@@ -6690,10 +6690,16 @@ www.tiktok.com/@mimoyyzz
 
 
 
+---------
 
 
+sudo apt update
+sudo apt install python3-pip
+sudo apt install git
+sudo apt install python3-dev
 
-
+cara harvester
+python3 theHarvester.py -d example.com -l 500 -b all
 
 
 
