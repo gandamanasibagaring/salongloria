@@ -1431,6 +1431,9 @@ You can disable blank password restrictions by using a policy. To locate and cha
 -Click Disabled, and then click OK.
 -Quit Group Policy Editor.
 
+gpupdate /force
+
+
 --------------------------------------------------
 11 Januari
 
@@ -2715,7 +2718,7 @@ Jam Tutup :
 LAPORAN SALES HARIAN
 
 1. Offline Sales
-(Ini bisa dilihat di Apps bukukas, karena semua orderan wajib diinput ke bukukas) 
+(Ini bisa dilihat di Apps bukukas, karena semua orderan wajib diinput ke cebukukas) 
 - Orisisu : ....cup (kalau ada topping tambahan, tulis)
 - Tarosisu : 
 - .....
@@ -6439,7 +6442,8 @@ blueman-applet 22.04.41 WARNING  PluginManager:151 __load_plugin: Not loading Dh
 25/05/23 22:05:19 Using protocol version 3.8
 ChatGPT
 
-Berdasarkan log yang Anda berikan, tampaknya ada masalah dengan proses otentikasi pada VNC server. Log tersebut mencatat bahwa autentikasi gagal dari alamat IP 192.168.1.7. Ini menunjukkan bahwa VNC server menolak koneksi karena masalah autentikasi.
+Berdasarkan log yang Anda berikan, tampaknya ada masalah dengan proses otentikasi pada VNC
+ server. Log tersebut mencatat bahwa autentikasi gagal dari alamat IP 192.168.1.7. Ini menunjukkan bahwa VNC server menolak koneksi karena masalah autentikasi.
 
 Beberapa hal yang dapat Anda coba untuk mengatasi masalah ini:
 
@@ -6698,9 +6702,7 @@ sudo apt install python3-pip
 sudo apt install git
 sudo apt install python3-dev
 
-cara harvester
-python3 theHarvester.py -d example.com -l 500 -b all
-
+cara harve
 
 
 
