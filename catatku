@@ -6704,8 +6704,33 @@ sudo apt install python3-dev
 
 cara harve
 
+04Juli2018
 
 
+
+
+-------------------------
+
+
+ChatGPT
+Saya tidak melihat kesalahan sintaksis yang jelas dalam program tersebut. Namun, ada beberapa hal yang perlu diperhatikan:
+
+Pastikan Anda telah memastikan bahwa file config_connect.php ada dan berisi koneksi yang valid ke database.
+
+Pastikan format tanggal yang digunakan dalam klausa LIKE adalah format yang benar. Misalnya, jika format tanggal di kolom "tglmasuk" adalah "YYYY-MM-DD", maka Anda harus memastikan bahwa variabel $bulansekarang dan $harisekarang memiliki format "MM" dan "DD" yang valid. Anda dapat memeriksa nilai yang disimpan dalam variabel tersebut dengan echo $bulansekarang; dan echo $harisekarang; untuk memastikan formatnya benar.
+
+Pastikan tabel dan kolom yang digunakan dalam kueri SQL sudah sesuai dengan struktur database Anda. Jika terjadi perubahan pada struktur database, pastikan kueri SQL yang Anda gunakan masih sesuai.
+
+Pastikan tabel dan kolom yang digunakan dalam kueri SQL sudah ada dan berisi data. Jika tabel atau kolom yang diacu tidak ada atau kosong, maka kueri SQL tidak akan mengembalikan hasil yang diharapkan.
+
+Pastikan Anda telah melakukan sanitasi input dan memastikan bahwa nilai yang digunakan dalam kueri SQL aman untuk menghindari serangan SQL injection.
+
+Untuk menemukan kesalahan yang lebih spesifik, Anda dapat menambahkan pernyataan echo mysqli_error($conn); setelah setiap pemanggilan mysqli_query() untuk menampilkan pesan kesalahan dari database jika ada. Dengan cara ini, Anda dapat memperoleh informasi yang lebih rinci tentang masalah yang mungkin terjadi dalam kueri SQL.
+
+
+
+----------------------------------
+24 juli
 
 
 
