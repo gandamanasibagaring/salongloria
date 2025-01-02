@@ -6820,3 +6820,64 @@ Solusi: Berikut adalah beberapa solusi
         Untuk masalah SSH, pastikan bahwa IP atau domain server yang Anda tuju benar dan Anda memiliki akses jaringan yang stabil.
         Jika akses SSH terus bermasalah, Anda bisa mencoba memeriksa firewall atau meminta bantuan dari penyedia layanan hosting.
         Gunakan juga metode lain untuk mengakses server, seperti menggunakan panel kontrol hosting jika ada.
+
+
+
+
+-----------------------------------
+23 desember
+
+-belajar java aps development desktop
+-cara dual booting di latop
+
+---------------------------
+2 januari
+
+Berikut langkah-langkah untuk menginstal **Balena Etcher** di Ubuntu menggunakan terminal:
+
+### 1. Tambahkan Repository Balena Etcher
+Balena Etcher menyediakan repositori APT resmi yang memudahkan instalasi dan pembaruan.
+
+#### a. Tambahkan Kunci GPG
+```bash
+sudo apt update
+sudo apt install -y wget apt-transport-https
+wget -qO - https://balena.io/etcher/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/balena-etcher.gpg
+```
+
+#### b. Tambahkan Repositori ke Daftar Sumber
+```bash
+echo "deb [signed-by=/usr/share/keyrings/balena-etcher.gpg] https://deb.etcher.io stable etcher" | sudo tee /etc/apt/sources.list.d/balena-etcher.list
+```
+
+### 2. Perbarui Daftar Paket
+```bash
+sudo apt update
+```
+
+### 3. Instal Balena Etcher
+```bash
+sudo apt install -y balena-etcher-electron
+```
+
+### 4. Verifikasi Instalasi
+Setelah instalasi selesai, Anda dapat menjalankan **Balena Etcher** dengan mengetik:
+```bash
+balena-etcher-electron
+```
+
+Jika ikon aplikasi tidak muncul, Anda juga bisa mencari **"Etcher"** melalui menu aplikasi.
+
+### Alternatif: Instal melalui File AppImage
+Jika tidak ingin menambahkan repositori, Anda bisa menggunakan file AppImage:
+1. Unduh file AppImage terbaru dari [situs resmi Balena Etcher](https://balena.io/etcher).
+2. Ubah izin file agar dapat dieksekusi:
+   ```bash
+   chmod +x balena-etcher-*.AppImage
+   ```
+3. Jalankan aplikasi:
+   ```bash
+   ./balena-etcher-*.AppImage
+   ```
+
+Selamat mencoba! 🎉
