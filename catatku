@@ -6881,3 +6881,75 @@ Jika tidak ingin menambahkan repositori, Anda bisa menggunakan file AppImage:
    ```
 
 Selamat mencoba! 🎉
+
+
+--------------------------------------
+21 januari 2025
+
+pembuatan program visual basic untuk gkpi
+
+-harus tau file file yg terhubung
+-harus tau kode tiap mata anggaran
+
+
+-(JURNAL PENGELUARAN JEMAAT) jika bulan baru akan membuat field baru
+-(BUKU BESAR PENGELUARAN JEMAAT) harus tau logika if bulan baru pasti membuat template baru jadi harus di copas, jika kolom next month kosong maka field nya harus terisi otomatis
+-harus tau lokasi atau xy masing masing yang mau di tarik dari mana dan kemana
+
+
+
+Buku Pengeluaran Jemaat
+opsi mata anggaran: 
+200. ADMINISTRASI GEREJA
+200.01. Tunjangan & Pengganti Transport
+01.01. Pendeta Pimpinan Jemaat
+01.02. Vicaris dan Pendeta Khusus
+01.03. Guru Jemaat
+01.04. Sekretaris dan Bendahara
+01.05. Pegawai Kantor
+01.06. Pegawai Kebersihan & Keamanan
+400. BIAYA OPERASIONAL
+400.01. Biaya Listrik, Air & Telepon
+400.02. Biaya ATK & Fotocopy
+400.03. Biaya Pemeliharaan Inventaris
+400.04. Biaya Pemeliharaan Gedung
+400.05. Biaya Rapat-rapat
+400.06. Biaya Transportasi & BBM
+400.07. Biaya Konsumsi
+400.08. Biaya Pengadaan Inventaris
+400.09. Biaya Internet
+400.10. Biaya Asuransi
+400.11. Biaya Bank
+400.12. Biaya Lain-lain
+600. PELAYANAN
+600.01. Pelayanan Ibadah
+01.01. Ibadah Minggu
+01.02. Ibadah Kategorial
+01.03. Ibadah Khusus
+600.02. Pelayanan Pastoral
+600.03. Pelayanan Perkunjungan
+600.04. Pelayanan Diakonia
+600.05. Pelayanan Pembinaan
+600.06. Pelayanan Musik Gereja
+600.07. Pelayanan Multimedia
+600.08. Pelayanan Hari-hari Besar Gereja
+600.09. Pelayanan Sosial
+600.10. Dana Partisipasi
+800. BINGKISAN/TUNJANGAN HARI RAYA
+800.01. Bingkisan Natal
+01.01. Pendeta
+01.02. Penatua
+01.03. Pegawai
+01.04. Guru Sekolah Minggu
+01.05. Pemusik
+01.06. Songleader
+01.07. Petugas Lainnya
+800.02. Tunjangan Hari Raya
+800.03. Bingkisan untuk Petugas/Pelayan
+
+
+
+
+
+admingandatech
+password: @Turboturbo123
