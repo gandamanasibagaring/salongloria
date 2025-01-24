@@ -6953,3 +6953,574 @@ opsi mata anggaran:
 
 admingandatech
 password: @Turboturbo123
+
+
+---------------------
+23 januari 2025
+
+
+untuk this workbook file vba:
+Private Sub Workbook_Open()
+    ' Masukkan kode yang ingin dijalankan saat workbook dibuka
+    MsgBox "Selamat datang! Program VBA sedang berjalan!"
+    ' Contoh jika ingin memanggil subrutin dari module
+    Call CopyDataToSheet2 ' Sesuaikan dengan subrutin Anda
+End Sub
+
+
+
+
+
+
+
+
+input_form.py:
+
+
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+from datetime import datetime
+import os
+import win32com.client as win32
+
+class InputForm:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Form Input & Pencarian Pengeluaran")
+        
+        # Data Kategori
+        self.kategori = {
+            "200 - ADMINISTRASI GEREJA": [
+                "200.01.01 - Pendeta Pimpinan Jemaat",
+                "200.01.02 - Vicaris dan Pendeta Khusus",
+                "200.01.03 - Guru Jemaat", 
+                "200.01.04 - Sekretaris dan Bendahara Jemaat",
+                "200.01.05.a - Pegawai Kantor (Administrasi): 2 orang",
+                "200.01.06.a - Pegawai Kebersihan Gedung Gereja: 1 orang",
+                "200.01.06.b - Pegawai Kebersihan Pekarangan Gereja: 1 orang",
+                "200.01.06.c1 - Pegawai Supir Mobil Dinas & Ambulance",
+                "200.01.06.c2 - Pegawai Jaga Malam",
+                "200.01.06.d - Pegawai Kebersihan Gedung Multifungsi",
+                "200.01.06.e - Pegawai Soundman",
+                "200.01.07 - Administrasi Guru Sekolah Minggu (dan Remaja)",
+                "200.01.08 - Pengawas Parkir Gereja (Minggu & Hari Besar)",
+                "200.02.01 - Alat Tulis Kantor, Penggandaan dan Cetakan",
+                "200.02.02 - Rapat dan Pertemuan Majelis Jemaat",
+                "200.02.03 - Insentif/Lembur Pegawai",
+                "200.02.04.a - Minum & Konsumsi Kantor, Jemaat",
+                "200.02.04.b - Biaya Makan Tamu Gereja",
+                "200.02.04.c - Biaya Snack untuk Pemusik & Songleader",
+                "200.02.05 - Penyediaan Kolportase",
+                "200.02.06 - Transport, Kurir, Benda Pos",
+                "200.03.01.a - Snack dan minuman sermon penatua",
+                "200.03.01.b - Penyediaan makanan pembukaan dan penutupan sermon penatua",
+                "200.03.02 - Dana Pembinaan untuk Paduan Suara",
+                "200.03.03.a - Syukuran Awal Tahun (Jemaat & Pendeta)",
+                "200.03.03.b - Snack Kebaktian Awal Tahun Gereja",
+                "200.03.03.c - Snack Paskah dan Buha-Buha Ijuk",
+                "200.03.04 - Krans Bunga Dukacita bagi Anggota Jemaat",
+                "200.03.05 - Bantuan Dukacita bagi Anggota Jemaat",
+                "200.03.06.a - Bunga altar pada Kebaktian Minggu",
+                "200.03.06.b - Dekorasi pada Kebaktian Hari Besar Kristen",
+                "200.03.07 - Keamanan Acara Hari Besar Kristen",
+                "200.03.08.a - Kontribusi & Registrasi Peserta Rapat Pendeta",
+                "200.03.08.b - Perjalanan Dinas Peserta Rapat Pendeta (2 pendeta)",
+                "200.03.09 - Perjalanan Dinas atas undangan Kantor Pusat",
+                "200.03.10 - Sidang Umum Jemaat",
+                "200.03.11.a - Biaya Tak Terduga (Pengurusan Sertifikat Tanah)",
+                "200.03.11.b - Biaya Tak Terduga/Insidentil",
+                "200.04.01 - Gedung Gereja, Rumah Dinas & Pekarangan",
+                "200.04.02 - Inventaris Gereja",
+                "200.05.01.a - Kijang Innova, Plat BK 1757 EJ",
+                "200.05.01.b - Pajak Kendaraan Kijang Innova",
+                "200.05.02.a - HIACE BK.7866 DP",
+                "200.05.02.b - Pajak Kendaraan HIACE",
+                "200.05.03.a - Roda 2: 1 unit, Plat BK. 5440 AGG",
+                "200.05.03.b - Pajak Kendaraan Roda 2",
+                "200.06.01 - Telepon, Speedy, MyRepublik dan WA",
+                "200.07.01 - Jubah Penatua (Upah Jahit)",
+                "200.07.02 - Peralatan & Perlengkapan Inventaris Gereja",
+                "200.07.03 - Dekorasi dan Persiapan Natal"
+            ],
+            
+            "400 - PELAYANAN IBADAH": [
+                "400.01.01 - Pengkhotbah Minggu: Pimpinan Pusat GKPI",
+                "400.01.02 - Pengkhotbah Minggu: Dari Luar Kota",
+                "400.01.03 - Pengkhotbah Minggu: Dari Dalam Kota",
+                "400.01.04 - Pengkhotbah Minggu: Di Rumah Duka (Oleh Pendeta)",
+                "400.01.05 - Pengkhotbah Minggu: Remaja",
+                "400.02.01 - Pengkhotbah Kebaktian di Lingkungan (Wijk)",
+                "400.02.02 - Pengkhotbah Kebaktian Pemuda-Pemudi/Remaja & GSM",
+                "400.02.03 - Pengkhotbah Kebaktian Koor Ibu-Ibu",
+                "400.02.04 - Pengkhotbah Kebaktian Ibu Hanna",
+                "400.02.05 - Pengkhotbah Kebaktian Lanjut Usia (LANSIA)",
+                "400.03.01 - Pengkhotbah Perjanjian/Pemberkatan Nikah",
+                "400.03.02 - Pengkhotbah Penguburan Jenazah",
+                "400.03.03 - Pengkhotbah di Rumah Duka (Oleh Penatua)",
+                "400.04.01 - Minggu Pagi 08.00 WIB (@ 13 Orang)",
+                "400.04.02 - Minggu Sore: Pukul 18.00 WIB (@ 13 Orang)",
+                "400.04.03 - Sekolah Minggu dan Remaja",
+                "400.04.04 - Perjanjian/Pemberkatan Pernikahan",
+                "400.04.05 - Kebaktian pemberangkatan jenazah",
+                "400.04.06 - Minggu Di Rumah Duka",
+                "400.04.07 - Pelayanan di Rumah Duka",
+                "400.04.08 - Guru Sekolah Minggu (Sermon & Mengajar)",
+                "400.04.09 - Latihan Pemusik dan Songleader",
+                "400.04.10 - Petugas Penghitung Kebaktian Minggu",
+                "400.05.01 - Perjamuan Kudus di Gereja",
+                "400.05.02 - Snack Ujian Tulisan & Lisan Pelajar Sidi",
+                "400.06.01 - Perayaan HUT Jemaat"
+            ],
+
+            "600 - PEMBINAAN & PELAYANAN": [
+                "600.01.01 - Pendidikan Lanjutan untuk Pendeta",
+                "600.01.02 - Penghargaan untuk Penatua",
+                "600.01.03 - Pembinaan & Pelatihan Pelajar Sidi",
+                "600.01.04 - Pembinaan Penatua se Resort Medan Barat",
+                "600.02.01 - Pembinaan & Pelayan Rohani (PPR)",
+                "600.02.02 - Pekabaran Injil",
+                "600.02.03 - Diakoni Sosial",
+                "600.02.04 - Musik, Nyanyian & Koor (MNK)",
+                "600.02.05 - Sekolah Minggu",
+                "600.02.06 - Remaja",
+                "600.02.07 - Pemuda",
+                "600.02.08 - Perempuan",
+                "600.02.09 - Pria",
+                "600.02.10 - Lansia",
+                "600.02.11 - Kesehatan",
+                "600.02.12 - Pendidikan",
+                "600.02.13 - Usaha & Pengembangan Sumber Daya (UPSD)",
+                "600.02.14 - Sarana & Prasarana",
+                "600.02.15 - Natal Gabungan Seksi-Seksi (Natal II)",
+                "600.03.01 - Target Ke Kantor Pusat GKPI",
+                "600.03.02 - Biaya Tahun Renstra GKPI 2023",
+                "600.03.03 - Kantor Sinode GKPI (Persembahan Kedua)",
+                "600.04.01 - Target Ke GKPI Resort Medan Barat"
+            ],
+
+            "800 - BANTUAN & TUNJANGAN": [
+                "800.01.01 - Bantuan ke Jemaat untuk musibah/bencana alam",
+                "800.01.02 - Akomodasi Acara Penghiburan Ke Rumah Duka",
+                "800.01.03 - Bantuan untuk Dana Pensiun Pendeta GKPI",
+                "800.01.04 - Bantuan untuk PA. Mamre dan Yapentra",
+                "800.01.05 - Bantuan Ke GKPI Lainnya",
+                "800.01.06 - Bantuan Kepada Masyarakat di sekitar",
+                "800.02.01 - Sekolah Minggu",
+                "800.02.02 - Penatua Purna Bakti",
+                "800.02.03 - Penatua Aktif",
+                "800.02.04 - Calon Penatua Aktif",
+                "800.02.05 - Pendeta GKPI Resort Medan Barat",
+                "800.02.06 - Anggota Majelis Jemaat: Ketua Seksi & Penasehat",
+                "800.02.07 - Guru-Guru Koor di Jemaat",
+                "800.02.08 - Guru-Guru Sekolah Minggu",
+                "800.02.09 - Pemusik: Pianis, Organis dan Saxophonis",
+                "800.02.10 - Songleader",
+                "800.02.11 - Petugas Live Streaming"
+            ]
+        }
+        
+        # Excel file path
+        self.excel_file = 'JURNAL PENGELUARAN JEMAAT 2024.xls'
+        self.sheet_name = 'JUR PENGEL JEMAAT 2024'
+        
+        # Tambahkan sheet untuk pencarian
+        self.sheet_pencarian = 'BUKU BESAR'
+        
+        self.create_widgets()
+        
+    def create_widgets(self):
+        # Buat notebook/tab untuk memisahkan form input dan pencarian
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.grid(row=0, column=0, padx=5, pady=5)
+        
+        # Tab untuk input data
+        self.input_frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.input_frame, text='Input Data')
+        
+        # Tab untuk pencarian
+        self.search_frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.search_frame, text='Pencarian')
+        
+        # Buat widget form input seperti sebelumnya tapi gunakan input_frame sebagai parent
+        self.create_input_widgets()
+        
+        # Buat widget pencarian
+        self.create_search_widgets()
+
+    def create_input_widgets(self):
+        # Tanggal
+        ttk.Label(self.input_frame, text="Tanggal (DD-MMM-YY):").grid(row=0, column=0, padx=5, pady=5, sticky='w')
+        self.tanggal_entry = ttk.Entry(self.input_frame, width=40)
+        self.tanggal_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.tanggal_entry.insert(0, datetime.now().strftime('%d-%b-%y'))
+        
+        # Nomor KW
+        ttk.Label(self.input_frame, text="Nomor KW:").grid(row=1, column=0, padx=5, pady=5, sticky='w')
+        self.kw_entry = ttk.Entry(self.input_frame, width=40)
+        self.kw_entry.grid(row=1, column=1, padx=5, pady=5)
+        
+        # Uraian
+        ttk.Label(self.input_frame, text="Uraian:").grid(row=2, column=0, padx=5, pady=5, sticky='w')
+        self.uraian_entry = ttk.Entry(self.input_frame, width=40)
+        self.uraian_entry.grid(row=2, column=1, padx=5, pady=5)
+        
+        # Jumlah (KAS)
+        ttk.Label(self.input_frame, text="Jumlah (KAS):").grid(row=3, column=0, padx=5, pady=5, sticky='w')
+        self.jumlah_entry = ttk.Entry(self.input_frame, width=40)
+        self.jumlah_entry.grid(row=3, column=1, padx=5, pady=5)
+        
+        # Uang yang disetor
+        ttk.Label(self.input_frame, text="Uang yang disetor:").grid(row=4, column=0, padx=5, pady=5, sticky='w')
+        self.setor_entry = ttk.Entry(self.input_frame, width=40)
+        self.setor_entry.grid(row=4, column=1, padx=5, pady=5)
+        
+        # Kategori
+        ttk.Label(self.input_frame, text="Kategori:").grid(row=5, column=0, padx=5, pady=5, sticky='w')
+        self.kategori_cb = ttk.Combobox(self.input_frame, values=["-- Pilih Kategori --"] + list(self.kategori.keys()), width=37)
+        self.kategori_cb.set("-- Pilih Kategori --")
+        self.kategori_cb.grid(row=5, column=1, padx=5, pady=5)
+        self.kategori_cb.bind('<<ComboboxSelected>>', self.on_kategori_change)
+        
+        # Sub Kategori
+        ttk.Label(self.input_frame, text="Sub Kategori:").grid(row=6, column=0, padx=5, pady=5, sticky='w')
+        self.sub_kategori_cb = ttk.Combobox(self.input_frame, values=["-- Pilih Sub Kategori --"], width=37)
+        self.sub_kategori_cb.set("-- Pilih Sub Kategori --")
+        self.sub_kategori_cb.grid(row=6, column=1, padx=5, pady=5)
+        
+        # Tombol Simpan
+        ttk.Button(self.input_frame, text="Simpan", command=self.save_data).grid(row=7, column=1, padx=5, pady=10)
+
+    def create_search_widgets(self):
+        # Label dan combobox untuk kategori
+        ttk.Label(self.search_frame, text="Kategori:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
+        self.search_kategori_cb = ttk.Combobox(self.search_frame, values=["-- Pilih Kategori --"] + list(self.kategori.keys()), width=37)
+        self.search_kategori_cb.set("-- Pilih Kategori --")
+        self.search_kategori_cb.grid(row=0, column=1, padx=5, pady=5)
+        self.search_kategori_cb.bind('<<ComboboxSelected>>', self.on_search_kategori_change)
+        
+        # Label dan combobox untuk sub kategori
+        ttk.Label(self.search_frame, text="Sub Kategori:").grid(row=1, column=0, padx=5, pady=5, sticky='w')
+        self.search_sub_kategori_cb = ttk.Combobox(self.search_frame, values=["-- Pilih Sub Kategori --"], width=37)
+        self.search_sub_kategori_cb.set("-- Pilih Sub Kategori --")
+        self.search_sub_kategori_cb.grid(row=1, column=1, padx=5, pady=5)
+        
+        # Tombol Cari
+        ttk.Button(self.search_frame, text="Cari", command=self.search_data).grid(row=2, column=1, padx=5, pady=5)
+        
+        # Treeview untuk menampilkan hasil
+        self.result_tree = ttk.Treeview(self.search_frame, columns=('Tanggal', 'KW', 'Uraian', 'Jumlah'), show='headings')
+        self.result_tree.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+        
+        # Set heading treeview
+        self.result_tree.heading('Tanggal', text='Tanggal')
+        self.result_tree.heading('KW', text='No KW')
+        self.result_tree.heading('Uraian', text='Uraian')
+        self.result_tree.heading('Jumlah', text='Jumlah')
+        
+        # Set lebar kolom
+        self.result_tree.column('Tanggal', width=100)
+        self.result_tree.column('KW', width=100)
+        self.result_tree.column('Uraian', width=200)
+        self.result_tree.column('Jumlah', width=150)
+
+    def on_kategori_change(self, event=None):
+        kategori = self.kategori_cb.get()
+        self.sub_kategori_cb.set("-- Pilih Sub Kategori --")
+        if kategori in self.kategori:
+            self.sub_kategori_cb['values'] = ["-- Pilih Sub Kategori --"] + self.kategori[kategori]
+        else:
+            self.sub_kategori_cb['values'] = ["-- Pilih Sub Kategori --"]
+
+    def validate_input(self):
+        try:
+            datetime.strptime(self.tanggal_entry.get(), '%d-%b-%y')
+        except ValueError:
+            messagebox.showerror("Error", "Format tanggal salah! Gunakan format DD-MMM-YY\nContoh: 05-Jan-24")
+            return False
+        
+        if not self.kw_entry.get().strip():
+            messagebox.showerror("Error", "Nomor KW wajib diisi!")
+            return False
+            
+        if not self.uraian_entry.get().strip():
+            messagebox.showerror("Error", "Uraian harus diisi!")
+            return False
+            
+        try:
+            jumlah = float(self.jumlah_entry.get().strip())
+            if jumlah <= 0:
+                messagebox.showerror("Error", "Jumlah harus lebih besar dari 0!")
+                return False
+        except ValueError:
+            messagebox.showerror("Error", "Jumlah harus berupa angka!")
+            return False
+            
+        # Validasi uang yang disetor (boleh kosong)
+        setor_str = self.setor_entry.get().strip()
+        if setor_str:  # Hanya validasi jika ada isinya
+            try:
+                setor = float(setor_str)
+                # Hapus pengecekan nilai negatif karena setor bisa 0
+            except ValueError:
+                messagebox.showerror("Error", "Uang yang disetor harus berupa angka!")
+                return False
+            
+        if self.kategori_cb.get() == "-- Pilih Kategori --":
+            messagebox.showerror("Error", "Pilih kategori terlebih dahulu!")
+            return False
+            
+        if self.sub_kategori_cb.get() == "-- Pilih Sub Kategori --":
+            messagebox.showerror("Error", "Pilih sub kategori terlebih dahulu!")
+            return False
+            
+        return True
+
+    def create_monthly_header(self, ws, tanggal):
+        # Cari baris terakhir
+        last_row = ws.Cells(ws.Rows.Count, "A").End(-4162).Row
+        
+        # Inisialisasi variabel
+        found_same_month = False
+        first_row_of_month = 1
+        next_row = last_row + 1
+        
+        # Cari dari atas ke bawah untuk menemukan data bulan yang sama
+        for row in range(1, last_row + 1):
+            cell_value = ws.Cells(row, 1).Value
+            if cell_value and isinstance(cell_value, str) is False:
+                try:
+                    # Langsung gunakan datetime dari Excel
+                    if isinstance(cell_value, datetime):
+                        date_value = cell_value
+                        if date_value.month == tanggal.month and date_value.year == tanggal.year:
+                            found_same_month = True
+                            first_row_of_month = row
+                            # Cari baris terakhir dari bulan ini
+                            for r in range(row, last_row + 1):
+                                next_date = ws.Cells(r, 1).Value
+                                if next_date and isinstance(next_date, str) is False:
+                                    try:
+                                        if isinstance(next_date, datetime):
+                                            if next_date.month != date_value.month or next_date.year != date_value.year:
+                                                next_row = r
+                                                break
+                                    except:
+                                        continue
+                            break
+                except:
+                    continue
+        
+        # Jika tidak ketemu bulan yang sama, buat header baru
+        if not found_same_month:
+            header_row = last_row + 2  # Tambah 2 baris kosong setelah data terakhir
+            
+            # Tulis header bulan baru
+            ws.Cells(header_row, 1).Value = " BULAN " + tanggal.strftime("%B %Y").upper()
+            
+            # Header kolom
+            header_row += 1
+            ws.Cells(header_row, 1).Value = "TGL"
+            ws.Cells(header_row, 2).Value = "KW"
+            ws.Cells(header_row, 3).Value = "URAIAN"
+            ws.Cells(header_row, 4).Value = "KAS"
+            ws.Cells(header_row, 5).Value = "200"
+            ws.Cells(header_row, 7).Value = "400"
+            ws.Cells(header_row, 9).Value = "600"
+            ws.Cells(header_row, 11).Value = "800"
+            ws.Cells(header_row, 13).Value = "SETOR"
+            
+            first_row_of_month = header_row + 1  # Set first_row_of_month untuk bulan baru
+            
+            return header_row + 1, first_row_of_month  # Return tuple dengan kedua nilai
+        else:
+            return next_row, first_row_of_month  # Return tuple dengan kedua nilai
+
+    def save_data(self):
+        if not self.validate_input():
+            return
+        
+        try:
+            excel = win32.Dispatch('Excel.Application')
+            excel.Visible = False
+            excel.DisplayAlerts = False
+            
+            try:
+                wb = excel.Workbooks.Open(os.path.abspath(self.excel_file))
+                ws = wb.Worksheets(self.sheet_name)
+                
+                # Ambil tanggal input
+                input_date = datetime.strptime(self.tanggal_entry.get(), '%d-%b-%y')
+                
+                # Dapatkan baris untuk data baru dan informasi bulan
+                next_row, first_row_of_month = self.create_monthly_header(ws, input_date)
+                
+                # Format dan tulis data baru
+                jumlah = float(self.jumlah_entry.get().strip())
+                
+                # Tulis data dasar
+                ws.Cells(next_row, 1).Value = self.tanggal_entry.get()
+                ws.Cells(next_row, 2).Value = self.kw_entry.get()
+                ws.Cells(next_row, 3).Value = self.uraian_entry.get()
+                
+                # Tulis jumlah di kolom KAS
+                ws.Cells(next_row, 4).NumberFormat = "#.##0,00"
+                ws.Cells(next_row, 4).Value = jumlah
+                
+                # Tulis uang yang disetor jika ada
+                setor_str = self.setor_entry.get().strip()
+                if setor_str:
+                    setor = float(setor_str)
+                    ws.Cells(next_row, 13).NumberFormat = "#.##0,00"
+                    ws.Cells(next_row, 13).Value = setor
+
+                # Tulis ke kolom kategori yang sesuai
+                kode = self.sub_kategori_cb.get().split(' - ')[0]
+                kategori = self.kategori_cb.get()
+                
+                # Reset semua kolom kategori ke kosong dulu
+                for col in [5, 6, 7, 8, 9, 10, 11, 12]:
+                    ws.Cells(next_row, col).Value = None
+                
+                # Tulis kode dan jumlah hanya untuk kategori yang dipilih
+                if "200" in kategori:
+                    ws.Cells(next_row, 5).Value = kode
+                    ws.Cells(next_row, 6).NumberFormat = "#.##0,00"
+                    ws.Cells(next_row, 6).Value = jumlah
+                elif "400" in kategori:
+                    ws.Cells(next_row, 7).Value = kode
+                    ws.Cells(next_row, 8).NumberFormat = "#.##0,00"
+                    ws.Cells(next_row, 8).Value = jumlah
+                elif "600" in kategori:
+                    ws.Cells(next_row, 9).Value = kode
+                    ws.Cells(next_row, 10).NumberFormat = "#.##0,00"
+                    ws.Cells(next_row, 10).Value = jumlah
+                elif "800" in kategori:
+                    ws.Cells(next_row, 11).Value = kode
+                    ws.Cells(next_row, 12).NumberFormat = "#.##0,00"
+                    ws.Cells(next_row, 12).Value = jumlah
+
+                # Cek apakah ada data untuk bulan berikutnya
+                next_month_exists = False
+                for row in range(next_row + 1, ws.Cells(ws.Rows.Count, "A").End(-4162).Row + 1):
+                    cell_value = ws.Cells(row, 1).Value
+                    if cell_value and isinstance(cell_value, str) is False:
+                        try:
+                            if isinstance(cell_value, datetime):
+                                if cell_value.month != input_date.month or cell_value.year != input_date.year:
+                                    next_month_exists = True
+                                    break
+                        except:
+                            continue
+
+                # Jika tidak ada data bulan berikutnya, tambahkan total
+                if not next_month_exists:
+                    total_row = next_row + 1
+                    
+                    # Hapus total sebelumnya jika ada
+                    if ws.Cells(total_row - 1, 3).Value and "SUM TOTAL" in str(ws.Cells(total_row - 1, 3).Value):
+                        total_row -= 1
+                    
+                    # Tulis total baru
+                    ws.Cells(total_row, 3).Value = f"SUM TOTAL ({input_date.strftime('%B %Y').upper()})"
+                    
+                    # Set format dan formula untuk total
+                    columns = ['D', 'F', 'H', 'J', 'L', 'M']
+                    for col in columns:
+                        ws.Cells(total_row, ord(col)-64).NumberFormat = "#.##0,00"
+                        ws.Cells(total_row, ord(col)-64).Formula = f"=SUM({col}{first_row_of_month}:{col}{next_row})"
+                
+                # Simpan dan tutup
+                wb.Save()
+                wb.Close()
+                excel.Quit()
+                
+                messagebox.showinfo("Sukses", "Data berhasil disimpan!")
+                self.clear_form()
+                
+            except Exception as e:
+                wb.Close(SaveChanges=False)
+                excel.Quit()
+                raise e
+                
+        except PermissionError:
+            messagebox.showerror("Error", "File Excel sedang dibuka. Mohon tutup file terlebih dahulu.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Terjadi kesalahan: {str(e)}")
+
+    def clear_form(self):
+        self.tanggal_entry.delete(0, tk.END)
+        self.tanggal_entry.insert(0, datetime.now().strftime('%d-%b-%y'))
+        self.kw_entry.delete(0, tk.END)
+        self.uraian_entry.delete(0, tk.END)
+        self.jumlah_entry.delete(0, tk.END)
+        self.setor_entry.delete(0, tk.END)
+        self.kategori_cb.set("-- Pilih Kategori --")
+        self.sub_kategori_cb.set("-- Pilih Sub Kategori --")
+
+    def on_search_kategori_change(self, event=None):
+        kategori = self.search_kategori_cb.get()
+        self.search_sub_kategori_cb.set("-- Pilih Sub Kategori --")
+        if kategori in self.kategori:
+            self.search_sub_kategori_cb['values'] = ["-- Pilih Sub Kategori --"] + self.kategori[kategori]
+        else:
+            self.search_sub_kategori_cb['values'] = ["-- Pilih Sub Kategori --"]
+            
+    def search_data(self):
+        # Hapus data lama di treeview
+        for item in self.result_tree.get_children():
+            self.result_tree.delete(item)
+            
+        try:
+            excel = win32.Dispatch('Excel.Application')
+            excel.Visible = False
+            
+            wb = excel.Workbooks.Open(os.path.abspath(self.excel_file))
+            ws = wb.Worksheets(self.sheet_pencarian)
+            
+            # Ambil kode dari sub kategori yang dipilih
+            sub_kategori = self.search_sub_kategori_cb.get()
+            if sub_kategori == "-- Pilih Sub Kategori --":
+                messagebox.showerror("Error", "Pilih sub kategori terlebih dahulu!")
+                return
+                
+            kode = sub_kategori.split(' - ')[0]
+            
+            # Cari data yang sesuai
+            last_row = ws.Cells(ws.Rows.Count, "A").End(-4162).Row
+            found_data = []
+            
+            for row in range(1, last_row + 1):
+                cell_value = str(ws.Cells(row, 1).Value)
+                if kode in str(cell_value):
+                    tanggal = ws.Cells(row, 2).Value
+                    kw = ws.Cells(row, 3).Value
+                    uraian = ws.Cells(row, 4).Value
+                    jumlah = ws.Cells(row, 5).Value
+                    
+                    if all([tanggal, kw, uraian, jumlah]):  # Pastikan semua data ada
+                        found_data.append((tanggal, kw, uraian, jumlah))
+            
+            # Tampilkan hasil di treeview
+            for data in found_data:
+                formatted_jumlah = "{:,.2f}".format(float(data[3])).replace(',', '_').replace('.', ',').replace('_', '.')
+                self.result_tree.insert('', 'end', values=(data[0], data[1], data[2], formatted_jumlah))
+            
+            wb.Close(SaveChanges=False)
+            excel.Quit()
+            
+            if not found_data:
+                messagebox.showinfo("Info", "Tidak ada data yang ditemukan")
+                
+        except Exception as e:
+            messagebox.showerror("Error", f"Terjadi kesalahan: {str(e)}")
+            try:
+                wb.Close(SaveChanges=False)
+                excel.Quit()
+            except:
+                pass
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = InputForm(root)
+    root.mainloop()
