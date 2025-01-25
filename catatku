@@ -8190,3 +8190,92 @@ vba untuk h0:
     
     MsgBox "Data berhasil dipindahkan ke Sheet2!"
 End Sub
+
+
+
+
+-kode terbaru h0:
+
+--------------
+Sub GroupDataByHobby()
+    Dim ws1 As Worksheet, ws2 As Worksheet
+    Dim lastRow1 As Long, currentRow As Long
+    Dim i As Long
+    Dim hobby As String
+    Dim nameBox As Range, nextNameBox As Range
+    
+    ' Inisialisasi Sheet1 dan Sheet2
+    Set ws1 = ThisWorkbook.Sheets("Sheet1")
+    Set ws2 = ThisWorkbook.Sheets("Sheet2")
+    
+    ' Hapus isi Sheet2
+    ws2.Cells.Clear
+    
+    ' Cari baris terakhir di Sheet1
+    lastRow1 = ws1.Cells(ws1.Rows.Count, "A").End(xlUp).Row
+    
+    ' Array untuk menyimpan kode hobi dan namebox
+    Dim hobbyCodes() As Variant
+    hobbyCodes = Array("H01", "H02", "H03", "H04")
+    Dim hobbyNames() As Variant
+    hobbyNames = Array("Membaca Buku", "Menonton Film", "Olahraga", "Musik")
+    
+    For h = 0 To UBound(hobbyCodes)
+        ' Set namebox saat ini dan berikutnya
+        Set nameBox = ws2.Range("kode" & hobbyCodes(h))
+        If h < UBound(hobbyCodes) Then
+            Set nextNameBox = ws2.Range("kode" & hobbyCodes(h + 1))
+        Else
+            Set nextNameBox = Nothing
+        End If
+        
+        ' Tulis header
+        ws2.Cells(nameBox.Row, nameBox.Column).Value = hobbyNames(h) & " (" & hobbyCodes(h) & ")"
+        currentRow = nameBox.Row + 1
+        ws2.Cells(currentRow, nameBox.Column).Resize(1, 3).Value = Array("Nama", "Alamat", "Usia")
+        currentRow = currentRow + 1
+        
+        ' Tulis data
+        Dim dataCount As Long
+        dataCount = 0
+        For i = 2 To lastRow1
+            If ws1.Cells(i, 3).Value = hobbyCodes(h) Then
+                ws2.Cells(currentRow, nameBox.Column).Value = ws1.Cells(i, 1).Value
+                ws2.Cells(currentRow, nameBox.Column + 1).Value = ws1.Cells(i, 2).Value
+                ws2.Cells(currentRow, nameBox.Column + 2).Value = ws1.Cells(i, 4).Value
+                currentRow = currentRow + 1
+                dataCount = dataCount + 1
+            End If
+        Next i
+        
+        ' Periksa jarak ke namebox berikutnya
+        If Not nextNameBox Is Nothing Then
+            Dim requiredRows As Long
+            requiredRows = dataCount + 2 ' Header + kolom judul
+            Dim availableRows As Long
+            availableRows = nextNameBox.Row - nameBox.Row
+            
+            ' Jika jarak kurang dari minimal (data + header + 4 baris kosong)
+            If availableRows < (requiredRows + 4) Then
+                ' Geser namebox berikutnya dan semua namebox setelahnya
+                Dim rowsToAdd As Long
+                rowsToAdd = (requiredRows + 4) - availableRows
+                
+                ' Geser semua namebox berikutnya
+                For j = h + 1 To UBound(hobbyCodes)
+                    Dim boxToMove As Range
+                    Set boxToMove = ws2.Range("kode" & hobbyCodes(j))
+                    boxToMove.Offset(rowsToAdd, 0).Name = "kode" & hobbyCodes(j)
+                Next j
+            End If
+        End If
+    Next h
+    
+    ' Format tabel
+    With ws2
+        .Columns("A:C").AutoFit
+    End With
+    
+    MsgBox "Data berhasil dipindahkan ke Sheet2!"
+End Sub
+----------
