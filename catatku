@@ -8087,3 +8087,106 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InputForm(root)
     root.mainloop()
+
+
+
+vba untuk h0:
+    Sub GroupDataByHobby()
+    Dim ws1 As Worksheet, ws2 As Worksheet
+    Dim lastRow1 As Long, currentRow As Long
+    Dim i As Long
+    Dim hobby As String
+    
+    ' Inisialisasi Sheet1 dan Sheet2
+    Set ws1 = ThisWorkbook.Sheets("Sheet1")
+    Set ws2 = ThisWorkbook.Sheets("Sheet2")
+    
+    ' Hapus isi Sheet2
+    ws2.Cells.Clear
+    
+    ' Set baris awal
+    currentRow = 1
+    
+    ' Tambahkan header untuk kategori H01
+    ws2.Cells(currentRow, 1).Value = "Membaca Buku (H01)"
+    currentRow = currentRow + 1
+    ws2.Cells(currentRow, 1).Resize(1, 3).Value = Array("Nama", "Alamat", "Usia")
+    currentRow = currentRow + 1
+    
+    ' Cari baris terakhir di Sheet1
+    lastRow1 = ws1.Cells(ws1.Rows.Count, "A").End(xlUp).Row
+    
+    ' Tulis data untuk H01
+    For i = 2 To lastRow1
+        If ws1.Cells(i, 3).Value = "H01" Then
+            ws2.Cells(currentRow, 1).Value = ws1.Cells(i, 1).Value ' Nama
+            ws2.Cells(currentRow, 2).Value = ws1.Cells(i, 2).Value ' Alamat
+            ws2.Cells(currentRow, 3).Value = ws1.Cells(i, 4).Value ' Usia
+            currentRow = currentRow + 1
+        End If
+    Next i
+    
+    ' Tambah 2 baris kosong
+    currentRow = currentRow + 2
+    
+    ' Tambahkan header untuk kategori H02
+    ws2.Cells(currentRow, 1).Value = "Menonton Film (H02)"
+    currentRow = currentRow + 1
+    ws2.Cells(currentRow, 1).Resize(1, 3).Value = Array("Nama", "Alamat", "Usia")
+    currentRow = currentRow + 1
+    
+    ' Tulis data untuk H02
+    For i = 2 To lastRow1
+        If ws1.Cells(i, 3).Value = "H02" Then
+            ws2.Cells(currentRow, 1).Value = ws1.Cells(i, 1).Value
+            ws2.Cells(currentRow, 2).Value = ws1.Cells(i, 2).Value
+            ws2.Cells(currentRow, 3).Value = ws1.Cells(i, 4).Value
+            currentRow = currentRow + 1
+        End If
+    Next i
+    
+    ' Tambah 2 baris kosong
+    currentRow = currentRow + 2
+    
+    ' Tambahkan header untuk kategori H03
+    ws2.Cells(currentRow, 1).Value = "Olahraga (H03)"
+    currentRow = currentRow + 1
+    ws2.Cells(currentRow, 1).Resize(1, 3).Value = Array("Nama", "Alamat", "Usia")
+    currentRow = currentRow + 1
+    
+    ' Tulis data untuk H03
+    For i = 2 To lastRow1
+        If ws1.Cells(i, 3).Value = "H03" Then
+            ws2.Cells(currentRow, 1).Value = ws1.Cells(i, 1).Value
+            ws2.Cells(currentRow, 2).Value = ws1.Cells(i, 2).Value
+            ws2.Cells(currentRow, 3).Value = ws1.Cells(i, 4).Value
+            currentRow = currentRow + 1
+        End If
+    Next i
+    
+    ' Tambah 2 baris kosong
+    currentRow = currentRow + 2
+    
+    ' Tambahkan header untuk kategori H04
+    ws2.Cells(currentRow, 1).Value = "Musik (H04)"
+    currentRow = currentRow + 1
+    ws2.Cells(currentRow, 1).Resize(1, 3).Value = Array("Nama", "Alamat", "Usia")
+    currentRow = currentRow + 1
+    
+    ' Tulis data untuk H04
+    For i = 2 To lastRow1
+        If ws1.Cells(i, 3).Value = "H04" Then
+            ws2.Cells(currentRow, 1).Value = ws1.Cells(i, 1).Value
+            ws2.Cells(currentRow, 2).Value = ws1.Cells(i, 2).Value
+            ws2.Cells(currentRow, 3).Value = ws1.Cells(i, 4).Value
+            currentRow = currentRow + 1
+        End If
+    Next i
+    
+    ' Format tabel
+    With ws2
+        .Columns("A:C").AutoFit
+    End With
+    
+    MsgBox "Data berhasil dipindahkan ke Sheet2!"
+End Sub
