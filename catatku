@@ -8279,3 +8279,234 @@ Sub GroupDataByHobby()
     MsgBox "Data berhasil dipindahkan ke Sheet2!"
 End Sub
 ----------
+
+
+
+Dim headersSheet1 As Variant
+headers = Array( _
+    "TGL.", "KW", "URAIAN", "KREDIT - KAS", _
+    "200 (Kode)", "200 (Nilai)", _
+    "400 (Kode)", "400 (Nilai)", _
+    "600 (Kode)", "600 (Nilai)", _
+    "800 (Kode)", "800 (Nilai)", _
+    "Uang yang di setor" _
+)
+
+Dim headersSheet2 As Variant
+headersSheet2 = Array("TGL.", "BKK", "URAIAN", "Jumlah")
+
+
+
+----------------------------
+kode.gs (sudah bagus untuk form iput. tinggal sum dan header)
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Form Input')
+      .addItem('Buka Form', 'showInputForm')
+      .addToUi();
+}
+
+function showInputForm() {
+  var html = HtmlService.createHtmlOutputFromFile('InputForm')
+      .setWidth(400)
+      .setHeight(600);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Form Input & Pencarian Pengeluaran');
+}
+
+function saveData(data) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('JUR PENGEL JEMAAT 2024');
+  var lastRow = sheet.getLastRow() + 1;
+
+  // Menyimpan data dasar ke sheet
+  var tanggal = new Date(data.tanggal);
+  
+  // Set format sel untuk setiap kolom
+  sheet.getRange(lastRow, 1).setValue(tanggal).setNumberFormat("dd-mmm-yy"); // Format tanggal
+  sheet.getRange(lastRow, 2).setValue(data.kw);
+  sheet.getRange(lastRow, 3).setValue(data.uraian);
+  sheet.getRange(lastRow, 4).setValue(data.jumlah).setNumberFormat("#,##0.00"); // Format angka
+  sheet.getRange(lastRow, 13).setValue(data.setor).setNumberFormat("#,##0.00"); // Kolom setoran (M)
+
+  // Ambil kode dari sub kategori
+  var kodeSub = data.subKategori.split(' - ')[0];
+  
+  // Set format sel sebagai teks untuk kolom kode anggaran
+  if (data.kategori.includes("200")) {
+    sheet.getRange(lastRow, 5).setValue(kodeSub).setNumberFormat("@"); // Kolom E sebagai teks
+    sheet.getRange(lastRow, 6).setValue(data.jumlah).setNumberFormat("#,##0.00");
+  } else if (data.kategori.includes("400")) {
+    sheet.getRange(lastRow, 7).setValue(kodeSub).setNumberFormat("@"); // Kolom G sebagai teks
+    sheet.getRange(lastRow, 8).setValue(data.jumlah).setNumberFormat("#,##0.00");
+  } else if (data.kategori.includes("600")) {
+    sheet.getRange(lastRow, 9).setValue(kodeSub).setNumberFormat("@"); // Kolom I sebagai teks
+    sheet.getRange(lastRow, 10).setValue(data.jumlah).setNumberFormat("#,##0.00");
+  } else if (data.kategori.includes("800")) {
+    sheet.getRange(lastRow, 11).setValue(kodeSub).setNumberFormat("@"); // Kolom K sebagai teks
+    sheet.getRange(lastRow, 12).setValue(data.jumlah).setNumberFormat("#,##0.00");
+  }
+
+
+  // Menghitung total nilai untuk kolom D
+  var kolomF = sheet.getRange(lastRow, 6).getValue() || 0;
+  var kolomH = sheet.getRange(lastRow, 8).getValue() || 0;
+  var kolomJ = sheet.getRange(lastRow, 10).getValue() || 0;
+  var kolomL = sheet.getRange(lastRow, 12).getValue() || 0;
+  var kolomM = sheet.getRange(lastRow, 13).getValue() || 0;
+  
+  var totalKas = kolomF + kolomH + kolomJ + kolomL + kolomM;
+
+  // Menyimpan total ke kolom D
+  sheet.getRange(lastRow, 4).setValue(totalKas).setNumberFormat("#,##0.00");
+  
+  return "Data berhasil disimpan!";
+}
+
+function searchData(subKategori) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('BUKU BESAR');
+  var data = sheet.getDataRange().getValues();
+  var results = [];
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][2] === subKategori) { // Asumsi subKategori ada di kolom ketiga
+      results.push(data[i]);
+    }
+  }
+  
+  return results;
+}
+
+function getSubCategories(kategori) {
+  var subCategories = {
+    "200 - ADMINISTRASI GEREJA": [
+      "200.01.01 - Pendeta Pimpinan Jemaat",
+      "200.01.02 - Vicaris dan Pendeta Khusus",
+      "200.01.03 - Guru Jemaat", 
+      "200.01.04 - Sekretaris dan Bendahara Jemaat",
+      "200.01.05.a - Pegawai Kantor (Administrasi): 2 orang",
+      "200.01.06.a - Pegawai Kebersihan Gedung Gereja: 1 orang",
+      "200.01.06.b - Pegawai Kebersihan Pekarangan Gereja: 1 orang",
+      "200.01.06.c1 - Pegawai Supir Mobil Dinas & Ambulance",
+      "200.01.06.c2 - Pegawai Jaga Malam",
+      "200.01.06.d - Pegawai Kebersihan Gedung Multifungsi",
+      "200.01.06.e - Pegawai Soundman",
+      "200.01.07 - Administrasi Guru Sekolah Minggu (dan Remaja)",
+      "200.01.08 - Pengawas Parkir Gereja (Minggu & Hari Besar)",
+      "200.02.01 - Alat Tulis Kantor, Penggandaan dan Cetakan",
+      "200.02.02 - Rapat dan Pertemuan Majelis Jemaat",
+      "200.02.03 - Insentif/Lembur Pegawai",
+      "200.02.04.a - Minum & Konsumsi Kantor, Jemaat",
+      "200.02.04.b - Biaya Makan Tamu Gereja",
+      "200.02.04.c - Biaya Snack untuk Pemusik & Songleader",
+      "200.02.05 - Penyediaan Kolportase",
+      "200.02.06 - Transport, Kurir, Benda Pos",
+      "200.03.01.a - Snack dan minuman sermon penatua",
+      "200.03.01.b - Penyediaan makanan pembukaan dan penutupan sermon penatua",
+      "200.03.02 - Dana Pembinaan untuk Paduan Suara",
+      "200.03.03.a - Syukuran Awal Tahun (Jemaat & Pendeta)",
+      "200.03.03.b - Snack Kebaktian Awal Tahun Gereja",
+      "200.03.03.c - Snack Paskah dan Buha-Buha Ijuk",
+      "200.03.04 - Krans Bunga Dukacita bagi Anggota Jemaat",
+      "200.03.05 - Bantuan Dukacita bagi Anggota Jemaat",
+      "200.03.06.a - Bunga altar pada Kebaktian Minggu",
+      "200.03.06.b - Dekorasi pada Kebaktian Hari Besar Kristen",
+      "200.03.07 - Keamanan Acara Hari Besar Kristen",
+      "200.03.08.a - Kontribusi & Registrasi Peserta Rapat Pendeta",
+      "200.03.08.b - Perjalanan Dinas Peserta Rapat Pendeta (2 pendeta)",
+      "200.03.09 - Perjalanan Dinas atas undangan Kantor Pusat",
+      "200.03.10 - Sidang Umum Jemaat",
+      "200.03.11.a - Biaya Tak Terduga (Pengurusan Sertifikat Tanah)",
+      "200.03.11.b - Biaya Tak Terduga/Insidentil",
+      "200.04.01 - Gedung Gereja, Rumah Dinas & Pekarangan",
+      "200.04.02 - Inventaris Gereja",
+      "200.05.01.a - Kijang Innova, Plat BK 1757 EJ",
+      "200.05.01.b - Pajak Kendaraan Kijang Innova",
+      "200.05.02.a - HIACE BK.7866 DP",
+      "200.05.02.b - Pajak Kendaraan HIACE",
+      "200.05.03.a - Roda 2: 1 unit, Plat BK. 5440 AGG",
+      "200.05.03.b - Pajak Kendaraan Roda 2",
+      "200.06.01 - Telepon, Speedy, MyRepublik dan WA",
+      "200.07.01 - Jubah Penatua (Upah Jahit)",
+      "200.07.02 - Peralatan & Perlengkapan Inventaris Gereja",
+      "200.07.03 - Dekorasi dan Persiapan Natal"
+    ],
+    
+    "400 - PELAYANAN IBADAH": [
+      "400.01.01 - Pengkhotbah Minggu: Pimpinan Pusat GKPI",
+      "400.01.02 - Pengkhotbah Minggu: Dari Luar Kota",
+      "400.01.03 - Pengkhotbah Minggu: Dari Dalam Kota",
+      "400.01.04 - Pengkhotbah Minggu: Di Rumah Duka (Oleh Pendeta)",
+      "400.01.05 - Pengkhotbah Minggu: Remaja",
+      "400.02.01 - Pengkhotbah Kebaktian di Lingkungan (Wijk)",
+      "400.02.02 - Pengkhotbah Kebaktian Pemuda-Pemudi/Remaja & GSM",
+      "400.02.03 - Pengkhotbah Kebaktian Koor Ibu-Ibu",
+      "400.02.04 - Pengkhotbah Kebaktian Ibu Hanna",
+      "400.02.05 - Pengkhotbah Kebaktian Lanjut Usia (LANSIA)",
+      "400.03.01 - Pengkhotbah Perjanjian/Pemberkatan Nikah",
+      "400.03.02 - Pengkhotbah Penguburan Jenazah",
+      "400.03.03 - Pengkhotbah di Rumah Duka (Oleh Penatua)",
+      "400.04.01 - Minggu Pagi 08.00 WIB (@ 13 Orang)",
+      "400.04.02 - Minggu Sore: Pukul 18.00 WIB (@ 13 Orang)",
+      "400.04.03 - Sekolah Minggu dan Remaja",
+      "400.04.04 - Perjanjian/Pemberkatan Pernikahan",
+      "400.04.05 - Kebaktian pemberangkatan jenazah",
+      "400.04.06 - Minggu Di Rumah Duka",
+      "400.04.07 - Pelayanan di Rumah Duka",
+      "400.04.08 - Guru Sekolah Minggu (Sermon & Mengajar)",
+      "400.04.09 - Latihan Pemusik dan Songleader",
+      "400.04.10 - Petugas Penghitung Kebaktian Minggu",
+      "400.05.01 - Perjamuan Kudus di Gereja",
+      "400.05.02 - Snack Ujian Tulisan & Lisan Pelajar Sidi",
+      "400.06.01 - Perayaan HUT Jemaat"
+    ],
+
+    "600 - PEMBINAAN & PELAYANAN": [
+      "600.01.01 - Pendidikan Lanjutan untuk Pendeta",
+      "600.01.02 - Penghargaan untuk Penatua",
+      "600.01.03 - Pembinaan & Pelatihan Pelajar Sidi",
+      "600.01.04 - Pembinaan Penatua se Resort Medan Barat",
+      "600.02.01 - Pembinaan & Pelayan Rohani (PPR)",
+      "600.02.02 - Pekabaran Injil",
+      "600.02.03 - Diakoni Sosial",
+      "600.02.04 - Musik, Nyanyian & Koor (MNK)",
+      "600.02.05 - Sekolah Minggu",
+      "600.02.06 - Remaja",
+      "600.02.07 - Pemuda",
+      "600.02.08 - Perempuan",
+      "600.02.09 - Pria",
+      "600.02.10 - Lansia",
+      "600.02.11 - Kesehatan",
+      "600.02.12 - Pendidikan",
+      "600.02.13 - Usaha & Pengembangan Sumber Daya (UPSD)",
+      "600.02.14 - Sarana & Prasarana",
+      "600.02.15 - Natal Gabungan Seksi-Seksi (Natal II)",
+      "600.03.01 - Target Ke Kantor Pusat GKPI",
+      "600.03.02 - Biaya Tahun Renstra GKPI 2023",
+      "600.03.03 - Kantor Sinode GKPI (Persembahan Kedua)",
+      "600.04.01 - Target Ke GKPI Resort Medan Barat"
+    ],
+
+    "800 - BANTUAN & TUNJANGAN": [
+      "800.01.01 - Bantuan ke Jemaat untuk musibah/bencana alam",
+      "800.01.02 - Akomodasi Acara Penghiburan Ke Rumah Duka",
+      "800.01.03 - Bantuan untuk Dana Pensiun Pendeta GKPI",
+      "800.01.04 - Bantuan untuk PA. Mamre dan Yapentra",
+      "800.01.05 - Bantuan Ke GKPI Lainnya",
+      "800.01.06 - Bantuan Kepada Masyarakat di sekitar",
+      "800.02.01 - Sekolah Minggu",
+      "800.02.02 - Penatua Purna Bakti",
+      "800.02.03 - Penatua Aktif",
+      "800.02.04 - Calon Penatua Aktif",
+      "800.02.05 - Pendeta GKPI Resort Medan Barat",
+      "800.02.06 - Anggota Majelis Jemaat: Ketua Seksi & Penasehat",
+      "800.02.07 - Guru-Guru Koor di Jemaat",
+      "800.02.08 - Guru-Guru Sekolah Minggu",
+      "800.02.09 - Pemusik: Pianis, Organis dan Saxophonis",
+      "800.02.10 - Songleader",
+      "800.02.11 - Petugas Live Streaming"
+    ]
+  };
+
+  return subCategories[kategori] || [];
+}
+
+--------------------------------
