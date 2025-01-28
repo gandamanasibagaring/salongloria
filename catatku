@@ -8510,3 +8510,27 @@ function getSubCategories(kategori) {
 }
 
 --------------------------------
+
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Dim WatchColumn As Integer
+    Dim NewRowPosition As Long
+
+    ' Kolom yang ingin diawasi (misal kolom ke-5 / kolom E)
+    WatchColumn = 5 
+
+    ' Pastikan perubahan ada di kolom yang diawasi
+    If Not Intersect(Target, Me.Columns(WatchColumn)) Is Nothing Then
+        Application.EnableEvents = False
+        On Error Resume Next
+        
+        ' Dapatkan baris baru di bawah data yang diubah
+        NewRowPosition = Target.Row + 1
+        
+        ' Tambahkan baris baru
+        Me.Rows(NewRowPosition).Insert Shift:=xlDown
+
+        Application.EnableEvents = True
+        On Error GoTo 0
+    End If
+End Sub
