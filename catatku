@@ -8534,3 +8534,75 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         On Error GoTo 0
     End If
 End Sub
+
+
+
+-------------------------
+function kelompokkanData() {
+  // Mendapatkan spreadsheet aktif dan sheet sumber serta tujuan
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetSumber = ss.getSheetByName('JUR PENGEL JEMAAT 2024');
+  var sheetTujuan = ss.getSheetByName('BUKU BESAR PENGEL JEMAAT 2024');
+
+  if (!sheetSumber || !sheetTujuan) {
+    Browser.msgBox('Sheet tidak ditemukan. Pastikan nama sheet benar.');
+    return;
+  }
+
+  // Mengambil semua data dari sheet sumber
+  var data = sheetSumber.getDataRange().getValues();
+  
+  if (data.length < 2) {
+    Browser.msgBox('Tidak ada data untuk diproses.');
+    return;
+  }
+
+  // Objek untuk menyimpan data berdasarkan kode subkategori
+  var kelompok = {};
+
+  // Proses setiap baris data dari sheet sumber
+  for (var i = 1; i < data.length; i++) {
+    var tgl = data[i][0]; // Kolom A
+    var kw = data[i][1]; // Kolom B
+    var uraian = data[i][2]; // Kolom C
+    var kas = data[i][3]; // Kolom D
+    var kodeSub = data[i][4]; // Kolom E sebagai kode subkategori
+
+    if (!tgl || !kodeSub) continue; // Lewati jika tidak ada tanggal atau kode subkategori
+
+    // Jika kode subkategori belum ada, inisialisasi array baru
+    if (!kelompok[kodeSub]) {
+      kelompok[kodeSub] = [];
+    }
+
+    // Simpan data berdasarkan kode subkategori
+    kelompok[kodeSub].push([tgl, kw, uraian, kas, kodeSub]);
+  }
+
+  // Hapus isi sheet tujuan sebelum menulis data baru
+  sheetTujuan.clear();
+
+  var startRow = 1;
+  var header = [['Tanggal', 'Kwitansi', 'Uraian', 'Kas', 'Kode Sub']];
+
+  // Menulis data ke sheet tujuan berdasarkan kode subkategori
+  for (var kodeSub in kelompok) {
+    var subHeader = "Kode Sub: " + kodeSub;
+    sheetTujuan.getRange(startRow, 1).setValue(subHeader);
+    startRow++;
+
+    sheetTujuan.getRange(startRow, 1, 1, 5).setValues(header);
+    startRow++;
+
+    var dataKodeSub = kelompok[kodeSub];
+
+    // Urutkan berdasarkan tanggal (opsional, bisa dihapus jika tidak dibutuhkan)
+    dataKodeSub.sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
+    sheetTujuan.getRange(startRow, 1, dataKodeSub.length, 5).setValues(dataKodeSub);
+    startRow += dataKodeSub.length + 2; // Tambahkan spasi 2 baris antara kelompok
+  }
+
+  Browser.msgBox('Data berhasil dikelompokkan berdasarkan kode subkategori.');
+}
+-----------------------
