@@ -8606,3 +8606,542 @@ function kelompokkanData() {
   Browser.msgBox('Data berhasil dikelompokkan berdasarkan kode subkategori.');
 }
 -----------------------
+3 februari
+
+function kelompokkanData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var wsSumber = ss.getSheetByName("JUR PENGEL JEMAAT 2024");
+  var wsTujuan = ss.getSheetByName("REKAP PENGEL JEMAAT 2024");
+
+  if (!wsSumber || !wsTujuan) {
+      Logger.log("Sheet tidak ditemukan. Pastikan 'JUR PENGEL JEMAAT 2024' dan 'REKAP PENGEL JEMAAT 2024' tersedia.");
+      return;
+  }
+
+  var data = wsSumber.getDataRange().getValues();
+  
+  if (data.length < 4) {
+      Logger.log("Tidak ada data untuk diproses.");
+      return;
+  }
+
+  var kelompok = {}; // Dictionary untuk menyimpan hasil pengelompokan
+  
+  Logger.log("Mulai membaca data sumber...");
+  
+  // Loop melalui data sumber dan mengelompokkan berdasarkan kategori & subkategori
+  for (var i = 3; i < data.length; i++) { // Mulai dari baris ke-4
+      var tgl = data[i][0]; // Kolom A (Tanggal)
+      var kas = data[i][3]; // Kolom D (Kas)
+      var kodeKategori = String(data[i][4]).trim(); // Kolom F (Kode Kategori)
+      var kodeSubKategori = String(data[i][6]).trim(); // Kolom H (Kode Sub Kategori)
+      var kategori = String(data[i][5]).trim(); // Kolom G (Kategori)
+      var subKategori = String(data[i][7]).trim(); // Kolom I (Sub Kategori)
+      
+      var bulan = (tgl instanceof Date) ? "Bulan " + (tgl.getMonth() + 1) : "Undef";
+
+      var key = kodeKategori + "-" + kodeSubKategori;
+
+      if (!kelompok[key]) {
+          kelompok[key] = {
+              kodeKategori: kodeKategori,
+              kodeSubKategori: kodeSubKategori,
+              kategori: kategori,
+              subKategori: subKategori,
+              kasPerBulan: {}
+          };
+      }
+
+      if (!kelompok[key].kasPerBulan[bulan]) {
+          kelompok[key].kasPerBulan[bulan] = 0;
+      }
+
+      if (!isNaN(kas) && kas !== "") {
+          kelompok[key].kasPerBulan[bulan] += parseFloat(kas);
+      }
+  }
+
+  Logger.log("Selesai membaca data sumber. Total kategori ditemukan: " + Object.keys(kelompok).length);
+
+  // Hapus semua isi di sheet tujuan sebelum menulis data baru
+  wsTujuan.clear();
+
+  var startRow = 1, startCol = 1;
+
+  // Header
+  wsTujuan.getRange(startRow, startCol).setValue("REALISASI PENGELUARAN GEREJA SELAMA JANUARI - DES 2024");
+  startRow++;
+  wsTujuan.getRange(startRow, startCol).setValue("M.A.");
+  wsTujuan.getRange(startRow, startCol + 1).setValue("KEGIATAN");
+  wsTujuan.getRange(startRow, startCol + 2).setValue("URAIAN KEGIATAN");
+
+  // Header Bulanan
+  for (var bulanIndex = 1; bulanIndex <= 12; bulanIndex++) {
+      wsTujuan.getRange(startRow, startCol + 2 + bulanIndex).setValue(getBulanNama(bulanIndex));
+  }
+  wsTujuan.getRange(startRow, startCol + 15).setValue("Total");
+  startRow++;
+
+  // Struktur Tabel Kategori & Subkategori
+  var struktur = [
+  // Administrasi Gereja
+  ["200.01", "Administrasi Gereja", "Pendeta Pimpinan Jemaat"],
+  ["200.01", "Administrasi Gereja", "Pendeta Khusus / Vikaris"],
+  ["200.01", "Administrasi Gereja", "Guru Jemaat"],
+  ["200.01", "Administrasi Gereja", "Sekretaris dan Bendahara Jemaat"],
+  ["200.01", "Administrasi Gereja", "Pegawai Administrasi: Kantor GKPI Medan Kota"],
+  ["200.01", "Administrasi Gereja", "Pegawai Kebersihan & Teknisi"],
+  ["200.01", "Administrasi Gereja", "Gedung Gereja"],
+  ["200.01", "Administrasi Gereja", "Pekarangan & Taman Gereja"],
+  ["200.01", "Administrasi Gereja", "Supir Mobil Dinas & Ambulance GKPI Medan Kota"],
+  ["200.01", "Administrasi Gereja", "Jaga Malam"],
+  ["200.01", "Administrasi Gereja", "Gedung Multifungsi"],
+  ["200.01", "Administrasi Gereja", "Soundman"],
+  ["200.01", "Administrasi Gereja", "Administrasi Guru Sekolah Minggu (dan Remaja)"],
+  ["200.01", "Administrasi Gereja", "Pengawas Parkir (Minggu & Hari Besar)"],
+
+  // Administrasi Kantor
+  ["200.02", "Administrasi Kantor", "Alat Tulis Kantor, Penggandaan dan Cetakan"],
+  ["200.02", "Administrasi Kantor", "Rapat dan Pertemuan Majelis Jemaat"],
+  ["200.02", "Administrasi Kantor", "Insentif / Lembur Pegawai"],
+  ["200.02", "Administrasi Kantor", "Minum & Konsumsi Kantor, Jemaat & Tamu"],
+  ["200.02", "Administrasi Kantor", "Penyediaan Kolportase (Al & Kal, Alkitab, Agenda, dll)"],
+  ["200.02", "Administrasi Kantor", "Transport, Kurir, Benda pos"],
+
+  // Administrasi & Umum
+  ["200.03", "Administrasi & Umum", "Sermon Penatua"],
+  ["200.03", "Administrasi & Umum", "Dana Pembinaan untuk Paduan Suara di GKPI Medan Kota"],
+  ["200.03", "Administrasi & Umum", "Syukuran Awal Tahun (Jemaat & Pendeta)"],
+
+  // Pemeliharaan Rutin Gereja
+  ["200.04", "Pemeliharaan Rutin Gereja", "Inventaris Gereja"],
+
+  // Eksploitasi - Kendaraan Dinas Gereja
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Roda 4(Empat) : Kijang Innova, Plat BK 1757 EJ"],
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Pajak Kenderaan Kijang Innova, Plat BK 1757 EJ"],
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Roda 4(Empat) : HIACE BK.7866 DP"],
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Pajak Kenderaan Roda 4(Empat) : HIACE BK.7866 DP"],
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Roda 2(dua) : 1 unit, Plat BK. 5440 AGG"],
+  ["200.05", "Eksploitasi - Kendaraan Dinas Gereja", "Pajak Kendaraan Roda 2(dua) : 1 unit, Plat BK. 5440 AGG"],
+
+  // Daya & Jasa
+  ["200.06", "Daya & Jasa", "Telepon Kantor (Gereja / Jemaat) : (061) 453-4521, Speedy, My republik dan Wa"],
+
+  // Pengadaan Inventaris Gereja
+  ["200.07", "Pengadaan Inventaris Gereja", "Jubah Penatua"],
+  ["200.07", "Pengadaan Inventaris Gereja", "Pengadaan Peralatan & Perlengkapan Inventaris Gereja"],
+  ["200.07", "Pengadaan Inventaris Gereja", "Dekorasi dan Persiapan Natal"],
+
+  // Ibadah Minggu
+  ["400.01", "Ibadah Minggu", "Pengkhotbah Minggu : Di Rumah Duka"],
+  ["400.01", "Ibadah Minggu", "Pengkhotbah Minggu : Remaja"],
+
+  // Ibadah / Persekutuan Doa / Kebaktian
+  ["400.02", "Ibadah / Persekutuan Doa / Kebaktian", "Pengkhotbah Kebaktian Lingkungan"],
+  ["400.02", "Ibadah / Persekutuan Doa / Kebaktian", "Pengkhotbah Kebaktian Pemuda-Pemudi & GSM"],
+  ["400.02", "Ibadah / Persekutuan Doa / Kebaktian", "Pengkhotbah Kebaktian Perkumpulan Koor Ibu-Ibu"],
+  ["400.02", "Ibadah / Persekutuan Doa / Kebaktian", "Pengkhotbah Kebaktian Ibu Hanna & Diakoni"],
+  ["400.02", "Ibadah / Persekutuan Doa / Kebaktian", "Pengkhotbah Kebaktian Lanjut Usia (LANSIA)"],
+
+  // Ibadah Khusus
+  ["400.03", "Ibadah Khusus", "Pengkhotbah Kebak. Perjanjian/Pemberkatan Nikah"],
+  ["400.03", "Ibadah Khusus", "Pengkhotbah Kebak. Penguburan Jenazah"],
+  ["400.03", "Ibadah Khusus", "Pengkhotbah Kebak. di Rumah Duka oleh Penatua"],
+
+  // Pendidikan & Pembinaan
+  ["600.01", "Pendidikan & Pembinaan", "Pendidikan Lanjutan Untuk Pendeta"],
+  ["600.01", "Pendidikan & Pembinaan", "Penghargaan Untuk Penatua"],
+  ["600.01", "Pendidikan & Pembinaan", "Pembinaan & Pelatihan Pelajar Sidi GKPI Medan Kota"],
+  ["600.01", "Pendidikan & Pembinaan", "Pembinaan Penatua se Resort Medan Barat"],
+
+  // Program Kerja Seksi
+  ["600.02", "Program Kerja Seksi", "Pembinaan & Pelayanan Rohani (PPR)"],
+  ["600.02", "Program Kerja Seksi", "Pekabaran Injil (PI)"],
+  ["600.02", "Program Kerja Seksi", "Diakoni"],
+  ["600.02", "Program Kerja Seksi", "Musik, Nyanyian & Koor (MNK)"],
+  ["600.02", "Program Kerja Seksi", "Sekolah Minggu"],
+  ["600.02", "Program Kerja Seksi", "Remaja"],
+  ["600.02", "Program Kerja Seksi", "Pemuda"],
+  ["600.02", "Program Kerja Seksi", "Perempuan"],
+  ["600.02", "Program Kerja Seksi", "Pria"],
+  ["600.02", "Program Kerja Seksi", "Lansia"],
+  ["600.02", "Program Kerja Seksi", "Kesehatan"],
+  ["600.02", "Program Kerja Seksi", "Pendidikan"],
+  ["600.02", "Program Kerja Seksi", "Usaha & Pengembangan Sumber Daya (UPSD)"],
+  ["600.02", "Program Kerja Seksi", "Sarana & Prasarana"],
+  ["600.02", "Program Kerja Seksi", "Natal Gabungan Seksi-seksi (Natal II)"]
+  ["600.03", "Bakti Bulanan / Target ke Kantor Pusat", "Target Ke Kantor Pusat GKPI"],
+  ["600.03", "Bakti Bulanan / Target ke Kantor Pusat", "Biaya Tahun Renstra GKPI 2023"],
+  ["600.03", "Bakti Bulanan / Target ke Kantor Pusat", "Kantor Sinode GKPI (Persembahan Kedua)"],
+  ["600.04", "Target Ke GKPI Ressort Medan Barat", "Target Ke GKPI Ressort Medan Barat"],
+
+
+  ["800.01", "Bantuan Kemanusiaan / Jemaat", "Bantuan ke Jemaat untuk musibah/bencana alam"],
+  ["800.01", "Bantuan Kemanusiaan / Jemaat", "Akomodasi Acara Penghiburan ke rumah duka"],
+  ["800.01", "Bantuan Kemanusiaan / Jemaat", "Bantuan untuk Dana Pensiun Pendeta GKPI"],
+  ["800.01", "Bantuan Kemanusiaan / Jemaat", "Bantuan untuk PA. Mamre dan Yapentra"],
+  ["800.01", "Bantuan Kemanusiaan / Jemaat", "Bantuan Ke GKPI Lainnya"],
+  ["800.02", "Bingkisan Natal", "Anak - Anak Sekolah Minggu"],
+  ["800.02", "Bingkisan Natal", "Penatua Purnabakti"],
+  ["800.02", "Bingkisan Natal", "Penatua Aktif"],
+  ["800.02", "Bingkisan Natal", "Calon Penatua"],
+  ["800.02", "Bingkisan Natal", "Pendeta GKPI Ressort Medan Barat"],
+  ["800.02", "Bingkisan Natal", "Anggota Majelis Jemaat : Ketua Seksi, Penasehat, PHBK"],
+  ["800.02", "Bingkisan Natal", "Guru-Guru Koor di Jemaat GKPI Medan Kota"],
+  ["800.02", "Bingkisan Natal", "Guru-Guru Sekolah Minggu"],
+  ["800.02", "Bingkisan Natal", "Pemusik : (Organis, Pianis dan Saxophonis)"],
+  ["800.02", "Bingkisan Natal", "Songleader (Pemandu Lagu)"],
+  ["800.02", "Bingkisan Natal", "Petugas Live Streaming Minggu"]
+];
+
+  // Pastikan struktur terdefinisi dan memiliki elemen
+  if (!Array.isArray(struktur) || struktur.length === 0) {
+      Logger.log("Struktur tidak terdefinisi atau kosong.");
+      return;
+  }
+
+  // Tulis Struktur Kategori & Subkategori
+  for (var i = 0; i < struktur.length; i++) {
+      if (!Array.isArray(struktur[i]) || struktur[i].length < 3) {
+          Logger.log("Data tidak lengkap atau tidak valid pada indeks: " + i);
+          continue; // Lewati iterasi jika data tidak lengkap atau tidak valid
+      }
+
+      wsTujuan.getRange(startRow, startCol).setValue(struktur[i][0]); // Kode Kategori
+      wsTujuan.getRange(startRow, startCol + 1).setValue(struktur[i][1]); // Nama Kategori
+      wsTujuan.getRange(startRow, startCol + 2).setValue(struktur[i][2]); // Uraian
+
+      var totalPerRow = 0;
+      for (var bulanIndex = 1; bulanIndex <= 12; bulanIndex++) {
+          var key = struktur[i][0] + "-" + struktur[i][1];
+          var kasBulan = (kelompok[key]?.kasPerBulan["Bulan " + bulanIndex]) || 0;
+          Logger.log("Menulis kas untuk " + key + " bulan " + bulanIndex + ": " + kasBulan);
+          wsTujuan.getRange(startRow, startCol + 2 + bulanIndex).setValue(kasBulan);
+          totalPerRow += kasBulan;
+      }
+
+      wsTujuan.getRange(startRow, startCol + 15).setValue(totalPerRow);
+      startRow++;
+  }
+
+  Logger.log("Selesai menulis data ke sheet tujuan.");
+  Logger.log("Proses pengelompokan data selesai.");
+}
+
+/**
+* Fungsi untuk mendapatkan nama bulan dalam bahasa Indonesia
+*/
+function getBulanNama(index) {
+  var bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  return bulan[index - 1];
+}
+-------------------------------
+array lengkap: function getPengeluaranGereja() {
+  const pengeluaranGereja = [
+    {
+      kategori: "ADMINISTRASI GEREJA",
+      subkategori: [
+        {
+          kode: "200.01",
+          nama: "TUNJANGAN & PENGGANTI TRANSPORT",
+          kegiatan: [
+            { no: 1, nama: "Pendeta Pimpinan Jemaat" },
+            { no: 2, nama: "Pendeta Khusus (diperbantukan) / Vikaris (Calon Pendeta GKPI)" },
+            { no: 3, nama: "Guru Jemaat" },
+            { no: 4, nama: "Sekretaris dan Bendahara Jemaat" },
+            { no: 5, nama: "Pegawai Administrasi: Kantor GKPI Medan Kota" },
+            { no: 6, nama: "Pegawai Kebersihan & Teknisi" },
+            {
+              no: 7,
+              nama: "Kegiatan Kebersihan & Teknisi",
+              sub_kegiatan: [
+                { no: 'a', nama: "Gedung Gereja" },
+                { no: 'b', nama: "Pekarangan & Taman Gereja" },
+                { no: 'c', nama: "Supir Mobil Dinas & Ambulance GKPI Medan Kota" },
+                { no: 'd', nama: "Jaga Malam" },
+                { no: 'e', nama: "Gedung Multifungsi" },
+                { no: 'f', nama: "Soundman" }
+              ]
+            },
+            { no: 8, nama: "Administrasi Guru Sekolah Minggu (dan Remaja)" },
+            { no: 9, nama: "Pengawas Parkir (Minggu & Hari Besar)" }
+          ]
+        },
+        {
+          kode: "200.02",
+          nama: "ADMINISTRASI KANTOR",
+          kegiatan: [
+            { no: 1, nama: "Alat Tulis Kantor, Penggandaan dan Cetakan" },
+            { no: 2, nama: "Rapat dan Pertemuan Majelis Jemaat" },
+            { no: 3, nama: "Insentif / Lembur Pegawai" },
+            { no: 4, nama: "Minum & Konsumsi Kantor, Jemaat & Tamu" },
+            {
+              no: 5,
+              nama: "Minum & Konsumsi Kantor, Jemaat",
+              sub_kegiatan: [
+                { no: 'a', nama: "Minum & Konsumsi Kantor, Jemaat" },
+                { no: 'b', nama: "Biaya Makan Tamu Gereja" },
+                { no: 'c', nama: "Biaya Snack untuk Pemusik & Songleader" }
+              ]
+            },
+            { no: 6, nama: "Penyediaan Kolportase (Al & Kal, Alkitab, Agenda, dll)" },
+            { no: 7, nama: "Transport, Kurir, Benda pos" }
+          ]
+        },
+        {
+          kode: "200.03",
+          nama: "ADMINISTRASI & UMUM",
+          kegiatan: [
+            { no: 1, nama: "Sermon Penatua" },
+            {
+              no: 2,
+              nama: "Snack dan Minuman Sermon Penatua",
+              sub_kegiatan: [
+                { no: 'a', nama: "Snack dan Minuman" },
+                { no: 'b', nama: "Penyediaan Makanan Pembukaan dan Penutupan" }
+              ]
+            },
+            { no: 3, nama: "Dana Pembinaan untuk Paduan Suara di GKPI Medan Kota" },
+            {
+              no: 4,
+              nama: "Syukuran Awal Tahun (Jemaat & Pendeta)",
+              sub_kegiatan: [
+                { no: 'a', nama: "Snack Kebaktian Pembukaan dan Tutup Tahun Gereja" },
+                { no: 'b', nama: "Snack Paskah dan Buha - Buha Ijuk" }
+              ]
+            },
+            { no: 5, nama: "Krans Bunga Dukacita bagi Anggota Jemaat" },
+            { no: 6, nama: "Bantuan Dukacita bagi Anggota Jemaat" },
+            {
+              no: 7,
+              nama: "Bunga untuk Altar",
+              sub_kegiatan: [
+                { no: 'a', nama: "Bunga altar pada Kebaktian Minggu" },
+                { no: 'b', nama: "Dekorasi pada Kebaktian Hari Besar Kristen" }
+              ]
+            },
+            { no: 8, nama: "Keamanan Acara Hari Besar Kristen" },
+            {
+              no: 9,
+              nama: "Penyelenggaraan Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023",
+              sub_kegiatan: [
+                { no: 'a', nama: "Kontribusi & Registrasi Peserta untuk Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023" },
+                { no: 'b', nama: "Perjalanan Dinas Peserta Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023" }
+              ]
+            },
+            { no: 10, nama: "Perjalanan Dinas atas undangan Kantor Pusat GKPI" },
+            { no: 11, nama: "Sidang Umum Jemaat GKPI Medan Kota" },
+            { no: 12, nama: "Biaya Tak Terduga / Insidentil" }
+          ]
+        },
+        {
+          kode: "200.04",
+          nama: "PEMELIHARAAN RUTIN GEREJA",
+          kegiatan: [
+            { no: 1, nama: "Gedung Gereja, Rumah Dinas & Pekarangan" },
+            { no: 2, nama: "Inventaris Gereja" }
+          ]
+        },
+        {
+          kode: "200.05",
+          nama: "EKSPLOITASI - KENDARAAN DINAS GEREJA",
+          kegiatan: [
+            {
+              no: 1,
+              nama: "Roda 4(Empat)",
+              sub_kegiatan: [
+                { no: 'a', nama: "Kijang Innova, Plat BK 1757 EJ" },
+                { no: 'b', nama: "Pajak Kenderaan Kijang Innova, Plat BK 1757 EJ" }
+              ]
+            },
+            {
+              no: 2,
+              nama: "Roda 4(Empat)",
+              sub_kegiatan: [
+                { no: 'a', nama: "HIACE BK.7866 DP" },
+                { no: 'b', nama: "Pajak Kenderaan Roda 4(Empat): HIACE BK.7866 DP" }
+              ]
+            },
+            {
+              no: 3,
+              nama: "Roda 2(dua)",
+              sub_kegiatan: [
+                { no: 'a', nama: "1 unit, Plat BK. 5440 AGG" },
+                { no: 'b', nama: "Pajak Kendaraan Roda 2(dua): 1 unit, Plat BK. 5440 AGG" }
+              ]
+            }
+          ]
+        },
+        {
+          kode: "200.06",
+          nama: "DAYA & JASA",
+          kegiatan: [
+            { no: 1, nama: "Telepon Kantor (Gereja / Jemaat): (061) 453-4521, Speedy, My republik dan Wa" }
+          ]
+        },
+        {
+          kode: "200.07",
+          nama: "PENGADAAN INVENTARIS GEREJA",
+          kegiatan: [
+            { no: 1, nama: "Jubah Penatua" },
+            { no: 2, nama: "Pengadaan Peralatan & Perlengkapan Inventaris Gereja" },
+            { no: 3, nama: "Dekorasi dan Persiapan Natal" }
+          ]
+        }
+      ]
+    },
+    {
+      kategori: "BIDANG APOSTOLAT",
+      subkategori: [
+        {
+          kode: "400.01",
+          nama: "IBADAH MINGGU",
+          kegiatan: [
+            { no: 1, nama: "Pengkhotbah Minggu: Pimpinan Sinode GKPI" },
+            { no: 2, nama: "Pengkhotbah Minggu: Dari Luar Kota" },
+            { no: 3, nama: "Pengkhotbah Minggu: Dari Dalam Kota" },
+            { no: 4, nama: "Pengkhotbah Minggu: Di Rumah Duka" },
+            { no: 5, nama: "Pengkhotbah Minggu: Remaja" }
+          ]
+        },
+        {
+          kode: "400.02",
+          nama: "IBADAH / PERSEKUTUAN DOA / KEBAKTIAN",
+          kegiatan: [
+            { no: 1, nama: "Pengkhotbah Kebaktian Lingkungan" },
+            { no: 2, nama: "Pengkhotbah Kebaktian Pemuda-Pemudi & GSM" },
+            { no: 3, nama: "Pengkhotbah Kebaktian Perkumpulan Koor Ibu-Ibu" },
+            { no: 4, nama: "Pengkhotbah Kebaktian Ibu Hanna & Diakoni" },
+            { no: 5, nama: "Pengkhotbah Kebaktian Lanjut Usia (LANSIA)" }
+          ]
+        },
+        {
+          kode: "400.03",
+          nama: "IBADAH KHUSUS",
+          kegiatan: [
+            { no: 1, nama: "Pengkhotbah Kebak. Perjanjian/Pemberkatan Nikah" },
+            { no: 2, nama: "Pengkhotbah Kebak. Penguburan Jenazah" },
+            { no: 3, nama: "Pengkhotbah Kebak. di Rumah Duka oleh Penatua" }
+          ]
+        },
+        {
+          kode: "400.04",
+          nama: "PETUGAS KEBAKTIAN",
+          kegiatan: [
+            { no: 1, nama: "Minggu Pagi: Pukul 08.00 WIB" },
+            { no: 2, nama: "Minggu Sore: Pukul 18.00 WIB" },
+            { no: 3, nama: "Sekolah Minggu & Remaja" },
+            { no: 4, nama: "Perjanjian / Pemberkatan Nikah" },
+            { no: 5, nama: "Kebaktian pemberangkatan jenazah (pemusik & songleader)" },
+            { no: 6, nama: "Kebaktian di Rumah Duka" },
+            { no: 7, nama: "Pelayanan di Rumah Duka" },
+            { no: 8, nama: "Guru Sekolah Minggu (Sermon & Mengajar)" },
+            { no: 9, nama: "Latihan Pemusik dan Songleader" },
+            { no: 10, nama: "Petugas Penghitung Kebaktian Minggu" }
+          ]
+        },
+        {
+          kode: "400.05",
+          nama: "PELAYANAN SAKRAMEN",
+          kegiatan: [
+            { no: 1, nama: "Perjamuan Kudus di Gereja" },
+            { no: 2, nama: "Snack Ujian Tulisan & Lisan Pelajar Sidi TA. 2021" }
+          ]
+        },
+        {
+          kode: "400.06",
+          nama: "HUT GKPI MEDAN KOTA",
+          kegiatan: []
+        }
+      ]
+    },
+    {
+      kategori: "BIDANG PASTORAT",
+      subkategori: [
+        {
+          kode: "600.01",
+          nama: "PENDIDIKAN & PEMBINAAN",
+          kegiatan: [
+            { no: 1, nama: "Pendidikan Lanjutan Untuk Pendeta" },
+            { no: 2, nama: "Penghargaan Untuk Penatua" },
+            { no: 3, nama: "Pembinaan & Pelatihan Pelajar Sidi GKPI Medan Kota" },
+            { no: 4, nama: "Pembinaan Penatua se Resort Medan Barat" }
+          ]
+        },
+        {
+          kode: "600.02",
+          nama: "PROGRAM KERJA SEKSI",
+          kegiatan: [
+            { no: 1, nama: "Pembinaan & Pelayanan Rohani (PPR)" },
+            { no: 2, nama: "Pekabaran Injil (PI)" },
+            { no: 3, nama: "Diakoni" },
+            { no: 4, nama: "Musik, Nyanyian & Koor (MNK)" },
+            { no: 5, nama: "Sekolah Minggu" },
+            { no: 6, nama: "Remaja" },
+            { no: 7, nama: "Pemuda" },
+            { no: 8, nama: "Perempuan" },
+            { no: 9, nama: "Pria" },
+            { no: 10, nama: "Lansia" },
+            { no: 11, nama: "Kesehatan" },
+            { no: 12, nama: "Pendidikan" },
+            { no: 13, nama: "Usaha & Pengembangan Sumber Daya (UPSD)" },
+            { no: 14, nama: "Sarana & Prasarana" },
+            { no: 15, nama: "Natal Gabungan Seksi-seksi (Natal II)" }
+          ]
+        },
+        {
+          kode: "600.03",
+          nama: "BAKTI BULANAN / TARGET KE KANTOR PUSAT",
+          kegiatan: [
+            { no: 1, nama: "Target Ke Kantor Pusat GKPI" },
+            { no: 2, nama: "Biaya Tahun Renstra GKPI 2023" },
+            { no: 3, nama: "Kantor Sinode GKPI (Persembahan Kedua)" }
+          ]
+        },
+        {
+          kode: "600.04",
+          nama: "Target Ke GKPI Ressort Medan Barat",
+          kegiatan: [
+            { no: 1, nama: "Target Ke GKPI Ressort Medan Barat" }
+          ]
+        }
+      ]
+    },
+    {
+      kategori: "BIDANG DIAKONAT",
+      subkategori: [
+        {
+          kode: "800.01",
+          nama: "BANTUAN KEMANUSIAAN / JEMAAT",
+          kegiatan: [
+            { no: 1, nama: "Bantuan ke Jemaat untuk musibah/bencana alam" },
+            { no: 2, nama: "Akomodasi Acara Penghiburan ke rumah duka" },
+            { no: 3, nama: "Bantuan untuk Dana Pensiun Pendeta GKPI" },
+            { no: 4, nama: "Bantuan untuk PA. Mamre dan Yapentra" },
+            { no: 5, nama: "Bantuan Ke GKPI Lainnya" }
+          ]
+        },
+        {
+          kode: "800.02",
+          nama: "BINGKISAN NATAL",
+          kegiatan: [
+            { no: 1, nama: "Anak - Anak Sekolah Minggu" },
+            { no: 2, nama: "Penatua Purnabakti" },
+            { no: 3, nama: "Penatua Aktif" },
+            { no: 4, nama: "Calon Penatua" },
+            { no: 5, nama: "Pendeta GKPI Ressort Medan Barat" },
+            { no: 6, nama: "Anggota Majelis Jemaat: Ketua Seksi, Penasehat, PHBK" },
+            { no: 7, nama: "Guru-Guru Koor di Jemaat GKPI Medan Kota" },
+            { no: 8, nama: "Guru-Guru Sekolah Minggu" },
+            { no: 9, nama: "Pemusik: (Organis, Pianis dan Saxophonis)" },
+            { no: 10, nama: "Songleader (Pemandu Lagu)" },
+            { no: 11, nama: "Petugas Live Streaming Minggu" }
+          ]
+        }
+      ]
+    }
+  ];
+  
+  return pengeluaranGereja;
+}
+-------------------
