@@ -9150,3 +9150,122 @@ kak Sitanggang +62 838-7020-6424
 
 
 Maya Simbolon istrinya tukang +62 895-6220-50003
+
+
+---------------------------
+14 feb
+program sheet 2 yang udah terbentuk format kode yg benar:
+Sub kelompokkanData()
+    Dim wsSumber As Worksheet, wsTujuan As Worksheet
+    Dim wb As Workbook
+    Set wb = ThisWorkbook
+    
+    Set wsSumber = wb.Sheets("JUR PENGEL JEMAAT 2024")
+    Set wsTujuan = wb.Sheets("REKAP PENGEL JEMAAT 2024")
+    
+    If wsSumber Is Nothing Or wsTujuan Is Nothing Then
+        MsgBox "Sheet tidak ditemukan. Pastikan 'JUR PENGEL JEMAAT 2024' dan 'REKAP PENGEL JEMAAT 2024' tersedia."
+        Exit Sub
+    End If
+    
+    Dim data As Variant
+    data = wsSumber.UsedRange.Value
+    
+    If UBound(data, 1) < 3 Then
+        MsgBox "Tidak ada data untuk diproses."
+        Exit Sub
+    End If
+    
+    Dim kelompok As Object
+    Set kelompok = CreateObject("Scripting.Dictionary")
+    
+    Dim i As Integer, j As Integer
+    Dim tgl As Variant, kwitansi As Variant, uraian As Variant, kas As Variant
+    Dim kodeSub As String, bulan As String
+    
+    For i = 4 To UBound(data, 1) ' Mulai dari baris ke-4
+        tgl = data(i, 1)
+        kwitansi = data(i, 2)
+        uraian = data(i, 3)
+        kas = data(i, 4)
+        
+        If IsDate(tgl) Then
+            bulan = "Bulan " & Month(tgl)
+        Else
+            bulan = "Undef"
+        End If
+        
+        kodeSub = Trim(data(i, 5) & data(i, 7) & data(i, 9) & data(i, 11))
+        If kodeSub = "" Then kodeSub = "Uang Setoran"
+        
+        If Not kelompok.exists(bulan) Then
+            kelompok.Add bulan, CreateObject("Scripting.Dictionary")
+        End If
+        
+        If Not kelompok(bulan).exists(kodeSub) Then
+            kelompok(bulan).Add kodeSub, Array()
+        End If
+        
+        Dim tempArray As Variant
+        tempArray = kelompok(bulan)(kodeSub)
+        ReDim Preserve tempArray(UBound(tempArray) + 1)
+        tempArray(UBound(tempArray)) = Array(tgl, kwitansi, uraian, kas, kodeSub)
+        kelompok(bulan)(kodeSub) = tempArray
+    Next i
+    
+    wsTujuan.Cells.Clear
+    
+    Dim startRow As Integer, startCol As Integer
+    startCol = 1
+    Dim colSpacing As Integer
+    colSpacing = 3
+    
+    Dim bulanKey As Variant, kodeSubKey As Variant
+    For Each bulanKey In kelompok.keys
+        startRow = 1
+        wsTujuan.Cells(startRow, startCol).Value = bulanKey
+        startRow = startRow + 1
+        
+        For Each kodeSubKey In kelompok(bulanKey).keys
+            wsTujuan.Cells(startRow, startCol).Value = "Subkategori: " & kodeSubKey
+            startRow = startRow + 1
+            
+            wsTujuan.Cells(startRow, startCol).Resize(1, 5).Value = Array("Tanggal", "Kwitansi", "Uraian", "Kas", "Kode Subkategori")
+            startRow = startRow + 1
+            
+            Dim dataKodeSub As Variant
+            dataKodeSub = kelompok(bulanKey)(kodeSubKey)
+            
+            Dim sortedData() As Variant
+            sortedData = dataKodeSub
+            
+            Dim r As Integer, c As Integer
+            Dim totalKas As Double
+            totalKas = 0
+            
+            For r = LBound(sortedData) To UBound(sortedData)
+                If UBound(sortedData(r)) >= 3 Then
+                    If Not IsEmpty(sortedData(r)(3)) And IsNumeric(sortedData(r)(3)) Then
+                        totalKas = totalKas + CDbl(sortedData(r)(3))
+                    End If
+                End If
+                For c = LBound(sortedData(r)) To UBound(sortedData(r))
+                    wsTujuan.Cells(startRow + r, startCol + c).Value = sortedData(r)(c)
+                Next c
+            Next r
+            
+            startRow = startRow + UBound(sortedData) + 1
+            
+            ' Menampilkan total kas
+            wsTujuan.Cells(startRow, startCol).Value = "Total Kas " & kodeSubKey
+            wsTujuan.Cells(startRow, startCol + 3).Value = totalKas
+            startRow = startRow + 2
+        Next kodeSubKey
+        
+        startCol = startCol + 7 + colSpacing
+    Next bulanKey
+    
+    MsgBox "Pengecekan kode sub, pengelompokan data, dan perhitungan total kas selesai."
+End Sub
+
+--------------------------
