@@ -9801,7 +9801,7 @@ Kode mata anggaran yang lengkap:
             rowIndex = rowIndex + 1
         End If
     Next dictKey
-    
+     
     For Each dictKey In totalKas.keys
         Dim keySplit() As String
         keySplit = Split(dictKey, "|")
