@@ -11497,7 +11497,9 @@ End Sub
 
 
 
+izinkan semua pengguna akses rdp
 
+Add-LocalGroupMember -Group "Remote Desktop Users" -Member "Everyone"
 
 --------------------
 
@@ -11533,3 +11535,4 @@ Untuk mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanp
 - Beberapa perubahan mungkin memerlukan Anda untuk log off dan log in kembali agar sepenuhnya berlaku.
 
 Dengan mengikuti langkah-langkah di atas, Anda dapat mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanpa perlu me-restart komputer Anda. 
+>>>>>>> 5b7f152501f1a4cac5d0e75cb6d9a96156620519
