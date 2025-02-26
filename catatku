@@ -11499,3 +11499,37 @@ End Sub
 
 
 
+--------------------
+
+
+cara setting rdp di windows 10 pake powershell
+Untuk mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanpa harus me-restart komputer, Anda dapat menggunakan PowerShell dengan langkah-langkah berikut:
+
+1. **Aktifkan Remote Desktop:**
+   - Buka PowerShell dengan hak administrator.
+   - Jalankan perintah berikut untuk mengaktifkan Remote Desktop:
+
+     ```powershell
+     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
+     ```
+
+   - Izinkan koneksi Remote Desktop melalui Windows Firewall dengan perintah:
+
+     ```powershell
+     Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'
+     ```
+
+2. **Perbarui Pengaturan Kebijakan Grup:**
+   - Untuk menerapkan perubahan kebijakan grup tanpa me-restart, jalankan perintah berikut:
+
+     ```powershell
+     gpupdate /force
+     ```
+
+     Perintah ini akan memaksa pembaruan kebijakan grup segera.
+
+**Catatan:**
+- Pastikan Anda menjalankan PowerShell dengan hak administrator untuk menghindari masalah izin.
+- Beberapa perubahan mungkin memerlukan Anda untuk log off dan log in kembali agar sepenuhnya berlaku.
+
+Dengan mengikuti langkah-langkah di atas, Anda dapat mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanpa perlu me-restart komputer Anda. 
