@@ -11504,38 +11504,93 @@ Add-LocalGroupMember -Group "Remote Desktop Users" -Member "Everyone"
 --------------------
 
 
-cara setting rdp di windows 10 pake powershell
-Untuk mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanpa harus me-restart komputer, Anda dapat menggunakan PowerShell dengan langkah-langkah berikut:
+cara setting rdp di windows 10 pake powershellUntuk mengatur **Remote Desktop** agar dapat diakses oleh komputer dalam satu jaringan **tanpa autentikasi dan password**, Anda perlu melakukan beberapa konfigurasi pada sistem Windows. Namun, perlu diingat bahwa menghilangkan autentikasi dan password dapat membahayakan keamanan sistem Anda. Pastikan Anda memahami risiko keamanan sebelum melanjutkan.
 
-1. **Aktifkan Remote Desktop:**
-   - Buka PowerShell dengan hak administrator.
-   - Jalankan perintah berikut untuk mengaktifkan Remote Desktop:
+Berikut adalah langkah-langkah untuk mengaktifkan Remote Desktop tanpa autentikasi dan password menggunakan **PowerShell**:
 
-     ```powershell
-     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
-     ```
+---
 
-   - Izinkan koneksi Remote Desktop melalui Windows Firewall dengan perintah:
+### **1. Aktifkan Remote Desktop**
+Anda perlu mengaktifkan fitur Remote Desktop di Windows. Jalankan perintah berikut di PowerShell (sebagai Administrator):
 
-     ```powershell
-     Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'
-     ```
+```powershell
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+```
 
-2. **Perbarui Pengaturan Kebijakan Grup:**
-   - Untuk menerapkan perubahan kebijakan grup tanpa me-restart, jalankan perintah berikut:
+Perintah ini akan mengaktifkan Remote Desktop dengan mengubah nilai registry `fDenyTSConnections` menjadi `0`.
 
-     ```powershell
-     gpupdate /force
-     ```
+---
 
-     Perintah ini akan memaksa pembaruan kebijakan grup segera.
+### **2. Nonaktifkan Network Level Authentication (NLA)**
+Network Level Authentication (NLA) adalah lapisan keamanan yang memerlukan autentikasi sebelum koneksi Remote Desktop dibuat. Untuk menonaktifkan NLA, jalankan perintah berikut:
 
-**Catatan:**
-- Pastikan Anda menjalankan PowerShell dengan hak administrator untuk menghindari masalah izin.
-- Beberapa perubahan mungkin memerlukan Anda untuk log off dan log in kembali agar sepenuhnya berlaku.
+```powershell
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 0
+```
 
-Dengan mengikuti langkah-langkah di atas, Anda dapat mengaktifkan Remote Desktop dan memperbarui pengaturan kebijakan grup tanpa perlu me-restart komputer Anda. 
-------------------
+Perintah ini akan menonaktifkan NLA dengan mengubah nilai registry `UserAuthentication` menjadi `0`.
+
+---
+
+### **3. Izinkan Pengguna untuk Login Tanpa Password**
+Untuk memungkinkan pengguna login tanpa password, Anda perlu mengubah kebijakan keamanan lokal. Jalankan perintah berikut:
+
+```powershell
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LimitBlankPasswordUse" -Value 0
+```
+
+Perintah ini akan mengizinkan pengguna dengan akun tanpa password untuk login.
+
+---
+
+### **4. Nonaktifkan Persyaratan Password untuk Akun Pengguna**
+Anda juga perlu menonaktifkan persyaratan password untuk akun pengguna tertentu. Jalankan perintah berikut:
+
+```powershell
+Set-LocalUser -Name "NamaPengguna" -PasswordNeverExpires $true -PasswordNotRequired $true
+```
+
+Ganti `NamaPengguna` dengan nama akun pengguna yang ingin Anda izinkan login tanpa password.
+
+---
+
+### **5. Izinkan Remote Desktop di Firewall**
+Pastikan firewall mengizinkan koneksi Remote Desktop. Jalankan perintah berikut:
+
+```powershell
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+```
+
+Perintah ini akan mengaktifkan aturan firewall untuk Remote Desktop.
+
+---
+
+### **6. Restart Komputer**
+Setelah melakukan perubahan, restart komputer untuk menerapkan konfigurasi:
+
+```powershell
+Restart-Computer -Force
+```
+
+---
+
+### **7. Akses Remote Desktop Tanpa Password**
+Setelah restart, Anda dapat mengakses komputer tersebut dari komputer lain dalam jaringan yang sama menggunakan Remote Desktop tanpa perlu memasukkan password.
+
+---
+
+### **Catatan Penting**
+1. **Risiko Keamanan**:
+   - Menonaktifkan autentikasi dan password membuat sistem Anda rentan terhadap serangan. Pastikan Anda hanya melakukan ini di lingkungan yang aman dan terpercaya.
+   - Jangan pernah menggunakan konfigurasi ini di jaringan publik atau tidak terpercaya.
+
+2. **Hanya untuk Penggunaan Lokal**:
+   - Konfigurasi ini hanya direkomendasikan untuk penggunaan di jaringan lokal (LAN) yang aman.
+
+3. **Alternatif yang Lebih Aman**:
+   - Jika memungkinkan, gunakan autentikasi dan password untuk melindungi sistem Anda. Anda dapat menggunakan fitur seperti **Windows Hello** atau **akun Microsoft** untuk meningkatkan keamanan.
+
+--- -----------------------
 
 
 Sub SalinTotalKeSheet3_Horizontal()
