@@ -14100,3 +14100,5 @@ Sub InisialisasiUraian(dict As Object)
     dict.Add "800.02.10", "Songleader (Pemandu Lagu)"
     dict.Add "800.02.11", "Petugas Live Streaming Minggu"
 End Sub
+---------------
+
