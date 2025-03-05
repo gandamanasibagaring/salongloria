@@ -13507,3 +13507,68 @@ Sub InisialisasiUraian(dict As Object)
     dict.Add "800.02.10", "Songleader (Pemandu Lagu)"
     dict.Add "800.02.11", "Petugas Live Streaming Minggu"
 End Sub
+--------------------------
+Sheet 3 dari file "JURNAL PENGELUARAN JEMAAT 2024.xls" memiliki struktur yang terorganisir dengan baik dan berisi catatan pengeluaran jemaat untuk tahun 2024. Berikut adalah analisis struktur dan konten dari sheet tersebut:
+
+### 1. **Header dan Metadata**
+   - **Judul Sheet**: "JUR PENGEL JEMAAT 2024" (Jurnal Pengeluaran Jemaat 2024).
+   - **Header Kolom**: 
+     - **Kolom A**: Tanggal (TGL.)
+     - **Kolom B**: Kode (KW)
+     - **Kolom C**: Uraian (URAIAN)
+     - **Kolom D**: Kredit (KREDIT)
+     - **Kolom E**: Debet (DEBET)
+     - **Kolom F**: KAS
+     - **Kolom G**: MATA ANGGARAN (kode anggaran)
+     - **Kolom H**: Jumlah yang disetor (Uang yang di setor)
+
+### 2. **Struktur Data**
+   - **Baris 1**: Judul sheet, yaitu "JURNAL PENGELUARAN JEMAAT 2024".
+   - **Baris 2**: Header kolom yang menjelaskan isi dari setiap kolom.
+   - **Baris 3**: Keterangan kolom untuk kode anggaran (200, 400, 600, 800).
+   - **Baris 4 dan seterusnya**: Data transaksi pengeluaran jemaat.
+
+### 3. **Kolom dan Deskripsi**
+   - **Kolom A (TGL.)**: Menunjukkan tanggal transaksi pengeluaran.
+   - **Kolom B (KW)**: Kode transaksi atau nomor referensi.
+   - **Kolom C (URAIAN)**: Deskripsi atau penjelasan mengenai transaksi pengeluaran.
+   - **Kolom D (KREDIT)**: Jumlah uang yang dikeluarkan (dalam rupiah).
+   - **Kolom E (DEBET)**: Biasanya kosong, karena ini adalah jurnal pengeluaran.
+   - **Kolom F (KAS)**: Jumlah uang yang dikeluarkan dari kas.
+   - **Kolom G (MATA ANGGARAN)**: Kode anggaran yang terkait dengan pengeluaran tersebut (misalnya, 200, 400, 600, 800).
+   - **Kolom H (Uang yang di setor)**: Jumlah uang yang disetor ke bank atau rekening tertentu.
+
+### 4. **Kode Anggaran**
+   - **200**: Kemungkinan besar terkait dengan pengeluaran operasional sehari-hari (seperti konsumsi, transportasi, dll).
+   - **400**: Kemungkinan terkait dengan pengeluaran untuk kegiatan ibadah atau pelayanan (seperti transportasi petugas ibadah, pengkhotbah, dll).
+   - **600**: Kemungkinan terkait dengan pengeluaran untuk kegiatan sosial atau diakonia (seperti bantuan kepada penerima beras, kunjungan kasih, dll).
+   - **800**: Kemungkinan terkait dengan pengeluaran untuk kontribusi atau bantuan ke organisasi lain (seperti dana pensiun, PA Mamre, Yapentra, dll).
+
+### 5. **Contoh Data**
+   - **Contoh 1**:
+     - **Tanggal**: 2024-01-05
+     - **Kode**: 16702
+     - **Uraian**: "Transp. Petugas Live Streaming Kebak. Minggu tgl. 01 Jan 2024 (10,00 WIB)"
+     - **Kredit**: 200000
+     - **KAS**: 200000
+     - **Mata Anggaran**: 400,04,01
+     - **Uang yang di setor**: Kosong
+   - **Contoh 2**:
+     - **Tanggal**: 2024-01-05
+     - **Kode**: 16801
+     - **Uraian**: "Transp. Petugas Kebak. Tahun Baru tgl. 01 Jan 2024 (10,00 WIB)"
+     - **Kredit**: 350000
+     - **KAS**: 350000
+     - **Mata Anggaran**: 400,04,01
+     - **Uang yang di setor**: Kosong
+
+### 6. **Total Pengeluaran**
+   - Di bagian bawah sheet, terdapat total pengeluaran untuk setiap bulan (misalnya, "JANUARI 2024", "FEBRUARI 2024", dst).
+   - Total pengeluaran dihitung berdasarkan jumlah kredit yang dikeluarkan selama bulan tersebut.
+
+### 7. **Kesimpulan Struktur**
+   - Sheet ini berfungsi sebagai **jurnal pengeluaran** yang mencatat semua transaksi pengeluaran jemaat selama tahun 2024.
+   - Setiap transaksi memiliki **tanggal, kode, uraian, jumlah kredit, kode anggaran**, dan **jumlah yang disetor** (jika ada).
+   - Kode anggaran digunakan untuk mengkategorikan pengeluaran berdasarkan jenis kegiatan atau tujuan pengeluaran.
+
+Dengan struktur ini, sheet 3 memungkinkan pelacakan dan pengelolaan keuangan jemaat secara terperinci dan terorganisir.
