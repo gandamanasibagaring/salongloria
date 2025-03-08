@@ -15245,3 +15245,594 @@ Sub InisialisasiUraian(dict As Object)
     dict.Add "800.02.10", "Songleader (Pemandu Lagu)"
     dict.Add "800.02.11", "Petugas Live Streaming Minggu"
 End Sub
+--------------------------
+udah bisa sheet 3 nya tanpa ada spasi pada kategori :
+Sub SalinTotalKeSheet3_Horizontal()
+    Dim wsSumber As Worksheet, wsTujuan As Worksheet
+    Dim wb As Workbook
+    Set wb = ThisWorkbook
+    
+    ' Pastikan sheet sumber dan tujuan ada
+    Set wsSumber = wb.Sheets("1")
+    Set wsTujuan = wb.Sheets("3")
+    
+    If wsSumber Is Nothing Or wsTujuan Is Nothing Then
+        MsgBox "Sheet tidak ditemukan. Pastikan '1' dan '3' tersedia.", vbExclamation
+        Exit Sub
+    End If
+    
+    Dim data As Variant
+    data = wsSumber.UsedRange.Value
+    
+    ' Pastikan ada data untuk diproses
+    If UBound(data, 1) < 4 Then
+        MsgBox "Tidak ada data untuk diproses.", vbExclamation
+        Exit Sub
+    End If
+    
+    ' Dictionary untuk menyimpan total kas per kategori, subkategori, dan bulan
+    Dim totalKas As Object
+    Set totalKas = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan uraian kode subkategori
+    Dim uraianDict As Object
+    Set uraianDict = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan subkategori per kategori
+    Dim subKategoriDict As Object
+    Set subKategoriDict = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan semua bulan yang ada
+    Dim allBulan As Object
+    Set allBulan = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan semua kategori yang ada
+    Dim kategoriDict As Object
+    Set kategoriDict = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan total per kategori dan bulan
+    Dim totalPerKategoriBulan As Object
+    Set totalPerKategoriBulan = CreateObject("Scripting.Dictionary")
+    
+    ' Dictionary untuk menyimpan total per kelompok 3 angka sama di depan
+    Dim totalPerKelompok As Object
+    Set totalPerKelompok = CreateObject("Scripting.Dictionary")
+
+    ' Dictionary untuk menyimpan total keseluruhan per bulan
+    Dim totalKeseluruhanPerBulan As Object
+    Set totalKeseluruhanPerBulan = CreateObject("Scripting.Dictionary")
+
+    ' Inisialisasi uraian kode subkategori
+    Call InisialisasiUraian(uraianDict)
+    
+    Dim i As Long
+    Dim tgl As Variant, kas As Double
+    Dim kodeSub As String, kategori As String, bulan As String
+    Dim kelompokKey As String
+    Dim kelompokTotalKey As String
+    
+    ' Loop melalui data sumber
+    For i = 4 To UBound(data, 1)
+        tgl = data(i, 1)
+        kas = 0
+        
+        ' Ambil nilai kas dari kolom 4
+        If Not IsEmpty(data(i, 4)) And IsNumeric(data(i, 4)) Then
+            kas = data(i, 4)
+        End If
+        
+        ' Ambil bulan dari tanggal
+        If IsDate(tgl) Then
+            bulan = Format(tgl, "mmmm yyyy")
+        Else
+            bulan = "Tidak Diketahui"
+        End If
+        
+        ' Ambil kode subkategori dari kolom yang valid
+        kodeSub = CleanCode(Trim(data(i, 5) & " " & data(i, 7) & " " & data(i, 9) & " " & data(i, 11)))
+        
+        ' Jika kode tidak ditemukan, beri default "Uang Setoran"
+        If kodeSub = "" Then
+            kodeSub = "Uang Setoran"
+            kategori = "Uang Setoran" ' Khusus untuk "Uang Setoran", kategori sama dengan kodeSub
+        Else
+            ' Ambil kategori utama (6 karakter awal kode, misalnya '200.01')
+            If Len(kodeSub) >= 6 Then
+                kategori = Left(kodeSub, 6)
+            Else
+                kategori = kodeSub
+            End If
+        End If
+        
+        ' Tambahkan ke daftar kategori jika belum ada
+        If Not kategoriDict.exists(kategori) Then
+            kategoriDict.Add kategori, Nothing
+            subKategoriDict.Add kategori, CreateObject("Scripting.Dictionary")
+        End If
+        
+        ' Tambahkan ke daftar bulan jika belum ada
+        If Not allBulan.exists(bulan) Then
+            allBulan.Add bulan, Nothing
+            totalKeseluruhanPerBulan.Add bulan, 0 ' Inisialisasi total keseluruhan per bulan
+        End If
+        
+        ' Buat key unik berdasarkan kategori, kode subkategori, dan bulan
+        Dim uniqueKey As String
+        uniqueKey = kategori & "|" & kodeSub & "|" & bulan
+        
+        ' Akumulasi total kas per kategori dan subkategori
+        If Not subKategoriDict(kategori).exists(kodeSub) Then
+            subKategoriDict(kategori).Add kodeSub, Nothing
+        End If
+
+        If totalKas.exists(uniqueKey) Then
+            totalKas(uniqueKey) = totalKas(uniqueKey) + kas
+        Else
+            totalKas.Add uniqueKey, kas
+        End If
+        
+        ' Akumulasi total keseluruhan per bulan
+        totalKeseluruhanPerBulan(bulan) = totalKeseluruhanPerBulan(bulan) + kas
+        
+        ' Ambil 3 angka pertama dari kode subkategori
+        If Len(kodeSub) >= 3 Then
+            kelompokKey = Left(kodeSub, 3)
+        Else
+            kelompokKey = kodeSub
+        End If
+
+        ' Akumulasi total per kelompok
+        kelompokTotalKey = kelompokKey & "|" & bulan
+        If totalPerKelompok.exists(kelompokTotalKey) Then
+            totalPerKelompok(kelompokTotalKey) = totalPerKelompok(kelompokTotalKey) + kas
+        Else
+            totalPerKelompok.Add kelompokTotalKey, kas
+        End If
+
+        ' Akumulasi total per kategori dan bulan
+        Dim totalKey As String
+        totalKey = kategori & "|" & bulan
+        If totalPerKategoriBulan.exists(totalKey) Then
+            totalPerKategoriBulan(totalKey) = totalPerKategoriBulan(totalKey) + kas
+        Else
+            totalPerKategoriBulan.Add totalKey, kas
+        End If
+    Next i
+    
+    ' Bersihkan sheet tujuan sebelum menulis data baru
+    wsTujuan.Cells.Clear
+    wsTujuan.Cells(1, 1).Value = "Kategori"
+    wsTujuan.Cells(1, 2).Value = "Kode Subkategori"
+    wsTujuan.Cells(1, 3).Value = "Uraian"
+    
+    ' Atur header bulan secara horizontal
+    Dim bulanList() As String, idx As Long
+    idx = 0
+    ReDim bulanList(allBulan.Count - 1)
+    
+    Dim bulanKey As Variant
+    For Each bulanKey In allBulan.keys
+        bulanList(idx) = bulanKey
+        idx = idx + 1
+    Next bulanKey
+    
+    ' Pastikan array bulan diurutkan dengan benar
+    Call BubbleSort(bulanList)
+    
+    Dim bulanCol As Object
+    Set bulanCol = CreateObject("Scripting.Dictionary")
+    
+    Dim colIndex As Long
+    colIndex = 4
+    For Each bulanKey In bulanList
+        wsTujuan.Cells(1, colIndex).Value = bulanKey
+        bulanCol.Add bulanKey, colIndex
+        colIndex = colIndex + 1
+    Next bulanKey
+    
+    ' Tambahkan kolom Total di sebelah kanan
+    wsTujuan.Cells(1, colIndex).Value = "Total"
+    
+    ' Proses menuliskan data ke sheet 3 berdasarkan kategori dan subkategori
+    Dim rowIndex As Long
+    rowIndex = 2
+
+    ' Dictionary untuk menyimpan total sementara per kelompok
+    Dim tempTotalPerKelompok As Object
+    Set tempTotalPerKelompok = CreateObject("Scripting.Dictionary")
+
+    ' Urutkan kategori dan subkategori
+    Dim sortedKategoriKeys As Variant
+    sortedKategoriKeys = SortKeysByDictionaryOrder(kategoriDict.keys)
+    
+    ' Loop melalui setiap kategori
+    For Each kategoriKey In sortedKategoriKeys
+        ' Jika kategori adalah "Uang Setoran", tulis sebagai kategori terpisah
+        If kategoriKey = "Uang Setoran" Then
+            wsTujuan.Cells(rowIndex, 1).Value = "Uang Setoran"
+            wsTujuan.Cells(rowIndex, 2).Value = ""
+            wsTujuan.Cells(rowIndex, 3).Value = ""
+            
+            ' Tulis total per bulan untuk "Uang Setoran"
+            Dim totalUangSetoran As Double
+            totalUangSetoran = 0
+            For Each bulanKey In bulanCol.keys
+                totalKey = kategoriKey & "|" & bulanKey
+                If totalPerKategoriBulan.exists(totalKey) Then
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalPerKategoriBulan(totalKey)
+                    totalUangSetoran = totalUangSetoran + totalPerKategoriBulan(totalKey)
+                    ' Beri warna hijau pada sel yang berisi nilai
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(146, 208, 80) ' Warna hijau
+                Else
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                End If
+            Next bulanKey
+            
+            ' Tulis total Uang Setoran di kolom Total
+            wsTujuan.Cells(rowIndex, colIndex).Value = totalUangSetoran
+            wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(146, 208, 80) ' Warna hijau
+            
+            rowIndex = rowIndex + 1
+        Else
+            ' Lanjutkan dengan logika yang sudah ada untuk kategori lainnya
+            Dim firstRowInCategory As Long
+            firstRowInCategory = rowIndex
+
+            ' Ambil 3 angka pertama dari kategori sebagai kelompokKey
+            kelompokKey = Left(kategoriKey, 3)
+
+            ' Jika kelompok ini belum diproses, inisialisasi total sementara
+            If Not tempTotalPerKelompok.exists(kelompokKey) Then
+                tempTotalPerKelompok.Add kelompokKey, CreateObject("Scripting.Dictionary")
+            End If
+
+            ' Urutkan subkategori
+            Dim sortedSubKategoriKeys As Variant
+            sortedSubKategoriKeys = SortKeysByDictionaryOrder(subKategoriDict(kategoriKey).keys)
+            
+            ' Loop melalui setiap subkategori dalam kategori
+            For Each subKategoriKey In sortedSubKategoriKeys
+                ' Tulis data kategori dan subkategori
+                wsTujuan.Cells(rowIndex, 1).Value = kategoriKey ' Kategori
+                wsTujuan.Cells(rowIndex, 2).Value = subKategoriKey ' Kode Subkategori
+                
+                ' Tambahkan uraian jika tersedia
+                If uraianDict.exists(subKategoriKey) Then
+                    wsTujuan.Cells(rowIndex, 3).Value = uraianDict(subKategoriKey)
+                Else
+                    wsTujuan.Cells(rowIndex, 3).Value = "Uraian Tidak Diketahui"
+                End If
+                
+                ' Tulis total per bulan
+                Dim bulanColumn As Long
+                Dim totalSubKategori As Double
+                totalSubKategori = 0
+                For Each bulanKey In bulanCol.keys
+                    uniqueKey = kategoriKey & "|" & subKategoriKey & "|" & bulanKey
+                    If totalKas.exists(uniqueKey) Then
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalKas(uniqueKey)
+                        totalSubKategori = totalSubKategori + totalKas(uniqueKey)
+                        
+                        ' Akumulasi total sementara per kelompok dan bulan
+                        kelompokTotalKey = kelompokKey & "|" & bulanKey
+                        If tempTotalPerKelompok(kelompokKey).exists(bulanKey) Then
+                            tempTotalPerKelompok(kelompokKey)(bulanKey) = tempTotalPerKelompok(kelompokKey)(bulanKey) + totalKas(uniqueKey)
+                        Else
+                            tempTotalPerKelompok(kelompokKey).Add bulanKey, totalKas(uniqueKey)
+                        End If
+                    Else
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                    End If
+                Next bulanKey
+                
+                ' Tulis total subkategori di kolom Total
+                wsTujuan.Cells(rowIndex, colIndex).Value = totalSubKategori
+                wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(146, 208, 80) ' Warna hijau
+                
+                rowIndex = rowIndex + 1
+            Next subKategoriKey
+            
+            ' Tulis total per kategori dan bulan setelah semua subkategori selesai
+            wsTujuan.Cells(rowIndex, 1).Value = "Total " & kategoriKey
+            wsTujuan.Cells(rowIndex, 2).Value = ""
+            wsTujuan.Cells(rowIndex, 3).Value = ""
+            
+            Dim totalKategori As Double
+            totalKategori = 0
+            For Each bulanKey In bulanCol.keys
+                totalKey = kategoriKey & "|" & bulanKey
+                If totalPerKategoriBulan.exists(totalKey) Then
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalPerKategoriBulan(totalKey)
+                    totalKategori = totalKategori + totalPerKategoriBulan(totalKey)
+                    ' Beri warna hijau pada sel yang berisi nilai
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(146, 208, 80) ' Warna hijau
+                Else
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                End If
+            Next bulanKey
+            
+            ' Tulis total kategori di kolom Total
+            wsTujuan.Cells(rowIndex, colIndex).Value = totalKategori
+            wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(146, 208, 80) ' Warna hijau
+            
+            rowIndex = rowIndex + 1
+
+            ' Cek apakah ini adalah kategori terakhir dalam kelompok
+            Dim isLastKategoriInKelompok As Boolean
+            isLastKategoriInKelompok = True
+            For Each k In sortedKategoriKeys
+                If Left(k, 3) = kelompokKey And k > kategoriKey Then
+                    isLastKategoriInKelompok = False
+                    Exit For
+                End If
+            Next k
+
+            ' Jika ini adalah kategori terakhir dalam kelompok, tulis total kelompok
+            If isLastKategoriInKelompok Then
+                ' Tulis total per kelompok
+                wsTujuan.Cells(rowIndex, 1).Value = "Total Kelompok " & kelompokKey
+                wsTujuan.Cells(rowIndex, 2).Value = ""
+                wsTujuan.Cells(rowIndex, 3).Value = ""
+
+                Dim totalKelompok As Double
+                totalKelompok = 0
+                For Each bulanKey In bulanCol.keys
+                    kelompokTotalKey = kelompokKey & "|" & bulanKey
+                    If tempTotalPerKelompok(kelompokKey).exists(bulanKey) Then
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = tempTotalPerKelompok(kelompokKey)(bulanKey)
+                        totalKelompok = totalKelompok + tempTotalPerKelompok(kelompokKey)(bulanKey)
+                        ' Beri warna kuning pada sel yang berisi nilai
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(255, 255, 0) ' Warna kuning
+                    Else
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                    End If
+                Next bulanKey
+
+                ' Tulis total kelompok di kolom Total
+                wsTujuan.Cells(rowIndex, colIndex).Value = totalKelompok
+                wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(255, 255, 0) ' Warna kuning
+
+                rowIndex = rowIndex + 1
+            End If
+        End If
+    Next kategoriKey
+
+    ' Tulis Total Keseluruhan di baris terakhir
+    wsTujuan.Cells(rowIndex, 1).Value = "Total Keseluruhan"
+    wsTujuan.Cells(rowIndex, 2).Value = ""
+    wsTujuan.Cells(rowIndex, 3).Value = ""
+    
+    Dim totalKeseluruhan As Double
+    totalKeseluruhan = 0
+    For Each bulanKey In bulanCol.keys
+        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalKeseluruhanPerBulan(bulanKey)
+        totalKeseluruhan = totalKeseluruhan + totalKeseluruhanPerBulan(bulanKey)
+        ' Beri warna biru pada sel yang berisi nilai
+        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(0, 176, 240) ' Warna biru
+    Next bulanKey
+    
+    ' Tulis total keseluruhan di kolom Total
+    wsTujuan.Cells(rowIndex, colIndex).Value = totalKeseluruhan
+    wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(0, 176, 240) ' Warna biru
+End Sub
+
+' Fungsi untuk mengurutkan kunci dictionary
+Function SortKeysByDictionaryOrder(keys As Variant) As Variant
+    Dim sortedList As Collection
+    Set sortedList = New Collection
+    Dim key As Variant
+    
+    ' Tambahkan kunci ke koleksi
+    For Each key In keys
+        sortedList.Add key
+    Next key
+    
+    ' Urutkan koleksi berdasarkan urutan kamus
+    Dim sortedKeys() As String
+    ReDim sortedKeys(0 To sortedList.Count - 1)
+    Dim i As Long
+    For i = 1 To sortedList.Count
+        sortedKeys(i - 1) = sortedList(i)
+    Next i
+    
+    ' Urutkan kunci secara numerik
+    Call BubbleSort(sortedKeys)
+    
+    SortKeysByDictionaryOrder = sortedKeys
+End Function
+
+' Fungsi untuk membersihkan format kode
+Function CleanCode(kode As String) As String
+    ' Menghapus semua spasi dari kode
+    kode = Replace(kode, " ", "") ' Menghapus semua spasi
+    CleanCode = kode
+End Function
+
+' Sub untuk mengurutkan array bulan
+Sub BubbleSort(arr() As String)
+    Dim i As Long, j As Long
+    Dim temp As String
+    For i = LBound(arr) To UBound(arr) - 1
+        For j = i + 1 To UBound(arr)
+            ' Pastikan arr(j) dan arr(i) adalah tanggal yang valid sebelum membandingkan
+            If IsDate(arr(j)) And IsDate(arr(i)) Then
+                If CDate(arr(j)) < CDate(arr(i)) Then
+                    temp = arr(i)
+                    arr(i) = arr(j)
+                    arr(j) = temp
+                End If
+            Else
+                ' Jika bukan tanggal yang valid, abaikan atau beri pesan debug
+                Debug.Print "Nilai tidak valid: arr(" & j & ") = " & arr(j) & ", arr(" & i & ") = " & arr(i)
+            End If
+        Next j
+    Next i
+End Sub
+
+' Sub untuk menginisialisasi uraian kode subkategori
+Sub InisialisasiUraian(dict As Object)
+    ' Kategori 200.01: Gaji dan Tunjangan
+    dict.Add "200.01.01", "Pendeta Pimpinan Jemaat"
+    dict.Add "200.01.02", "Pendeta Khusus (diperbantukan) / Vikaris (Calon Pendeta GKPI)"
+    dict.Add "200.01.03", "Guru Jemaat"
+    dict.Add "200.01.04", "Sekretaris dan Bendahara Jemaat"
+    dict.Add "200.01.05", "Pegawai Administrasi: Kantor GKPI Medan Kota"
+    dict.Add "200.01.06", "Pegawai Kebersihan & Teknisi"
+    dict.Add "200.01.06a", "Gedung Gereja"
+    dict.Add "200.01.06b", "Pekarangan & Taman Gereja"
+    dict.Add "200.01.06c", "Supir Mobil Dinas & Ambulance GKPI Medan Kota"
+    dict.Add "200.01.06d", "Jaga Malam"
+    dict.Add "200.01.06e", "Gedung Multifungsi"
+    dict.Add "200.01.06f", "Soundman"
+    dict.Add "200.01.07", "Administrasi Guru Sekolah Minggu (dan Remaja)"
+    dict.Add "200.01.08", "Pengawas Parkir (Minggu & Hari Besar)"
+
+    ' Kategori 200.02: Operasional Kantor
+    dict.Add "200.02.01", "Alat Tulis Kantor, Penggandaan dan Cetakan"
+    dict.Add "200.02.02", "Rapat dan Pertemuan Majelis Jemaat"
+    dict.Add "200.02.03", "Insentif / Lembur Pegawai"
+    dict.Add "200.02.04", "Minum & Konsumsi Kantor, Jemaat & Tamu"
+    dict.Add "200.02.04a", "Minum & Konsumsi Kantor, Jemaat"
+    dict.Add "200.02.04b", "Biaya Makan Tamu Gereja"
+    dict.Add "200.02.04c", "Biaya Snack untuk Pemusik & Songleader"
+    dict.Add "200.02.05", "Penyediaan Kolportase (Al & Kal, Alkitab, Agenda, dll)"
+    dict.Add "200.02.06", "Transport, Kurir, Benda pos"
+
+    ' Kategori 200.03: Kegiatan Jemaat
+    dict.Add "200.03.01", "Sermon Penatua"
+    dict.Add "200.03.01a", "Sermon Penatua Tambahan"
+    dict.Add "200.03.01b", "Sermon Penatua Khusus"
+    dict.Add "200.03.02", "Snack dan Minuman Sermon Penatua"
+    dict.Add "200.03.02a", "Snack dan Minuman"
+    dict.Add "200.03.02b", "Penyediaan Makanan Pembukaan dan Penutupan"
+    dict.Add "200.03.03", "Dana Pembinaan untuk Paduan Suara di GKPI Medan Kota"
+    dict.Add "200.03.03a", "Dana Pembinaan Tambahan"
+    dict.Add "200.03.03b", "Dana Pembinaan Khusus"
+    dict.Add "200.03.03c", "Dana Pembinaan Lainnya"
+    dict.Add "200.03.04", "Syukuran Awal Tahun (Jemaat & Pendeta)"
+    dict.Add "200.03.05", "Krans Bunga Dukacita bagi Anggota Jemaat"
+    dict.Add "200.03.06", "Bantuan Dukacita bagi Anggota Jemaat"
+    dict.Add "200.03.06a", "Bantuan Dukacita Tambahan"
+    dict.Add "200.03.06b", "Bantuan Dukacita Khusus"
+    dict.Add "200.03.07", "Bunga untuk Altar"
+    dict.Add "200.03.08", "Keamanan Acara Hari Besar Kristen"
+    dict.Add "200.03.09", "Penyelenggaraan Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023"
+    dict.Add "200.03.09a", "Kontribusi & Registrasi Peserta untuk Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023"
+    dict.Add "200.03.09b", "Perjalanan Dinas Peserta Rapat Sinode Am Kerja (SAK) XXIII GKPI 2023"
+    dict.Add "200.03.10", "Perjalanan Dinas atas undangan Kantor Pusat GKPI"
+    dict.Add "200.03.10a", "Perjalanan Dinas Tambahan"
+    dict.Add "200.03.11", "Sidang Umum Jemaat GKPI Medan Kota"
+    dict.Add "200.03.11b", "Sidang Umum Jemaat Tambahan"
+    dict.Add "200.03.12", "Biaya Tak Terduga / Insidentil"
+
+    ' Kategori 200.04: Pemeliharaan Aset
+    dict.Add "200.04.01", "Gedung Gereja, Rumah Dinas & Pekarangan"
+    dict.Add "200.04.02", "Inventaris Gereja"
+
+    ' Kategori 200.05: Kendaraan
+    dict.Add "200.05.01", "Roda 4 (Empat)"
+    dict.Add "200.05.01a", "Kijang Innova, Plat BK 1757 EJ"
+    dict.Add "200.05.01b", "Pajak Kendaraan Kijang Innova, Plat BK 1757 EJ"
+    dict.Add "200.05.02", "Roda 4 (Empat)"
+    dict.Add "200.05.02a", "HIACE BK.7866 DP"
+    dict.Add "200.05.02b", "Pajak Kendaraan Roda 4 (Empat): HIACE BK.7866 DP"
+    dict.Add "200.05.03", "Roda 2 (Dua)"
+    dict.Add "200.05.03a", "1 unit, Plat BK. 5440 AGG"
+    dict.Add "200.05.03b", "Pajak Kendaraan Roda 2 (Dua): 1 unit, Plat BK. 5440 AGG"
+
+    ' Kategori 200.06: Telekomunikasi
+    dict.Add "200.06.01", "Telepon Kantor (Gereja / Jemaat): (061) 453-4521, Speedy, My Republik, dan WA"
+
+    ' Kategori 200.07: Perlengkapan dan Dekorasi
+    dict.Add "200.07.01", "Jubah Penatua"
+    dict.Add "200.07.02", "Pengadaan Peralatan & Perlengkapan Inventaris Gereja"
+    dict.Add "200.07.03", "Dekorasi dan Persiapan Natal"
+
+    ' Kategori 400.01: Pengkhotbah Minggu
+    dict.Add "400.01.01", "Pengkhotbah Minggu: Pimpinan Sinode GKPI"
+    dict.Add "400.01.02", "Pengkhotbah Minggu: Dari Luar Kota"
+    dict.Add "400.01.03", "Pengkhotbah Minggu: Dari Dalam Kota"
+    dict.Add "400.01.04", "Pengkhotbah Minggu: Di Rumah Duka"
+    dict.Add "400.01.05", "Pengkhotbah Minggu: Remaja"
+
+    ' Kategori 400.02: Pengkhotbah Kebaktian
+    dict.Add "400.02.01", "Pengkhotbah Kebaktian Lingkungan"
+    dict.Add "400.02.02", "Pengkhotbah Kebaktian Pemuda-Pemudi & GSM"
+    dict.Add "400.02.03", "Pengkhotbah Kebaktian Perkumpulan Koor Ibu-Ibu"
+    dict.Add "400.02.04", "Pengkhotbah Kebaktian Ibu Hanna & Diakoni"
+    dict.Add "400.02.05", "Pengkhotbah Kebaktian Lanjut Usia (LANSIA)"
+
+    ' Kategori 400.03: Pengkhotbah Khusus
+    dict.Add "400.03.01", "Pengkhotbah Kebak. Perjanjian/Pemberkatan Nikah"
+    dict.Add "400.03.02", "Pengkhotbah Kebak. Penguburan Jenazah"
+    dict.Add "400.03.03", "Pengkhotbah Kebak. di Rumah Duka oleh Penatua"
+
+    ' Kategori 400.04: Kebaktian
+    dict.Add "400.04.01", "Minggu Pagi: Pukul 08.00 WIB"
+    dict.Add "400.04.02", "Minggu Sore: Pukul 18.00 WIB"
+    dict.Add "400.04.03", "Sekolah Minggu & Remaja"
+    dict.Add "400.04.04", "Perjanjian / Pemberkatan Nikah"
+    dict.Add "400.04.05", "Kebaktian pemberangkatan jenazah (pemusik & songleader)"
+    dict.Add "400.04.06", "Kebaktian di Rumah Duka"
+    dict.Add "400.04.07", "Pelayanan di Rumah Duka"
+    dict.Add "400.04.08", "Guru Sekolah Minggu (Sermon & Mengajar)"
+    dict.Add "400.04.09", "Latihan Pemusik dan Songleader"
+    dict.Add "400.04.10", "Petugas Penghitung Kebaktian Minggu"
+
+    ' Kategori 400.05: Perjamuan Kudus
+    dict.Add "400.05.01", "Perjamuan Kudus di Gereja"
+    dict.Add "400.05.02", "Snack Ujian Tulisan & Lisan Pelajar Sidi TA. 2021"
+
+    ' Kategori 400.06: Lainnya
+    dict.Add "400.06.01", "(Tidak ada kegiatan)"
+
+    ' Kategori 600.01: Pendidikan dan Pembinaan
+    dict.Add "600.01.01", "Pendidikan Lanjutan Untuk Pendeta"
+    dict.Add "600.01.02", "Penghargaan Untuk Penatua"
+    dict.Add "600.01.03", "Pembinaan & Pelatihan Pelajar Sidi GKPI Medan Kota"
+    dict.Add "600.01.04", "Pembinaan Penatua se Resort Medan Barat"
+
+    ' Kategori 600.02: Pelayanan
+    dict.Add "600.02.01", "Pembinaan & Pelayanan Rohani (PPR)"
+    dict.Add "600.02.02", "Pekabaran Injil (PI)"
+    dict.Add "600.02.03", "Diakoni"
+    dict.Add "600.02.04", "Musik, Nyanyian & Koor (MNK)"
+    dict.Add "600.02.05", "Sekolah Minggu"
+    dict.Add "600.02.06", "Remaja"
+    dict.Add "600.02.07", "Pemuda"
+    dict.Add "600.02.08", "Perempuan"
+    dict.Add "600.02.09", "Pria"
+    dict.Add "600.02.10", "Lansia"
+    dict.Add "600.02.11", "Kesehatan"
+    dict.Add "600.02.12", "Pendidikan"
+    dict.Add "600.02.13", "Usaha & Pengembangan Sumber Daya (UPSD)"
+    dict.Add "600.02.14", "Sarana & Prasarana"
+    dict.Add "600.02.15", "Natal Gabungan Seksi-seksi (Natal II)"
+
+    ' Kategori 600.03: Target dan Biaya
+    dict.Add "600.03.01", "Target Ke Kantor Pusat GKPI"
+    dict.Add "600.03.02", "Biaya Tahun Renstra GKPI 2023"
+    dict.Add "600.03.03", "Kantor Sinode GKPI (Persembahan Kedua)"
+    dict.Add "600.04.01", "Target Ke GKPI Ressort Medan Barat"
+
+    ' Kategori 800.01: Bantuan dan Sosial
+    dict.Add "800.01.01", "Bantuan ke Jemaat untuk musibah/bencana alam"
+    dict.Add "800.01.02", "Akomodasi Acara Penghiburan ke rumah duka"
+    dict.Add "800.01.03", "Bantuan untuk Dana Pensiun Pendeta GKPI"
+    dict.Add "800.01.04", "Bantuan untuk PA. Mamre dan Yapentra"
+    dict.Add "800.01.05", "Bantuan Ke GKPI Lainnya"
+
+    ' Kategori 800.02: Penghargaan dan Insentif
+    dict.Add "800.02.01", "Anak - Anak Sekolah Minggu"
+    dict.Add "800.02.02", "Penatua Purnabakti"
+    dict.Add "800.02.03", "Penatua Aktif"
+    dict.Add "800.02.04", "Calon Penatua"
+    dict.Add "800.02.05", "Pendeta GKPI Ressort Medan Barat"
+    dict.Add "800.02.06", "Anggota Majelis Jemaat: Ketua Seksi, Penasehat, PHBK"
+    dict.Add "800.02.07", "Guru-Guru Koor di Jemaat GKPI Medan Kota"
+    dict.Add "800.02.08", "Guru-Guru Sekolah Minggu"
+    dict.Add "800.02.09", "Pemusik: (Organis, Pianis dan Saxophonis)"
+    dict.Add "800.02.10", "Songleader (Pemandu Lagu)"
+    dict.Add "800.02.11", "Petugas Live Streaming Minggu"
+End Sub
+
