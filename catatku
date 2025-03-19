@@ -16960,7 +16960,7 @@ End Sub
 
 
 
--------------------------------
+-------------------------------kode yg udah ada uraian lengkap tp masih nol semua
 Option Explicit
 
 Sub SalinTotalKeSheet3_Horizontal()
