@@ -19678,3 +19678,67 @@ Sub InisialisasiAnggaran(dict As Object)
     dict.Add "Uang Setoran", 30000000
 End Sub
 
+-------------
+
+db gandatech shop pengeluaran::
+PT GANDATECH SOLUTION INDONESIA
+gandatech
+POS
+Jadwal Kegiatan
+Pengeluaran
+Pemasukan
+PT Gandatech Solution Indonesia
+JL. Perjuangan, Villa Nusa Setiabudi B16
+
+NIB: 1706240008062 | Kontak: 089661974219
+
+Daftar Pengeluaran
+No.	Tanggal	Kategori	Jumlah	Keterangan	Aksi	Foto
+1	2024-09-14	marketing	Rp 100.000	pasang google ads 1 hari	  	Tidak ada foto
+2	2024-09-17	marketing	Rp 70.000	untuk stiker kaca mobil belakang	  	Tidak ada foto
+3	2024-09-20	pembuatan ads tiktok	Rp 16.500	ada file	  	Foto Pengeluaran
+4	2024-09-21	ads	Rp 16.500	tiktok ads	  	Foto Pengeluaran
+5	2024-09-22	ads	Rp 16.650	tiktok ads	  	Foto Pengeluaran
+6	2023-11-15	Peralatan	Rp 37.176	Tiang bracket Stainless 100cm (2 buah)	  	Tidak ada foto
+7	2023-11-15	Peralatan	Rp 26.024	Strong Neodymium Magnet NdFeB N35 10 PCS - MAG1 - Silver	  	Tidak ada foto
+8	2023-11-15	Peralatan	Rp 170.700	Set Solder Listrik Lengkap dengan Multimeter Iron Tool Kit 220V 60W (Variasi: 60W with multimeter)	  	Tidak ada foto
+9	2023-11-15	Peralatan	Rp 27.500	USB Wifi Antena Chipset Mediatek MT 7601 Support Set Top Box TV	  	Tidak ada foto
+10	2023-11-15	Peralatan	Rp 35.900	Keyboard Usb Standart VOXY K328 - Keyboard Voxy Murah	  	Tidak ada foto
+11	2023-11-15	Peralatan	Rp 54.900	KIOXIA Flashdisk 32GB TransMemory U366 USB 3.2 / 100MB/s Original 32GB	  	Tidak ada foto
+12	2023-11-15	Peralatan	Rp 54.900	KIOXIA Flashdisk 32GB TransMemory U366 USB 3.2 / 100MB/s Original 32GB	  	Tidak ada foto
+13	2023-11-15	Peralatan	Rp 25.000	PHONE STAND EXTANTION COCOK UNTUK LEPTOP	  	Tidak ada foto
+14	2023-11-15	Peralatan	Rp 40.000	KABEL SATA 3 KE USB 3.0 SPEED 6gbps - USB2.0 20cm	  	Tidak ada foto
+15	2023-11-15	Peralatan	Rp 303.000	Tablet Advan G-Tab 8001 dual Sim 4G Ram 3/32GB 8 inch	  	Tidak ada foto
+‹
+1
+2
+›
+
+
+PT GANDATECH SOLUTION INDONESIA
+gandatech
+POS
+Jadwal Kegiatan
+Pengeluaran
+Pemasukan
+PT Gandatech Solution Indonesia
+JL. Perjuangan, Villa Nusa Setiabudi B16
+
+NIB: 1706240008062 | Kontak: 089661974219
+
+Daftar Pengeluaran
+No.	Tanggal	Kategori	Jumlah	Keterangan	Aksi	Foto
+16	2023-11-15	Layanan	Rp 112.000	RDP VPS 2 CORE 4GB RAM AKTIF 3 BULAN	  	Tidak ada foto
+17	2023-11-15	Iklan	Rp 100.000	Iklan facebook gandatech7agustus	  	Tidak ada foto
+18	2024-09-24	ads	Rp 16.650	tiktok ads	  	Foto Pengeluaran
+19	2024-09-26	ads	Rp 16.650	tiktok ads	  	Tidak ada foto
+20	2024-09-28	ads	Rp 100.000	wa ads	  	Foto Pengeluaran
+21	2024-09-30	ads	Rp 33.000	tiktok ads	  	Foto Pengeluaran
+22	2024-10-01	ads	Rp 58.500	myads	  	Foto Pengeluaran
+23	2024-10-01	ads	Rp 391.000	myads topup 350 rb	  	Foto Pengeluaran
+24	2024-11-03	fix cost	Rp 15.000.000	sewa tempat untuk usaha 3 tahun	  	Foto Pengeluaran
+25	2024-10-23	variabel cost	Rp 2.500.000	pembelian token dan instalasi listrik	  	Foto Pengeluaran
+‹
+1
+2
+›
