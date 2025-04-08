@@ -21426,3 +21426,255 @@ Daftar buku kedokteran wajib di baca untuk mahasiswa kedokteran bisa bervariasi 
 * **Berdiskusi dengan teman sejawat dan dosen untuk memahami materi dengan lebih baik.**
 
 Semoga daftar buku ini membantu Anda dalam perjalanan belajar kedokteran!
+
+
+
+-----------------------
+8 april 
+
+unutk sheet 2 tapi udah ada untuk lengkap format dan  strukturnya:
+
+Sub kelompokkanData_Terstruktur()
+    Dim wsSumber As Worksheet, wsTujuan As Worksheet
+    Dim wb As Workbook
+    Set wb = ThisWorkbook
+
+    ' Pastikan sheet sumber dan tujuan ada
+    On Error Resume Next
+    Set wsSumber = wb.Sheets("1")
+    Set wsTujuan = wb.Sheets("2")
+    On Error GoTo 0
+
+    If wsSumber Is Nothing Or wsTujuan Is Nothing Then
+        MsgBox "Sheet tidak ditemukan. Pastikan '1' dan '2' tersedia."
+        Exit Sub
+    End If
+
+    ' Cek jika ada data
+    Dim lastRow As Long
+    lastRow = wsSumber.Cells(wsSumber.Rows.Count, 1).End(xlUp).Row
+    If lastRow < 4 Then
+        MsgBox "Tidak ada data untuk diproses."
+        Exit Sub
+    End If
+
+    ' Baca data
+    Dim data As Variant
+    data = wsSumber.Range("A1:L" & lastRow).Value
+
+    ' Inisialisasi dictionary untuk pengelompokan
+    Dim kelompok As Object
+    Set kelompok = CreateObject("Scripting.Dictionary")
+
+    ' Variabel untuk loop
+    Dim i As Long
+    Dim tgl As Variant, kwitansi As Variant, uraian As Variant, kas As Variant
+    Dim kodeSub As String, bulan As String
+    Dim isUangSetoran As Boolean
+
+    ' Membaca data dan kelompokkan
+    For i = 4 To UBound(data, 1)
+        ' Baca data dasar
+        tgl = data(i, 1)
+        kwitansi = data(i, 2)
+        uraian = data(i, 3)
+        kas = data(i, 4)
+        
+        ' Tentukan bulan
+        If IsDate(tgl) And tgl <> "" Then
+            bulan = Format(tgl, "MMMM YYYY")
+        Else
+            bulan = "Tanggal Tidak Valid"
+        End If
+
+        ' Cek kriteria Uang Setoran
+        isUangSetoran = False
+        If IsNumeric(kas) And kas <> "" Then
+            If Trim(data(i, 5)) = "" And Trim(data(i, 7)) = "" And _
+               Trim(data(i, 9)) = "" And Trim(data(i, 11)) = "" Then
+                isUangSetoran = True
+            End If
+        End If
+
+        ' Tentukan kode subkategori
+        If isUangSetoran Then
+            kodeSub = "Uang Setoran"
+        Else
+            ' Gabungkan kode subkategori jika ada
+            kodeSub = Trim(data(i, 5) & " " & data(i, 7) & " " & data(i, 9) & " " & data(i, 11))
+            kodeSub = WorksheetFunction.Trim(kodeSub)
+            If kodeSub = "" Then kodeSub = "Lainnya"
+        End If
+
+        ' Tambahkan ke dictionary
+        If Not kelompok.Exists(bulan) Then
+            kelompok.Add bulan, CreateObject("Scripting.Dictionary")
+        End If
+
+        If Not kelompok(bulan).Exists(kodeSub) Then
+            kelompok(bulan).Add kodeSub, New Collection
+        End If
+
+        ' Tambahkan data ke collection
+        kelompok(bulan)(kodeSub).Add Array(tgl, kwitansi, uraian, kas, kodeSub)
+    Next i
+
+    ' Bersihkan sheet tujuan
+    wsTujuan.Cells.Clear
+
+    ' Mulai tulis hasil ke Sheet2
+    Dim startRow As Long, startCol As Long
+    startCol = 1
+    Dim colSpacing As Long: colSpacing = 3
+
+    ' Urutkan bulan
+    Dim bulanKeys() As Variant
+    bulanKeys = kelompok.keys
+    Call BubbleSort(bulanKeys)
+
+    ' Loop melalui setiap bulan
+    Dim bulanKey As Variant, kodeSubKey As Variant
+    For Each bulanKey In bulanKeys
+        startRow = 1
+        
+        ' Tulis header bulan
+        With wsTujuan.Cells(startRow, startCol)
+            .Value = UCase(bulanKey)
+            .Font.bold = True
+            .Font.Size = 12
+        End With
+        startRow = startRow + 1
+
+        ' Urutkan kode subkategori
+        Dim kodeSubKeys() As Variant
+        ReDim kodeSubKeys(kelompok(bulanKey).Count - 1)
+        
+        Dim k As Long: k = 0
+        For Each kodeSubKey In kelompok(bulanKey).keys
+            kodeSubKeys(k) = kodeSubKey
+            k = k + 1
+        Next kodeSubKey
+        
+        Call BubbleSort(kodeSubKeys)
+
+        ' Loop melalui setiap kode subkategori
+        For Each kodeSubKey In kodeSubKeys
+            ' Tulis header subkategori
+            With wsTujuan.Cells(startRow, startCol)
+                .Value = "Subkategori: " & kodeSubKey
+                .Font.bold = True
+            End With
+            startRow = startRow + 1
+            
+            ' Tulis header kolom
+            With wsTujuan.Cells(startRow, startCol).Resize(1, 5)
+                .Value = Array("Tanggal", "Kwitansi", "Uraian", "Kas", "Kode Subkategori")
+                .Font.bold = True
+                .Borders(xlEdgeBottom).LineStyle = xlContinuous
+            End With
+            startRow = startRow + 1
+
+            ' Tulis data
+            Dim dataItem As Variant
+            Dim totalKas As Double: totalKas = 0
+            Dim r As Long: r = 0
+            
+            For Each dataItem In kelompok(bulanKey)(kodeSubKey)
+                ' Pastikan ini array
+                If IsArray(dataItem) Then
+                    ' Tulis data dengan format
+                    With wsTujuan.Cells(startRow + r, startCol)
+                        .Value = dataItem(0) ' Tanggal
+                        .NumberFormat = "dd-mmm-yyyy"
+                    End With
+                    
+                    With wsTujuan.Cells(startRow + r, startCol + 1)
+                        .Value = dataItem(1) ' Kwitansi
+                    End With
+                    
+                    ' Kolom Uraian - dibatasi lebar dan wrap text
+                    With wsTujuan.Cells(startRow + r, startCol + 2)
+                        .Value = dataItem(2) ' Uraian
+                        .WrapText = True
+                        .ColumnWidth = 30 ' Lebar kolom uraian 30 karakter
+                        .Rows.RowHeight = 15 ' Tinggi baris disesuaikan
+                    End With
+                    
+                    ' Kolom Kas
+                    With wsTujuan.Cells(startRow + r, startCol + 3)
+                        If IsNumeric(dataItem(3)) Then
+                            .Value = dataItem(3)
+                            .NumberFormat = "#,##0"
+                            totalKas = totalKas + CDbl(dataItem(3))
+                        Else
+                            .Value = dataItem(3)
+                        End If
+                    End With
+                    
+                    ' Kode Subkategori
+                    With wsTujuan.Cells(startRow + r, startCol + 4)
+                        .Value = dataItem(4)
+                    End With
+                    
+                    r = r + 1
+                End If
+            Next dataItem
+
+            ' Tulis total kas
+            startRow = startRow + r
+            With wsTujuan.Cells(startRow, startCol)
+                .Value = "Total Kas " & kodeSubKey
+                .Font.bold = True
+            End With
+            With wsTujuan.Cells(startRow, startCol + 3)
+                .Value = totalKas
+                .NumberFormat = "#,##0"
+                .Font.bold = True
+                .Borders(xlEdgeTop).LineStyle = xlContinuous
+            End With
+            startRow = startRow + 2
+        Next kodeSubKey
+
+        ' Geser ke kolom berikutnya
+        startCol = startCol + 6 + colSpacing
+    Next bulanKey
+
+    ' Format kolom secara spesifik
+    Dim lastCol As Long
+    lastCol = wsTujuan.Cells.Find("*", , xlFormulas, , xlByColumns, xlPrevious).Column
+    
+    For i = 1 To lastCol
+        Select Case i Mod (6 + colSpacing)
+            Case 1 ' Kolom Tanggal
+                wsTujuan.Columns(i).ColumnWidth = 12
+            Case 2 ' Kolom Kwitansi
+                wsTujuan.Columns(i).ColumnWidth = 15
+            Case 3 ' Kolom Uraian (sudah diatur sebelumnya)
+                ' Tidak perlu diubah lagi
+            Case 4 ' Kolom Kas
+                wsTujuan.Columns(i).ColumnWidth = 15
+            Case 5 ' Kolom Kode Subkategori
+                wsTujuan.Columns(i).ColumnWidth = 20
+            Case Else ' Kolom kosong antar kelompok
+                wsTujuan.Columns(i).ColumnWidth = 3
+        End Select
+    Next i
+
+    MsgBox "Pengelompokan data selesai dengan tampilan yang rapi."
+End Sub
+
+Sub BubbleSort(arr() As Variant)
+    Dim i As Long, j As Long
+    Dim temp As Variant
+    
+    For i = LBound(arr) To UBound(arr) - 1
+        For j = i + 1 To UBound(arr)
+            If arr(i) > arr(j) Then
+                temp = arr(i)
+                arr(i) = arr(j)
+                arr(j) = temp
+            End If
+        Next j
+    Next i
+End Sub
+
