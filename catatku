@@ -21879,3 +21879,100 @@ Dan kalau dunia memintaku memilih,
 aku tetap akan memilih kamu.
 Bukan karena kamu yang paling sempurna,
 tapi karena kamu yang paling membuatku pulang.
+
+
+-----------------------
+Saya akan membantu memperbaiki dan memodifikasi kode Anda dengan mengganti hardcoded `InisialisasiUraian` dengan membaca dari sheet `MASTER_CODE`. Berikut perbaikannya:
+
+### ✅ **Perubahan Utama**
+
+1. **Hapus fungsi `InisialisasiUraian` yang lama** (yang berisi hardcode)
+2. **Ganti dengan versi baru** yang membaca dari sheet `MASTER_CODE`
+
+### ✅ **Kode yang Dimodifikasi**
+
+```vba
+Sub InisialisasiUraian(dict As Object)
+    ' Ganti hardcode dengan membaca dari sheet MASTER_CODE
+    Call LoadUraianDariMasterSheet(dict)
+End Sub
+
+Sub LoadUraianDariMasterSheet(dict As Object)
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("MASTER_CODE")
+    On Error GoTo 0
+    
+    If ws Is Nothing Then
+        MsgBox "Sheet 'MASTER_CODE' tidak ditemukan!", vbExclamation
+        Exit Sub
+    End If
+
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
+    Dim i As Long
+    Dim kode As String, uraian As String
+    
+    For i = 2 To lastRow ' Mulai dari baris 2 (baris 1 header)
+        kode = Trim(ws.Cells(i, 1).Value)
+        uraian = Trim(ws.Cells(i, 2).Value)
+        
+        If kode <> "" And uraian <> "" Then
+            If Not dict.exists(kode) Then
+                dict.Add kode, uraian
+            End If
+        End If
+    Next i
+End Sub
+```
+
+### ✅ **Perubahan pada Fungsi Utama**
+
+Tidak perlu perubahan pada fungsi `SalinTotalKeSheet3_Horizontal` karena:
+1. Ia tetap memanggil `InisialisasiUraian` seperti sebelumnya
+2. Logika pemrosesan dictionary tetap sama
+
+### ✅ **Bonus: Fungsi untuk Menambah Kode Baru ke MASTER_CODE**
+
+Tambahkan ini jika Anda perlu menambahkan kode baru dari form input:
+
+```vba
+Sub TambahKeMasterJikaBaru(kode As String, uraian As String)
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("MASTER_CODE")
+    
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
+    
+    ' Cek apakah kode sudah ada
+    Dim i As Long
+    For i = 2 To lastRow
+        If ws.Cells(i, 1).Value = kode Then Exit Sub ' Sudah ada
+    Next i
+    
+    ' Tambahkan jika baru
+    ws.Cells(lastRow + 1, 1).Value = kode
+    ws.Cells(lastRow + 1, 2).Value = uraian
+End Sub
+```
+
+### ⚠️ **Penting: Struktur Sheet MASTER_CODE**
+Pastikan sheet `MASTER_CODE` memiliki struktur:
+```
+| Kolom A (Kode) | Kolom B (Uraian)      |
+|----------------|-----------------------|
+| 200.01.01      | Pendeta Pimpinan...   |
+| 200.01.02      | Pendeta Khusus...     |
+| ...            | ...                   |
+```
+
+### 🔄 **Alur Kerja Baru**
+1. Data kode dan uraian diambil dari `MASTER_CODE`
+2. Jika ada kode baru di form, bisa ditambahkan ke `MASTER_CODE`
+3. Tidak perlu update kode VBA ketika ada penambahan kode baru
+
+### 🛠 **Jika Mau Lebih Baik Lagi:**
+1. Tambahkan error handling jika format sheet salah
+2. Buat fungsi validasi kode duplikat
+3. Tambahkan fitur sorting otomatis di `MASTER_CODE`
+
+Kode utama Anda sudah baik, hanya perlu mengganti bagian inisialisasi dictionary saja. Mau saya bantu modifikasi lebih lanjut untuk fitur tertentu?
