@@ -22168,3 +22168,900 @@ Gandatech IT Solution
 📞 089661974219
 ✉️ admin@gandatech.shop
 
+----------------------------------------
+
+////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+////////////////////////////////////////////////////
+///////////////lapor pajak npwp pribadi cara perhitungan/////////////
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+Anda bilang:
+Spt Ganda
+
+Tidak dapat menampilkan visualisasi
+Berikut adalah isi dari formulir yang Anda unggah, saya salin dalam bentuk tabel seperti aslinya:
+________________________________________
+Bagian A: Penghasilan Neto Dalam Negeri dari Usaha dan/atau Pekerjaan Bebas
+(Bagi Wajib Pajak yang Menyelenggarakan Pembukuan)
+PEMBUKUAN/LAPORAN KEUANGAN	
+Status Audit	Tidak Diaudit (✔)
+Nama Akuntan Publik	(kosong)
+NPWP Akuntan Publik	(kosong)
+Nama Kantor Akuntan Publik	(kosong)
+NPWP Kantor Akuntan Publik	(kosong)
+Nama Konsultan Pajak	(kosong)
+NPWP Konsultan Pajak	(kosong)
+Nama Kantor Konsultan Pajak	(kosong)
+NPWP Kantor Konsultan Pajak	(kosong)
+________________________________________
+URAIAN	KODE	RUPIAH
+a. Peredaran Usaha	1a	0
+b. Harga Pokok Penjualan	1b	0
+c. Laba/Rugi Bruto Usaha (1a - 1b)	1c	0
+d. Biaya Usaha	1d	0
+e. Penghasilan Neto (1c - 1d)	1e	0
+________________________________________
+Penyesuaian Fiskal Positif
+URAIAN	KODE	RUPIAH
+1. Biaya yang dibebankan/keluarkan untuk kepentingan pribadi Wajib Pajak atau orang yang menjadi tanggungannya	2a	0
+2. Premi asuransi kesehatan, asuransi kecelakaan, asuransi jiwa, asuransi dwiguna, dan asuransi sejenis	2b	0
+3. Pengeluaran yang tidak berhubungan dengan pekerjaan atau jasa yang diberikan dalam bentuk natura atau kenikmatan	2c	0
+4. Jumlah yang melebihi kewajaran yang dibayarkan kepada pihak yang memiliki hubungan istimewa	2d	0
+5. Harta yang dihibahkan, bantuan atau sumbangan	2e	0
+6. Pajak Penghasilan	2f	0
+7. Gaji yang dibayarkan kepada pemilik / orang yang menjadi tanggungannya	2g	0
+8. Sanksi Administrasi	2h	0
+9. Selisih penyusutan/amortisasi komersial di atas penyusutan/amortisasi fiskal	2i	0
+10. Biaya untuk mendapatkan, menagih dan memelihara penghasilan yang dikenakan PPh Final dan/atau tidak termasuk objek pajak	2j	0
+
+11. Biaya untuk mendapatkan, menagih dan memelihara penghasilan yang dikenakan PPh Final dan penghasilan yang tidak termasuk objek pajak	2k	0
+12. Penyesuaian fiskal positif lainnya	2l	0
+13. Jumlah (2a s.d. 2l)	2m	0
+Penyesuaian Fiskal Negatif
+URAIAN	KODE	RUPIAH
+a. Penghasilan yang dikenakan PPh Final dan penghasilan yang tidak termasuk objek pajak tetapi termasuk dalam peredaran usaha	3a	0
+b. Selisih penyusutan/amortisasi komersial di bawah penyusutan/amortisasi fiskal	3b	0
+c. Penyesuaian fiskal negatif lainnya	3c	0
+Jumlah (3a s.d. 3c)	3d	0
+________________________________________
+Jumlah Bagian A
+URAIAN	KODE	RUPIAH
+Jumlah Bagian A (1e + 2m - 3d)	4	0
+
+
+
+
+tolong isikan tabel ini berdasarkan data pada tabel excel berikut:
+
+
+ChatGPT bilang:
+Sepertinya file spt ganda.csv memiliki format yang tidak konsisten — kemungkinan ada baris-baris dengan pemisah (delimiter) berbeda atau struktur yang tidak seragam. Untuk memprosesnya dengan benar, saya akan coba membukanya ulang sebagai file teks mentah dan melihat isinya langsung.
+
+Tunggu sebentar ya, saya cek isinya dulu. ​​
+
+Terima kasih sudah menunggu. Dari isi file yang terbaca, tampaknya file CSV ini merupakan laporan pengeluaran (dan sedikit pendapatan) yang berisi kolom-kolom seperti:
+
+Tanggal
+
+Kategori (seperti Peralatan, Iklan, Marketing, Transportasi)
+
+Jumlah (Rp)
+
+Keterangan
+
+Namun, struktur awalnya juga mencakup semacam header laporan keuangan dan formatnya tidak standar (banyak baris kosong, nilai di tengah, dan susunan acak), sehingga butuh pemrosesan manual untuk mengekstrak angka-angka penting.
+
+Target kita:
+Mengisi tabel Bagian A pada formulir pajak dari data ini. Fokusnya ada pada:
+
+Peredaran Usaha (1a) → Pendapatan (jika ada)
+
+Harga Pokok Penjualan (1b) → Biaya langsung produksi/jasa (kalau relevan)
+
+Biaya Usaha (1d) → Semua pengeluaran selain HPP
+
+Sisanya 0 jika tidak relevan atau belum ada.
+
+Boleh aku olah sekarang datanya berdasarkan kategori ini:
+
+Kategori CSV	Keterangan	Masuk ke
+Transportasi, Iklan, Marketing, dll	Operasional/Biaya Usaha	1d
+Total Pendapatan	Jika ada nilainya (selain nol)	1a
+Total Pengeluaran	Untuk pembanding dan validasi	-
+Apakah kamu setuju dengan pendekatan seperti ini? Atau ada kategori tertentu yang ingin kamu hitung berbeda, misalnya "Peralatan" dianggap sebagai investasi bukan biaya usaha? ​​
+
+
+
+
+
+
+
+Anda bilang:
+oke
+
+
+ChatGPT bilang:
+Isi Formulir Bagian A
+
+
+Berikut adalah hasil pengisian Bagian A berdasarkan data laporan keuangan dari file kamu. Silakan cek apakah kategorisasi dan hasil perhitungan sudah sesuai. Kalau ada item yang perlu diklasifikasikan ulang (misalnya ke HPP atau penyesuaian fiskal), beri tahu ya! ​​
+
+
+
+
+
+
+
+Anda bilang:
+Spt
+
+
+coba isikan dalam excel untuk data laporan keuangan saya ini:
+masukkan langsung ke dalam tabel di atas dan export dalam xlsx
+
+
+ChatGPT bilang:
+Sepertinya file spt.csv yang kamu unggah tidak berformat CSV biasa, atau mengandung karakter khusus yang membuatnya gagal dibaca sebagai teks UTF-8.
+
+Karena kita ingin mengisi ke dalam template Excel, solusi terbaiknya adalah:
+Aku akan langsung konversi file spt.csv tersebut ke format .xlsx secara biner, lalu modifikasi file Excel-nya tanpa mencoba membacanya sebagai teks.
+
+Mari kita lakukan itu sekarang. ​​
+
+File spt.csv yang kamu unggah tadi bukan file Excel asli (XLSX), dan juga bukan file CSV biasa — jadi tidak bisa dibuka langsung oleh Excel engine (openpyxl) karena formatnya tidak valid sebagai file ZIP (struktur dasar file Excel modern).
+
+Solusi terbaik:
+Kalau kamu punya file asli dalam bentuk .xlsx (Excel), silakan unggah file Excel-nya langsung, bukan versi ekspor .csv. File itu akan bisa langsung saya isi secara otomatis dan dikembalikan dalam bentuk file Excel terisi.
+
+Ingin saya bantu siapkan ulang format tabelnya dari awal dan mengisi langsung dari data yang sudah ada? Atau kamu mau unggah ulang versi Excel-nya? ​​
+
+
+
+
+
+
+
+Anda bilang:
+buku legend fisika forensik
+
+
+ChatGPT bilang:
+Berikut beberapa buku referensi penting dalam bidang fisika forensik yang dapat Anda pertimbangkan:
+
+Solving Crimes With Physics
+Ditulis oleh William Hunter, buku ini merupakan bagian dari seri "Solving Crimes With Science: Forensics". Ditujukan untuk pembaca usia 12 tahun ke atas, buku ini memperkenalkan prinsip-prinsip dasar fisika yang digunakan dalam investigasi forensik. Cocok untuk pemula yang ingin memahami bagaimana fisika diterapkan dalam pemecahan kejahatan. ​
+SpringerLink
++7
+Amazon
++7
+cambridgescholars.com
++7
+
+
+Case Studies in Forensic Physics
+Ditulis oleh Gregory A. DiLisi dan Richard A. Rarick, buku ini menyajikan studi kasus nyata yang menunjukkan penerapan prinsip fisika dalam analisis forensik. Setiap bab membahas konsep fisika tertentu dan bagaimana konsep tersebut digunakan untuk memecahkan kasus-kasus sejarah yang kompleks. Sangat berguna bagi mahasiswa dan profesional yang ingin memperdalam pemahaman mereka tentang fisika forensik. ​
+forensicbookstore.com
++3
+collected.jcu.edu
++3
+SpringerLink
++3
+collected.jcu.edu
++2
+barnesandnoble.com
++2
+SpringerLink
++2
+
+
+Forensik: Ilmu dan Praktik Scientific Crime Investigation di Indonesia dan Dunia Internasional
+Buku ini membahas berbagai aspek ilmu forensik, termasuk pemeriksaan fisika dan komputer forensik. Disusun sebagai referensi bagi penyidik, pemeriksa laboratorium forensik, hakim, jaksa, pengacara, dosen, dan mahasiswa hukum. Memberikan wawasan tentang praktik forensik di Indonesia dan internasional. ​
+Google Buku
+
+
+Forensics and Physics
+Diterbitkan oleh Cambridge Scholars Publishing, buku ini mengulas hubungan antara ilmu forensik dan fisika. Membahas bagaimana prinsip-prinsip fisika digunakan dalam analisis jejak forensik dan identifikasi. Cocok untuk pembaca yang tertarik pada pendekatan ilmiah dalam investigasi kriminal. ​
+cambridgescholars.com
++1
+cambridgescholars.com
++1
+Google Buku
+
+
+Handbook of Forensic Physics
+Buku ini menyajikan berbagai metode dan teknik dalam fisika forensik, termasuk analisis tanah, pemeriksaan semen, inspeksi cat, identifikasi serat, analisis kaca, pemeriksaan bekas alat, analisis jejak ban, dan pemeriksaan jejak sepatu. Dilengkapi dengan ilustrasi berkualitas tinggi, buku ini cocok untuk mahasiswa, instruktur, dan profesional yang tertarik pada fisika forensik. ​
+SpringerLink
++5
+forensicbookstore.com
++5
+collected.jcu.edu
++5
+
+
+Jika Anda memerlukan informasi lebih lanjut atau rekomendasi tambahan, silakan beri tahu saya!
+
+
+
+
+
+
+
+Sumber
+
+
+
+
+
+
+Anda bilang:
+
+kalo ini coba tolong jelaskan cara menghitungnya: 
+
+ChatGPT bilang:
+Bagian formulir pajak yang kamu tunjuk pada gambar adalah Bagian A: Penghasilan Neto dari Usaha/Pekerjaan Bebas, dan berikut adalah cara menghitung masing-masing item:
+
+a. Peredaran Usaha (Kode 1a)
+Artinya: Total pendapatan atau omzet kotor dari usaha dalam satu tahun pajak (sebelum dikurangi biaya apa pun).
+
+Rumus:
+1a = Total penjualan atau penerimaan jasa selama setahun
+
+Contoh:
+Jika kamu menerima Rp10.000.000 selama 2024 dari proyek IT freelance, maka:
+
+1a = Rp10.000.000
+
+b. Harga Pokok Penjualan (HPP) (Kode 1b)
+Artinya: Biaya langsung untuk memproduksi barang/jasa yang dijual. Untuk pekerjaan jasa seperti IT, HPP biasanya tidak digunakan (0), kecuali jika ada produk yang dijual.
+
+Rumus:
+1b = Biaya langsung (bahan baku, tenaga kerja langsung, dll)
+
+Contoh:
+
+Kalau kamu tidak menjual produk, 1b = 0
+
+c. Laba/Rugi Bruto Usaha (Kode 1c)
+Rumus:
+1c = 1a - 1b
+(Menghasilkan keuntungan kotor usaha sebelum biaya operasional dikurangi)
+
+Contoh:
+
+Jika 1a = 10.000.000 dan 1b = 0 →
+1c = 10.000.000
+
+d. Biaya Usaha (Kode 1d)
+Artinya: Semua biaya yang dikeluarkan untuk menunjang kegiatan usaha. Termasuk:
+
+Sewa tempat kerja
+
+Listrik dan internet
+
+Transportasi kerja
+
+Biaya iklan
+
+Pembelian alat kerja
+
+Dsb
+
+Rumus:
+1d = Total seluruh pengeluaran untuk kegiatan usaha (selain HPP)
+
+e. Penghasilan Neto (Kode 1e)
+Rumus:
+1e = 1c - 1d
+(Menghasilkan laba bersih sebelum koreksi fiskal)
+
+Contoh:
+
+Jika 1c = 10.000.000 dan 1d = 3.000.000
+→ 1e = 7.000.000
+
+Kalau kamu ingin, aku bisa bantu hitungkan semua itu dari data keuanganmu yang sebelumnya. Mau lanjut kita isi ke formulir berdasarkan angka yang sudah dihitung sebelumnya?
+
+
+
+
+
+
+
+Anda bilang:
+ini data yg harus di olah: LAPORAN RUGI LABA TAHUN 2024				Tanggal	Kategori	Jumlah (Rp)	Keterangan
+				15/11/2023	Peralatan	37176	Tiang bracket Stainless 100cm (2 buah)
+PT Gandatech Solution Indonesia				15/11/2023	Peralatan	26024	Strong Neodymium Magnet NdFeB N35 10 PCS - MAG1 - Silver
+Per 1 Agustus 2024 Â– 11 April 2025				15/11/2023	Peralatan	170700	Set Solder Listrik Lengkap + Multimeter
+				15/11/2023	Peralatan	27500	USB Wifi Antena Chipset Mediatek MT 7601
+Kategori	Jumlah (Rp)	Keterangan		15/11/2023	Peralatan	35900	Keyboard Usb Standart VOXY K328
+Iklan	745.300	Biaya Operasional		15/11/2023	Peralatan	54900	KIOXIA Flashdisk 32GB (1)
+Marketing	170.000	Biaya Operasional		15/11/2023	Peralatan	54900	KIOXIA Flashdisk 32GB (2)
+Transportasi	3.660.000	Biaya transport harian (365 hari Ã— 10rb)		15/11/2023	Peralatan	25000	PHONE STAND EXTANTION
+Biaya Variabel	2.500.000	Pembelian token & instalasi listrik		15/11/2023	Peralatan	40000	KABEL SATA 3 KE USB 3.0
+Biaya Tetap	15.000.000	Sewa tempat usaha 3 tahun		15/11/2023	Peralatan	303000	Tablet Advan G-Tab 8001 4G
+Total Pengeluaran	22.075.300			15/11/2023	Layanan	112000	RDP VPS 2 CORE 4GB RAM - 3 BULAN
+Total Pendapatan	0	Belum ada pemasukan		15/11/2023	Iklan	100000	Iklan Facebook
+Laba/Rugi Bersih	-22.075.300	Rugi bersih		14/09/2024	Marketing	100000	Google Ads 1 Hari
+				17/09/2024	Marketing	70000	Stiker Kaca Mobil Belakang
+				20/09/2024	Iklan	16500	Ads TikTok
+				21/09/2024	Iklan	16500	TikTok Ads
+				22/09/2024	Iklan	16650	TikTok Ads
+				24/09/2024	Iklan	16650	TikTok Ads
+				26/09/2024	Iklan	16650	TikTok Ads
+				28/09/2024	Iklan	100000	WA Ads
+				30/09/2024	Iklan	33000	TikTok Ads
+				01/10/2024	Iklan	58500	MyAds
+				01/10/2024	Iklan	391000	MyAds Topup 350rb
+				23/10/2024	Biaya Variabel	2500000	Pembelian Token + Instalasi Listrik
+				03/11/2024	Biaya Tetap	15000000	Sewa Tempat Usaha 3 Tahun
+					Transportasi	3.660.000	Biaya transport harian (365 hari Ã— 10rb)
+
+
+ChatGPT bilang:
+Formulir Pajak Dari Data Rugi Laba
+
+
+Sudah selesai! Ini adalah hasil pengisian formulir pajak Bagian A berdasarkan data laporan rugi laba yang kamu berikan. Silakan dicek — kalau kamu ingin saya bantu export ke Excel atau lanjut ke bagian formulir berikutnya, tinggal bilang saja ya. ​​
+
+
+
+
+
+
+
+Anda bilang:
+coba jelaskan disini perhitungan lengkapnya
+
+
+ChatGPT bilang:
+Tentu! Berikut penjelasan perhitungan lengkap dari pengisian Formulir Pajak Bagian A berdasarkan laporan rugi laba tahun 2024 yang kamu berikan:
+
+📋 Rangkuman Kategori Pengeluaran (Dari Laporan)
+Semua item di laporan kamu berupa pengeluaran, dan tidak ada pemasukan (Total Pendapatan = 0). Maka:
+
+➤ a. Peredaran Usaha (1a)
+Ini adalah total pendapatan selama tahun pajak.
+= Rp 0
+(Sesuai laporan: Total Pendapatan = 0)
+
+➤ b. Harga Pokok Penjualan (1b)
+Tidak ada biaya bahan baku langsung atau biaya produksi karena usahamu di bidang IT dan tidak menjual produk, maka:
+= Rp 0
+
+➤ c. Laba/Rugi Bruto Usaha (1c = 1a - 1b)
+= 0 - 0 = Rp 0
+
+➤ d. Biaya Usaha (1d)
+Semua pengeluaran di laporan kamu termasuk ke dalam kategori biaya usaha, dan dijumlahkan menjadi:
+
+Kategori	Jumlah (Rp)
+Peralatan	Rp 779.100
+Iklan	Rp 787.950
+Marketing	Rp 170.000
+Transportasi	Rp 3.660.000
+Biaya Variabel	Rp 2.500.000
+Biaya Tetap	Rp15.000.000
+Layanan (RDP, dll)	Rp 112.000
+Total Biaya Usaha	Rp 22.982.550
+→ Semua ini diklasifikasikan sebagai biaya operasional karena menunjang aktivitas usaha, seperti:
+
+Peralatan: alat kerja seperti solder, magnet, flashdisk, tablet.
+
+Iklan & Marketing: untuk promosi usaha.
+
+Transportasi, listrik, sewa tempat: jelas masuk biaya usaha.
+
+➤ e. Penghasilan Neto (1e = 1c - 1d)
+= 0 - 22.982.550 = -Rp 22.982.550
+→ Artinya kamu mengalami rugi bersih dalam tahun pajak ini.
+
+➤ Penyesuaian Fiskal Positif dan Negatif (2m dan 3d)
+Tidak ada data yang menunjukkan penyesuaian fiskal (misal: biaya pribadi, natura, penyusutan beda fiskal), maka:
+
+2m = Rp 0
+
+3d = Rp 0
+
+➤ Jumlah Bagian A (Kode 4)
+= 1e + 2m - 3d = -22.982.550 + 0 - 0 = -Rp 22.982.550
+
+✅ Kesimpulan
+Kamu mengalami rugi bersih sebesar Rp 22.982.550, dan karena tidak ada pemasukan, maka tidak ada PPh terutang untuk tahun ini. Tapi laporan ini tetap penting untuk arsip pajak dan bisa berguna untuk pengajuan kredit atau pembuktian pengeluaran usaha.
+
+Kalau kamu ingin, aku bisa bantu:
+
+Mengisi file Excel-nya langsung
+
+Menyiapkan PDF lampiran
+
+Atau lanjut ke pengisian bagian B/C lainnya di formulir pajak
+
+Siap bantuin!
+
+
+
+
+
+
+
+Anda bilang:
+
+kalo ini juga tolong di proses: 
+
+ChatGPT bilang:
+Bagian formulir yang kamu lampirkan adalah Penyesuaian Fiskal Positif, yaitu penambahan kembali biaya-biaya tertentu ke dalam penghasilan neto karena secara fiskal tidak diperbolehkan sebagai pengurang pajak. Yuk kita bahas cara mengisinya berdasarkan laporan keuanganmu:
+
+✅ Apa Itu Penyesuaian Fiskal Positif?
+Ini adalah koreksi penambahan terhadap pengeluaran yang:
+
+Tidak diakui sebagai biaya menurut ketentuan perpajakan, meskipun dicatat sebagai beban di laporan rugi-laba.
+
+Tujuannya adalah menghitung penghasilan kena pajak yang sesuai dengan ketentuan fiskal.
+
+📋 Analisis berdasarkan data kamu
+Mari kita cocokkan dengan data:
+
+Kode	Penjelasan	Apakah Ada di Data Kamu?	Jumlah
+2a	Biaya pribadi WP atau tanggungan	Tidak ada (semua terkait usaha)	0
+2b	Premi asuransi (kesehatan, jiwa, dll)	Tidak ada	0
+2c	Natura/kenikmatan untuk karyawan	Tidak ada	0
+2d	Biaya ke pihak dengan hubungan istimewa	Tidak disebutkan → diasumsikan tidak	0
+2e	Sumbangan/hibah	Tidak ada	0
+2f	Pajak penghasilan (PPh) yang dibayar	Tidak ada dalam laporan	0
+2g	Gaji untuk pemilik / tanggungan	Tidak ada – kamu bekerja sendiri	0
+2h	Sanksi administrasi perpajakan	Tidak ada	0
+2i	Selisih penyusutan komersial vs fiskal	Tidak dicatat	0
+2j	Biaya atas penghasilan final/tidak kena pajak	Tidak ada	0
+2k	Lain-lain	Tidak ada	0
+💡 Hasil Penyesuaian Fiskal Positif
+Karena semua biaya yang kamu catat dalam laporan memang biaya operasional sah dan tidak melibatkan komponen pribadi, sumbangan, atau natura:
+
+👉 Semua nilai dari 2a s/d 2k = 0
+👉 Maka:
+2l (Jumlah Penyesuaian Fiskal Positif) = 0
+
+✅ Kesimpulan
+Uraian	Kode	Jumlah
+Penyesuaian Fiskal Positif Total	2l	0
+Jika kamu ingin, aku bisa bantu langsung masukkan ini ke template Excel atau melanjutkan ke Penyesuaian Fiskal Negatif (halaman selanjutnya di formulir pajak).
+
+Mau lanjut ke bagian itu?
+
+
+
+
+
+
+
+Anda bilang:
+
+ini juga hitung 
+
+ChatGPT bilang:
+Bagus! Gambar ini menunjukkan bagian Penyesuaian Fiskal Negatif, yaitu pengurangan terhadap penghasilan neto karena ada hal-hal yang secara fiskal boleh diakui meskipun secara komersial tidak diakui.
+
+Mari kita isi berdasarkan laporan kamu:
+
+🧾 PENJELASAN TIAP KOMPONEN
+Kode	Uraian	Ada di laporan kamu?	Jumlah
+3a	Penghasilan yang dikenakan PPh Final / tidak termasuk objek pajak, tapi masuk omzet	❌ Tidak ada pendapatan	0
+3b	Penyusutan/amortisasi komersial < penyusutan/amortisasi fiskal (selisih negatif)	❌ Tidak ada data aset tetap	0
+3c	Penyesuaian fiskal negatif lainnya (misalnya koreksi fiskal penghasilan khusus)	❌ Tidak disebutkan	0
+3d	Jumlah Penyesuaian Fiskal Negatif (3a + 3b + 3c)		0
+✅ HASIL PENGISIAN
+Seluruh nilai pada Penyesuaian Fiskal Negatif = 0, karena:
+
+Tidak ada penghasilan dari objek final atau non-objek.
+
+Tidak ada pencatatan penyusutan.
+
+Tidak ada koreksi negatif lain.
+
+🔢 Finalisasi Jumlah Bagian A
+Rumus	Hasil
+Jumlah Bagian A = 1e + 2l - 3d	= -22.982.550 + 0 - 0 = -22.982.550
+✅ KESIMPULAN:
+Semua penyesuaian fiskal negatif bernilai nol, dan jumlah akhir di bagian A tetap menunjukkan rugi bersih sebesar Rp22.982.550.
+
+Jika kamu mau, aku bisa bantu:
+
+Export hasil isian ini ke file Excel (.xlsx)
+
+Lanjut ke pengisian bagian B/C lainnya
+
+Menyiapkan file PDF ringkasan untuk pelaporan
+
+Mau dilanjutkan ke mana?
+
+
+
+
+
+
+
+Anda bilang:
+
+isi bagian ini 
+
+ChatGPT bilang:
+Gambar yang kamu berikan adalah Bagian A – Penghasilan yang Dikenakan Pajak Final dan/atau Bersifat Final, dari laporan SPT Tahunan Orang Pribadi.
+
+Mari kita isi berdasarkan data keuanganmu sebelumnya.
+
+📋 Prinsip Pengisian Bagian Ini:
+Bagian ini khusus mencatat penghasilan yang sudah dipotong PPh Final atau bersifat final, misalnya:
+
+Jenis Penghasilan Final	Contoh
+Bunga deposito/tabungan	Jika ada rekening berbunga
+Honorarium dari pemerintah (APBN/APBD)	Kalau bekerja dengan pemerintah
+Penghasilan jasa konstruksi	Pekerjaan proyek konstruksi
+Dividen, penjualan saham, properti, dll	Jika berinvestasi atau jual aset
+📊 Berdasarkan data kamu:
+Kamu menyatakan bahwa:
+
+Tidak ada pemasukan selama tahun pajak (Total Pendapatan = 0)
+
+Tidak ada aktivitas investasi, sewa, jual beli, proyek, atau honor pemerintah
+
+✅ Maka hasil isian adalah:
+No	Jenis Penghasilan	Dasar Pengenaan (Rp)	PPh Terutang (Rp)
+1–16	Semua item (bunga, obligasi, jasa konstruksi, dll)	Rp 0	Rp 0
+17	Penghasilan Lain Final (PP23/PP55, dll)	Rp 0	Rp 0
+18	JUMLAH (Total Final Income)	Rp 0	Rp 0
+💡 Kesimpulan:
+Karena tidak ada penghasilan yang dikenakan PPh Final, maka:
+
+Semua baris 1 s.d. 17 = 0
+
+Jumlah di baris 18 juga = 0
+
+Kalau kamu mau, aku bisa bantu:
+
+Export seluruh bagian ini dalam bentuk Excel/PDF
+
+Atau lanjut ke Bagian B (Penghasilan Tidak Kena Pajak / Tidak Termasuk Objek Pajak)
+
+Siap bantu terus, tinggal bilang aja!
+
+
+
+
+
+
+
+Anda bilang:
+
+ini juga
+
+ChatGPT bilang:
+Bagian yang kamu tunjuk ini adalah:
+
+📄 Bagian B – Penghasilan yang Tidak Termasuk Objek Pajak
+Ini adalah penghasilan yang tidak dikenakan pajak penghasilan karena dikecualikan oleh Undang-Undang Pajak Penghasilan (UU PPh).
+
+📋 Jenis-jenis Penghasilan Tidak Kena Pajak di Bagian B:
+No	Jenis Penghasilan
+1	Bantuan / Sumbangan / Hibah
+2	Warisan
+3	Bagian laba anggota perkumpulan, firma, CV, dll.
+4	Klaim asuransi (kesehatan, jiwa, kecelakaan, dwiguna, beasiswa)
+5	Beasiswa
+6a	Penghasilan dari luar negeri karena keahlian tertentu (UU PPh 4 ayat 3 h)
+6b	Penggantian natura/kenikmatan yang dikecualikan
+6c	Penghasilan lain yang tidak termasuk objek PPh
+🧾 Berdasarkan laporan keuangan kamu:
+✅ Tidak ada data yang menunjukkan:
+
+Menerima warisan, beasiswa, atau hibah
+
+Menerima klaim asuransi
+
+Menerima bagian laba dari firma atau CV
+
+Penghasilan dari luar negeri
+
+Natura atau kenikmatan (misalnya mobil dinas, fasilitas tempat tinggal)
+
+✅ Hasil Pengisian:
+No	Jenis Penghasilan	Jumlah (Rp)
+1–6	Semua item (hibah, asuransi, beasiswa, natura, dll)	Rp 0
+JBB	Jumlah Bagian B (Total Penghasilan Bukan Objek Pajak)	Rp 0
+➕ Bagian C: Penghasilan Neto Istri/Suami yang Dikenakan Pajak Terpisah
+Karena kamu menyatakan bekerja sendiri dan tidak melaporkan penghasilan pasangan, maka:
+
+Bagian ini juga diisi: Rp 0
+
+🔚 Kesimpulan:
+Seluruh Bagian B: 0
+
+Bagian C (Penghasilan Istri/Suami Terpisah): 0
+
+Kalau kamu ingin, aku bisa bantu susun semua hasil dari Bagian A s.d. C ini dalam format Excel, atau PDF SPT untuk disimpan dan diunggah ke DJP Online. Mau langsung saya bantu buatkan?
+
+
+
+
+
+
+
+Anda bilang:
+
+coba sesuaikan dengan ini
+
+ChatGPT bilang:
+Gambar ini adalah Bagian A – Daftar Harta pada Akhir Tahun dari formulir SPT Tahunan.
+
+Berikut adalah penyesuaian isinya berdasarkan data yang kamu lampirkan:
+
+✅ Rangkuman Data Harta Kamu:
+KODE HARTA	NAMA HARTA	TAHUN PEROLEHAN	HARGA PEROLEHAN	KETERANGAN
+012	Tabungan	2024	Rp 1.500.000	Pemberian dari orang tua
+055	Laptop ASUS	2024	Rp 600.000	Pemberian kakak
+055	Laptop HP	2023	Rp 1.000.000	Uang pribadi
+💡 Penjelasan Setiap Kolom:
+Kode Harta:
+
+012 = Tabungan
+
+055 = Peralatan Elektronik, Furniture, Komputer
+
+Nama Harta:
+
+Diisi sesuai barang dimiliki, bisa berupa nilai saldo untuk tabungan atau deskripsi barang seperti laptop.
+
+Tahun Perolehan:
+
+Wajib diisi sesuai tahun saat harta pertama kali dimiliki.
+
+Harga Perolehan:
+
+Nilai saat pertama diperoleh (bukan harga saat ini). Disesuaikan dari catatan/estimasi wajar.
+
+Keterangan:
+
+Sumber dana atau asal perolehan (contoh: hibah, pemberian, beli sendiri, warisan, dll.)
+
+🧾 Hasil Final yang Dicantumkan di Formulir:
+Kode	Nama Harta	Tahun Perolehan	Harga Perolehan	Keterangan
+012	Tabungan	2024	Rp 1.500.000	Pemberian dari orang tua
+055	Laptop ASUS	2024	Rp 600.000	Pemberian kakak
+055	Laptop HP	2023	Rp 1.000.000	Uang pribadi
+Kalau kamu mau, aku bisa bantu:
+
+Menyusun bagian ini dalam format Excel atau PDF
+
+Menambahkan ke file SPT terintegrasi (gabungan dari seluruh bagian A–C, Harta, Penghasilan, dll)
+
+Mau langsung saya satukan semua ke file final?
+
+
+
+
+
+
+
+Anda bilang:
+
+apakah ada bagian ini yg perlu di ubah 
+
+ChatGPT bilang:
+Bagus! Ini adalah Bagian B (Penghasilan yang Tidak Termasuk Objek Pajak) dan Bagian C (Penghasilan Istri/Suami yang Dikenakan Pajak Terpisah) dari SPT Tahunan Orang Pribadi.
+
+Mari kita telaah apakah perlu ada perubahan berdasarkan data kamu sebelumnya:
+
+📋 Ringkasan Informasi Kamu:
+Kamu bekerja sendiri (usaha perorangan di bidang IT)
+
+Tidak ada pemasukan selama tahun 2024 (Total Pendapatan = Rp 0)
+
+Tidak ada honor luar negeri, natura, warisan, hibah, atau beasiswa
+
+Belum ada karyawan, istri/suami tidak dilaporkan sebagai WP terpisah
+
+✅ Evaluasi Bagian B:
+Baris	Jenis Penghasilan	Perlu Diubah?	Keterangan Tambahan
+1	Bantuan / Sumbangan / Hibah	❌ Tidak	Tidak dicatat di laporan
+2	Warisan	❌ Tidak	Tidak ada data
+3	Bagian laba komanditer / firma / CV	❌ Tidak	Tidak ada CV/firma tercatat
+4	Klaim Asuransi	❌ Tidak	Tidak disebutkan
+5	Beasiswa	❌ Tidak	Tidak ada
+6a	Penghasilan luar negeri karena keahlian	❌ Tidak	Tidak ada penghasilan luar negeri
+6b	Penggantian natura / kenikmatan dari pekerjaan	❌ Tidak	Tidak ada mobil dinas, rumah, dll.
+6c	Penghasilan lain yang dikecualikan dari objek pajak	❌ Tidak	Tidak ada
+📌 JBB = 0 (Tetap)
+
+✅ Evaluasi Bagian C:
+Deskripsi	Status
+Penghasilan neto istri/suami dikenakan pajak terpisah	❌ Tidak ada
+📌 Bagian C juga = 0 (Tetap)
+
+✅ Kesimpulan:
+🔸 Tidak ada perubahan yang perlu dilakukan pada gambar di atas.
+🔸 Semua kolom sudah benar diisi Rp 0 berdasarkan data kamu.
+
+Kalau kamu ingin, saya bisa bantu rekap semua data yang sudah kita olah tadi (Bagian A–C, Harta, dll) dalam 1 file Excel atau PDF. Mau langsung saya susun?
+
+
+
+
+
+
+
+Anda bilang:
+
+jelaskan ini 
+
+ChatGPT bilang:
+Gambar ini menampilkan:
+
+📄 Bagian B dan C dari Lampiran SPT Formulir 1770 (Halaman Penghasilan Neto dengan Norma atau Catatan)
+🔹 Bagian B: Penghasilan Neto dari Usaha (dengan Norma Perhitungan)
+Untuk Wajib Pajak yang tidak menyelenggarakan pembukuan, perhitungan penghasilan neto dilakukan dengan cara:
+
+📌 Peredaran Usaha × Norma = Penghasilan Neto
+
+Kolom	Penjelasan
+Jenis Usaha	Dibagi menjadi: Dagang, Industri, Jasa, Pekerjaan Bebas, Usaha Lainnya
+Peredaran Usaha	Total omzet dari masing-masing jenis usaha
+Norma (%)	Persentase norma yang ditentukan DJP berdasarkan jenis usaha & wilayah
+Penghasilan Neto	Hasil perhitungan omzet × norma
+💡 Tapi... dalam kasusmu:
+Kamu menyelenggarakan pembukuan, karena sudah menyampaikan laporan rugi laba.
+
+Maka: bagian ini tidak digunakan.
+
+Diisi otomatis nol (0) sebagai formalitas.
+
+📌 Jumlah Bagian B (JBB) = 0
+(karena tidak menggunakan norma perhitungan penghasilan neto)
+
+🔹 Bagian C: Penghasilan Neto dari Pekerjaan (Bukan Usaha)
+Untuk Wajib Pajak yang bekerja sebagai karyawan (PNS/swasta), bukan wirausaha.
+
+Kolom	Penjelasan
+NPWP & Nama Pemberi Kerja	Diisi jika kamu bekerja di perusahaan/lembaga
+Penghasilan Bruto	Gaji kotor selama setahun
+Pengurangan	Biaya jabatan, iuran pensiun, dsb
+Penghasilan Neto	Bruto dikurangi pengurang
+💡 Tapi... dalam kasusmu:
+Kamu menyatakan tidak bekerja sebagai karyawan (hanya usaha sendiri di bidang IT).
+
+Maka: Bagian C ini = 0
+
+✅ Kesimpulan
+Bagian	Keterangan	Nilai
+Bagian B	Tidak digunakan karena kamu menyusun pembukuan	0
+Bagian C	Tidak ada pekerjaan tetap / karyawan	0
+Keduanya tidak perlu diisi karena kamu sudah mengisi melalui laporan usaha di Bagian A.
+
+Kalau kamu mau, aku bisa bantu rekap keseluruhan isi SPT yang sudah kita susun:
+
+Bagian A (Usaha dan Rugi Laba)
+
+Penyesuaian Fiskal
+
+Penghasilan Final
+
+Harta
+
+dll
+
+Dan menyatukannya dalam file Excel atau PDF. Siap bantu!
+
+
+
+
+
+
+
+Anda bilang:
+jadi kolom kolomnya diisi apa
+
+
+ChatGPT bilang:
+Oke! Kita bahas secara langsung dan praktis:
+Kamu adalah Wajib Pajak perorangan yang:
+
+Usahanya di bidang IT (tanpa karyawan, bukan karyawan tetap)
+
+Menyelenggarakan pembukuan
+
+Tidak punya pendapatan selama tahun 2024
+
+Telah melampirkan laporan rugi/laba dan daftar harta
+
+Berarti pengisian kolom di gambar ini adalah sebagai berikut:
+
+🟨 Bagian B – Penghasilan Neto dengan Norma (Pasal 14 UU PPh)
+Karena kamu pakai pembukuan, bagian ini tidak dipakai. Diisi semua dengan angka nol.
+
+NO	JENIS USAHA	PEREDARAN USAHA	NORMA (%)	PENGHASILAN NETO
+1	Dagang	0	–	0
+2	Industri	0	–	0
+3	Jasa	0	–	0
+4	Pekerjaan Bebas	0	–	0
+5	Usaha Lainnya	0	–	0
+JUMLAH BAGIAN B	0		0
+🟨 Bagian C – Penghasilan Neto dari Pekerjaan (Bukan Usaha)
+Karena kamu bukan karyawan, tidak ada penghasilan dari pekerjaan tetap, maka ini juga:
+
+NPWP PEMBERI KERJA	NAMA PEMBERI KERJA	PENGHASILAN BRUTO	PENGURANGAN	PENGHASILAN NETO
+–	–	0	0	0
+JUMLAH BAGIAN C				0
+✅ Kesimpulan Singkat
+Isi semua kolom pada Bagian B dan C dengan nol (0) karena:
+
+Kamu tidak menggunakan norma, tapi pembukuan
+
+Kamu tidak bekerja sebagai pegawai/karyawan tetap
+
+Kalau kamu mau, aku bisa bantu satukan semua ini dalam 1 file Excel yang rapi, atau bantu buat versi PDF untuk kamu laporkan ke DJP Online. Siap?
+
+
+
+
+
+
+
+Anda bilang:
+
+kalo ini diisi apa 
+
+ChatGPT bilang:
+Gambar ini menunjukkan:
+
+📄 Bagian D – Penghasilan Dalam Negeri Lainnya
+(Formulir 1770 – Lampiran III)
+
+Ini khusus untuk penghasilan non-usaha dan non-pekerjaan tetap, yang bukan objek PPh Final — jadi masuk perhitungan pajak progresif.
+
+📋 Kolom yang Ada & Penjelasannya:
+No	Jenis Usaha / Penghasilan	Contoh Umum
+1	Bunga	Bunga pinjaman pribadi, bunga piutang bukan dari bank
+2	Royalti	Dari penjualan hak cipta, lagu, software, dll
+3	Sewa	Misalnya menyewakan rumah, alat, kendaraan
+4	Penghargaan dan Hadiah	Hadiah lomba, apresiasi, penghargaan yang bukan undian
+5	Keuntungan Penjualan Harta	Jual laptop, motor, tanah — jika tidak dikenakan PPh Final
+6	Penghasilan Lainnya	Misalnya: cashback, refund, pendapatan tak biasa lainnya
+🧾 Berdasarkan laporan keuangan kamu:
+✅ Tidak ada penghasilan seperti:
+
+Bunga piutang pribadi
+
+Royalti dari software atau karya
+
+Menyewakan properti
+
+Jual beli barang (yang menimbulkan untung)
+
+Hadiah atau penghargaan
+
+✅ Jawaban Praktis untuk Kamu:
+NO	JENIS USAHA / PENGHASILAN	PENGHASILAN NETO
+1	Bunga	0
+2	Royalti	0
+3	Sewa	0
+4	Penghargaan dan Hadiah	0
+5	Keuntungan dari Penjualan Harta	0
+6	Penghasilan Lainnya	0
+JUMLAH BAGIAN D (JBD)	0
+✅ Kesimpulan:
+Semua diisi 0, karena kamu tidak punya penghasilan dari sumber-sumber ini selama 2024.
+
+Kalau kamu sudah sampai di sini, berarti semua bagian SPT kamu sudah lengkap.
+
+Mau saya bantu rekap jadi 1 file Excel atau PDF untuk disimpan dan dilaporkan ke DJP Online?
+
+
+
+
+
+
+
+///////////////////////////////////////////////
+/
+//////////////////////////////////////////////////
+/
+/////////////////////////////////////////////////
