@@ -23065,3 +23065,73 @@ Mau saya bantu rekap jadi 1 file Excel atau PDF untuk disimpan dan dilaporkan ke
 //////////////////////////////////////////////////
 /
 /////////////////////////////////////////////////
+
+mencetak form otomatis vba
+
+
+Sub BuatFormPengeluaran()
+
+    Dim UF As Object
+    Dim ctrl As MSForms.Control
+    Dim VBComp As VBIDE.VBComponent
+    Dim designer As Object
+    Dim cmbKategori As MSForms.ComboBox, cmbSubKategori As MSForms.ComboBox
+    
+    ' Tambahkan komponen UserForm baru
+    Set VBComp = ThisWorkbook.VBProject.VBComponents.Add(vbext_ct_MSForm)
+    VBComp.Properties("Caption") = "Form Input Pengeluaran Jemaat"
+    VBComp.Name = "FormPengeluaran"
+    
+    Set designer = VBComp.Designer
+    
+    ' Fungsi bantu untuk membuat label dan textbox
+    Dim top As Integer: top = 10
+    Dim i As Integer
+    
+    Dim labelNames As Variant, ctrlNames As Variant
+    labelNames = Array("Tanggal", "KW", "Uraian", "Jumlah", "Kategori", "Sub Kategori", "Setor")
+    ctrlNames = Array("txtTanggal", "txtKW", "txtUraian", "txtJumlah", "cmbKategori", "cmbSubKategori", "txtSetor")
+    
+    For i = 0 To UBound(labelNames)
+        ' Label
+        With designer.Controls.Add("Forms.Label.1")
+            .Caption = labelNames(i)
+            .Top = top
+            .Left = 10
+            .Width = 100
+        End With
+        
+        ' TextBox atau ComboBox
+        If Left(ctrlNames(i), 3) = "cmb" Then
+            Set ctrl = designer.Controls.Add("Forms.ComboBox.1", ctrlNames(i), True)
+        Else
+            Set ctrl = designer.Controls.Add("Forms.TextBox.1", ctrlNames(i), True)
+        End If
+        With ctrl
+            .Top = top
+            .Left = 120
+            .Width = 200
+        End With
+        top = top + 30
+    Next i
+    
+    ' Tombol Simpan
+    With designer.Controls.Add("Forms.CommandButton.1", "btnSubmit", True)
+        .Caption = "Simpan Data"
+        .Top = top
+        .Left = 120
+        .Width = 100
+    End With
+    
+    ' Tombol Batal
+    With designer.Controls.Add("Forms.CommandButton.1", "btnCancel", True)
+        .Caption = "Batal"
+        .Top = top
+        .Left = 230
+        .Width = 100
+    End With
+
+    MsgBox "Form 'FormPengeluaran' berhasil dibuat. Silakan buka dari jendela UserForm.", vbInformation
+
+End Sub
+-------------------------------
