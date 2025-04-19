@@ -23135,3 +23135,241 @@ Sub BuatFormPengeluaran()
 
 End Sub
 -------------------------------
+19 april
+
+forminput:
+' --- Kode di belakang UserForm 'FormPengeluaran' ---
+
+Private Sub UserForm_Initialize()
+    ' Inisialisasi data kategori
+    With Me.cmbKategori
+        .AddItem "200 - ADMINISTRASI GEREJA"
+        .AddItem "400 - PELAYANAN IBADAH"
+        .AddItem "600 - PEMBINAAN & PELAYANAN"
+        .AddItem "800 - BANTUAN & TUNJANGAN"
+    End With
+    
+    ' Set tanggal default ke hari ini
+    Me.txtTanggal.Value = Format(Date, "dd/mm/yyyy")
+End Sub
+
+Private Sub cmbKategori_Change()
+    ' Bersihkan sub kategori sebelumnya
+    Me.cmbSubKategori.Clear
+    
+    ' Isi subkategori berdasarkan kategori yang dipilih
+    Select Case Me.cmbKategori.Value
+        Case "200 - ADMINISTRASI GEREJA"
+            ' Subkategori untuk ADMINISTRASI GEREJA
+            Me.cmbSubKategori.AddItem "200.01.01 - Pendeta Pimpinan Jemaat"
+            Me.cmbSubKategori.AddItem "200.01.02 - Vicaris dan Pendeta Khusus"
+            Me.cmbSubKategori.AddItem "200.01.03 - Guru Jemaat"
+            Me.cmbSubKategori.AddItem "200.01.04 - Sekretaris dan Bendahara Jemaat"
+            Me.cmbSubKategori.AddItem "200.01.05.a - Pegawai Kantor (Administrasi): 2 orang"
+            Me.cmbSubKategori.AddItem "200.01.06.a - Pegawai Kebersihan Gedung Gereja: 1 orang"
+            Me.cmbSubKategori.AddItem "200.01.06.b - Pegawai Kebersihan Pekarangan Gereja: 1 orang"
+            Me.cmbSubKategori.AddItem "200.01.06.c1 - Pegawai Supir Mobil Dinas & Ambulance"
+            Me.cmbSubKategori.AddItem "200.01.06.c2 - Pegawai Jaga Malam"
+            Me.cmbSubKategori.AddItem "200.01.06.d - Pegawai Kebersihan Gedung Multifungsi"
+            Me.cmbSubKategori.AddItem "200.01.06.e - Pegawai Soundman"
+            Me.cmbSubKategori.AddItem "200.01.07 - Administrasi Guru Sekolah Minggu (dan Remaja)"
+            Me.cmbSubKategori.AddItem "200.01.08 - Pengawas Parkir Gereja (Minggu & Hari Besar)"
+            Me.cmbSubKategori.AddItem "200.02.01 - Alat Tulis Kantor, Penggandaan dan Cetakan"
+            Me.cmbSubKategori.AddItem "200.02.02 - Rapat dan Pertemuan Majelis Jemaat"
+            Me.cmbSubKategori.AddItem "200.02.03 - Insentif/Lembur Pegawai"
+            Me.cmbSubKategori.AddItem "200.02.04.a - Minum & Konsumsi Kantor, Jemaat"
+            Me.cmbSubKategori.AddItem "200.02.04.b - Biaya Makan Tamu Gereja"
+            Me.cmbSubKategori.AddItem "200.02.04.c - Biaya Snack untuk Pemusik & Songleader"
+            Me.cmbSubKategori.AddItem "200.02.05 - Penyediaan Kolportase"
+            Me.cmbSubKategori.AddItem "200.02.06 - Transport, Kurir, Benda Pos"
+            Me.cmbSubKategori.AddItem "200.03.01.a - Snack dan minuman sermon penatua"
+            Me.cmbSubKategori.AddItem "200.03.01.b - Penyediaan makanan pembukaan dan penutupan sermon penatua"
+            Me.cmbSubKategori.AddItem "200.03.02 - Dana Pembinaan untuk Paduan Suara"
+            Me.cmbSubKategori.AddItem "200.03.03.a - Syukuran Awal Tahun (Jemaat & Pendeta)"
+            Me.cmbSubKategori.AddItem "200.03.03.b - Snack Kebaktian Awal Tahun Gereja"
+            Me.cmbSubKategori.AddItem "200.03.03.c - Snack Paskah dan Buha-Buha Ijuk"
+            Me.cmbSubKategori.AddItem "200.03.04 - Krans Bunga Dukacita bagi Anggota Jemaat"
+            Me.cmbSubKategori.AddItem "200.03.05 - Bantuan Dukacita bagi Anggota Jemaat"
+            Me.cmbSubKategori.AddItem "200.03.06.a - Bunga altar pada Kebaktian Minggu"
+            Me.cmbSubKategori.AddItem "200.03.06.b - Dekorasi pada Kebaktian Hari Besar Kristen"
+            Me.cmbSubKategori.AddItem "200.03.07 - Keamanan Acara Hari Besar Kristen"
+            Me.cmbSubKategori.AddItem "200.03.08.a - Kontribusi & Registrasi Peserta Rapat Pendeta"
+            Me.cmbSubKategori.AddItem "200.03.08.b - Perjalanan Dinas Peserta Rapat Pendeta (2 pendeta)"
+            Me.cmbSubKategori.AddItem "200.03.09 - Perjalanan Dinas atas undangan Kantor Pusat"
+            Me.cmbSubKategori.AddItem "200.03.10 - Sidang Umum Jemaat"
+            Me.cmbSubKategori.AddItem "200.03.11.a - Biaya Tak Terduga (Pengurusan Sertifikat Tanah)"
+            Me.cmbSubKategori.AddItem "200.03.11.b - Biaya Tak Terduga/Insidentil"
+            Me.cmbSubKategori.AddItem "200.04.01 - Gedung Gereja, Rumah Dinas & Pekarangan"
+            Me.cmbSubKategori.AddItem "200.04.02 - Inventaris Gereja"
+            Me.cmbSubKategori.AddItem "200.05.01.a - Kijang Innova, Plat BK 1757 EJ"
+            Me.cmbSubKategori.AddItem "200.05.01.b - Pajak Kendaraan Kijang Innova"
+            Me.cmbSubKategori.AddItem "200.05.02.a - HIACE BK.7866 DP"
+            Me.cmbSubKategori.AddItem "200.05.02.b - Pajak Kendaraan HIACE"
+            Me.cmbSubKategori.AddItem "200.05.03.a - Roda 2: 1 unit, Plat BK. 5440 AGG"
+            Me.cmbSubKategori.AddItem "200.05.03.b - Pajak Kendaraan Roda 2"
+            Me.cmbSubKategori.AddItem "200.06.01 - Telepon, Speedy, MyRepublik dan WA"
+            Me.cmbSubKategori.AddItem "200.07.01 - Jubah Penatua (Upah Jahit)"
+            Me.cmbSubKategori.AddItem "200.07.02 - Peralatan & Perlengkapan Inventaris Gereja"
+            Me.cmbSubKategori.AddItem "200.07.03 - Dekorasi dan Persiapan Natal"
+            
+        Case "400 - PELAYANAN IBADAH"
+            ' Subkategori untuk PELAYANAN IBADAH
+            Me.cmbSubKategori.AddItem "400.01.01 - Pengkhotbah Minggu: Pimpinan Pusat GKPI"
+            Me.cmbSubKategori.AddItem "400.01.02 - Pengkhotbah Minggu: Dari Luar Kota"
+            Me.cmbSubKategori.AddItem "400.01.03 - Pengkhotbah Minggu: Dari Dalam Kota"
+            Me.cmbSubKategori.AddItem "400.01.04 - Pengkhotbah Minggu: Di Rumah Duka (Oleh Pendeta)"
+            Me.cmbSubKategori.AddItem "400.01.05 - Pengkhotbah Minggu: Remaja"
+            Me.cmbSubKategori.AddItem "400.02.01 - Pengkhotbah Kebaktian di Lingkungan (Wijk)"
+            Me.cmbSubKategori.AddItem "400.02.02 - Pengkhotbah Kebaktian Pemuda-Pemudi/Remaja & GSM"
+            Me.cmbSubKategori.AddItem "400.02.03 - Pengkhotbah Kebaktian Koor Ibu-Ibu"
+            Me.cmbSubKategori.AddItem "400.02.04 - Pengkhotbah Kebaktian Ibu Hanna"
+            Me.cmbSubKategori.AddItem "400.02.05 - Pengkhotbah Kebaktian Lanjut Usia (LANSIA)"
+            Me.cmbSubKategori.AddItem "400.03.01 - Pengkhotbah Perjanjian/Pemberkatan Nikah"
+            Me.cmbSubKategori.AddItem "400.03.02 - Pengkhotbah Penguburan Jenazah"
+            Me.cmbSubKategori.AddItem "400.03.03 - Pengkhotbah di Rumah Duka (Oleh Penatua)"
+            Me.cmbSubKategori.AddItem "400.04.01 - Minggu Pagi 08.00 WIB (@ 13 Orang)"
+            Me.cmbSubKategori.AddItem "400.04.02 - Minggu Sore: Pukul 18.00 WIB (@ 13 Orang)"
+            Me.cmbSubKategori.AddItem "400.04.03 - Sekolah Minggu dan Remaja"
+            Me.cmbSubKategori.AddItem "400.04.04 - Perjanjian/Pemberkatan Pernikahan"
+            Me.cmbSubKategori.AddItem "400.04.05 - Kebaktian pemberangkatan jenazah"
+            Me.cmbSubKategori.AddItem "400.04.06 - Minggu Di Rumah Duka"
+            Me.cmbSubKategori.AddItem "400.04.07 - Pelayanan di Rumah Duka"
+            Me.cmbSubKategori.AddItem "400.04.08 - Guru Sekolah Minggu (Sermon & Mengajar)"
+            Me.cmbSubKategori.AddItem "400.04.09 - Latihan Pemusik dan Songleader"
+            Me.cmbSubKategori.AddItem "400.04.10 - Petugas Penghitung Kebaktian Minggu"
+            Me.cmbSubKategori.AddItem "400.05.01 - Perjamuan Kudus di Gereja"
+            Me.cmbSubKategori.AddItem "400.05.02 - Snack Ujian Tulisan & Lisan Pelajar Sidi"
+            Me.cmbSubKategori.AddItem "400.06.01 - Perayaan HUT Jemaat"
+            
+        Case "600 - PEMBINAAN & PELAYANAN"
+            ' Subkategori untuk PEMBINAAN & PELAYANAN
+            Me.cmbSubKategori.AddItem "600.01.01 - Pendidikan Lanjutan untuk Pendeta"
+            Me.cmbSubKategori.AddItem "600.01.02 - Penghargaan untuk Penatua"
+            Me.cmbSubKategori.AddItem "600.01.03 - Pembinaan & Pelatihan Pelajar Sidi"
+            Me.cmbSubKategori.AddItem "600.01.04 - Pembinaan Penatua se Resort Medan Barat"
+            Me.cmbSubKategori.AddItem "600.02.01 - Pembinaan & Pelayan Rohani (PPR)"
+            Me.cmbSubKategori.AddItem "600.02.02 - Pekabaran Injil"
+            Me.cmbSubKategori.AddItem "600.02.03 - Diakoni Sosial"
+            Me.cmbSubKategori.AddItem "600.02.04 - Musik, Nyanyian & Koor (MNK)"
+            Me.cmbSubKategori.AddItem "600.02.05 - Sekolah Minggu"
+            Me.cmbSubKategori.AddItem "600.02.06 - Remaja"
+            Me.cmbSubKategori.AddItem "600.02.07 - Pemuda"
+            Me.cmbSubKategori.AddItem "600.02.08 - Perempuan"
+            Me.cmbSubKategori.AddItem "600.02.09 - Pria"
+            Me.cmbSubKategori.AddItem "600.02.10 - Lansia"
+            Me.cmbSubKategori.AddItem "600.02.11 - Kesehatan"
+            Me.cmbSubKategori.AddItem "600.02.12 - Pendidikan"
+            Me.cmbSubKategori.AddItem "600.02.13 - Usaha & Pengembangan Sumber Daya (UPSD)"
+            Me.cmbSubKategori.AddItem "600.02.14 - Sarana & Prasarana"
+            Me.cmbSubKategori.AddItem "600.02.15 - Natal Gabungan Seksi-Seksi (Natal II)"
+            Me.cmbSubKategori.AddItem "600.03.01 - Target Ke Kantor Pusat GKPI"
+            Me.cmbSubKategori.AddItem "600.03.02 - Biaya Tahun Renstra GKPI 2023"
+            Me.cmbSubKategori.AddItem "600.03.03 - Kantor Sinode GKPI (Persembahan Kedua)"
+            Me.cmbSubKategori.AddItem "600.04.01 - Target Ke GKPI Resort Medan Barat"
+            
+        Case "800 - BANTUAN & TUNJANGAN"
+            ' Subkategori untuk BANTUAN & TUNJANGAN
+            Me.cmbSubKategori.AddItem "800.01.01 - Bantuan ke Jemaat untuk musibah/bencana alam"
+            Me.cmbSubKategori.AddItem "800.01.02 - Akomodasi Acara Penghiburan Ke Rumah Duka"
+            Me.cmbSubKategori.AddItem "800.01.03 - Bantuan untuk Dana Pensiun Pendeta GKPI"
+            Me.cmbSubKategori.AddItem "800.01.04 - Bantuan untuk PA. Mamre dan Yapentra"
+            Me.cmbSubKategori.AddItem "800.01.05 - Bantuan Ke GKPI Lainnya"
+            Me.cmbSubKategori.AddItem "800.01.06 - Bantuan Kepada Masyarakat di sekitar"
+            Me.cmbSubKategori.AddItem "800.02.01 - Sekolah Minggu"
+            Me.cmbSubKategori.AddItem "800.02.02 - Penatua Purna Bakti"
+            Me.cmbSubKategori.AddItem "800.02.03 - Penatua Aktif"
+            Me.cmbSubKategori.AddItem "800.02.04 - Calon Penatua Aktif"
+            Me.cmbSubKategori.AddItem "800.02.05 - Pendeta GKPI Resort Medan Barat"
+            Me.cmbSubKategori.AddItem "800.02.06 - Anggota Majelis Jemaat: Ketua Seksi & Penasehat"
+            Me.cmbSubKategori.AddItem "800.02.07 - Guru-Guru Koor di Jemaat"
+            Me.cmbSubKategori.AddItem "800.02.08 - Guru-Guru Sekolah Minggu"
+            Me.cmbSubKategori.AddItem "800.02.09 - Pemusik: Pianis, Organis dan Saxophonis"
+            Me.cmbSubKategori.AddItem "800.02.10 - Songleader"
+            Me.cmbSubKategori.AddItem "800.02.11 - Petugas Live Streaming"
+    End Select
+End Sub
+
+Private Sub btnSubmit_Click()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim kodeSub As String
+    Dim jumlah As Double, setor As Double
+
+    ' Validasi input
+    If Me.txtTanggal.Value = "" Or Me.txtKW.Value = "" Or Me.txtUraian.Value = "" Or _
+       Me.txtJumlah.Value = "" Or Me.cmbKategori.Value = "" Or Me.cmbSubKategori.Value = "" Then
+        MsgBox "Harap isi semua field yang diperlukan!", vbExclamation
+        Exit Sub
+    End If
+    
+    ' Validasi format angka
+    If Not IsNumeric(Me.txtJumlah.Value) Then
+        MsgBox "Jumlah harus berupa angka!", vbExclamation
+        Exit Sub
+    End If
+    
+    If Me.txtSetor.Value <> "" And Not IsNumeric(Me.txtSetor.Value) Then
+        MsgBox "Setor harus berupa angka!", vbExclamation
+        Exit Sub
+    End If
+
+    ' Set nilai default untuk setor jika kosong
+    If Me.txtSetor.Value = "" Then
+        Me.txtSetor.Value = "0"
+    End If
+
+    ' Simpan data ke worksheet
+    Set ws = ThisWorkbook.Sheets("JUR PENGEL JEMAAT 2024")
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row + 1
+
+    ' Ekstrak kode subkategori
+    kodeSub = Split(Me.cmbSubKategori.Value, " - ")(0)
+    jumlah = Val(Me.txtJumlah.Value)
+    setor = Val(Me.txtSetor.Value)
+
+    ' Input data dasar
+    ws.Cells(lastRow, 1).Value = CDate(Me.txtTanggal.Value)
+    ws.Cells(lastRow, 1).NumberFormat = "dd-mmm-yy"
+    ws.Cells(lastRow, 2).Value = Me.txtKW.Value
+    ws.Cells(lastRow, 3).Value = Me.txtUraian.Value
+    ws.Cells(lastRow, 4).Value = jumlah
+    ws.Cells(lastRow, 4).NumberFormat = "#,##0.00"
+    ws.Cells(lastRow, 13).Value = setor
+    ws.Cells(lastRow, 13).NumberFormat = "#,##0.00"
+
+    ' Masukkan ke kolom sesuai kategori
+    Select Case True
+        Case Me.cmbKategori.Value Like "200*"
+            ws.Cells(lastRow, 5).Value = kodeSub
+            ws.Cells(lastRow, 6).Value = jumlah
+        Case Me.cmbKategori.Value Like "400*"
+            ws.Cells(lastRow, 7).Value = kodeSub
+            ws.Cells(lastRow, 8).Value = jumlah
+        Case Me.cmbKategori.Value Like "600*"
+            ws.Cells(lastRow, 9).Value = kodeSub
+            ws.Cells(lastRow, 10).Value = jumlah
+        Case Me.cmbKategori.Value Like "800*"
+            ws.Cells(lastRow, 11).Value = kodeSub
+            ws.Cells(lastRow, 12).Value = jumlah
+    End Select
+
+    ' Hitung total kas
+    ws.Cells(lastRow, 4).Value = WorksheetFunction.Sum(ws.Range(ws.Cells(lastRow, 6), ws.Cells(lastRow, 8), _
+                                  ws.Cells(lastRow, 10), ws.Cells(lastRow, 12), ws.Cells(lastRow, 13))
+    ws.Cells(lastRow, 4).NumberFormat = "#,##0.00"
+
+    ' Format angka untuk kolom jumlah
+    ws.Cells(lastRow, 6).NumberFormat = "#,##0.00"
+    ws.Cells(lastRow, 8).NumberFormat = "#,##0.00"
+    ws.Cells(lastRow, 10).NumberFormat = "#,##0.00"
+    ws.Cells(lastRow, 12).NumberFormat = "#,##0.00"
+
+    MsgBox "Data berhasil disimpan di baris " & lastRow, vbInformation
+    Unload Me
+End Sub
+
+Private Sub btnCancel_Click()
+    Unload Me
+End Sub
+
+
