@@ -23373,3 +23373,317 @@ Private Sub btnCancel_Click()
 End Sub
 
 
+-------------------
+23 april
+
+form udah bekerja dan added data di rowakhir
+' --- Kode di belakang UserForm 'FormPengeluaran' ---
+Option Explicit
+
+' Variabel global untuk worksheet
+Dim ws As Worksheet
+
+Private Sub UserForm_Initialize()
+    ' Inisialisasi worksheet - gunakan Sheet pertama (indeks 1)
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets(1)
+    On Error GoTo 0
+    
+    ' Jika Sheet 1 tidak ada, buat baru
+    If ws Is Nothing Then
+        Set ws = ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(1))
+        ws.Name = "Data Pengeluaran"
+        CreateHeaders
+    End If
+    
+    ' Inisialisasi data kategori
+    With Me.cmbKategori
+        .Clear
+        .AddItem "200 - ADMINISTRASI GEREJA"
+        .AddItem "400 - PELAYANAN IBADAH"
+        .AddItem "600 - PEMBINAAN & PELAYANAN"
+        .AddItem "800 - BANTUAN & TUNJANGAN"
+    End With
+    
+    ' Set tanggal default ke hari ini
+    Me.txtTanggal.Value = Format(Date, "dd/mm/yyyy")
+    
+    ' Kosongkan field lainnya
+    Me.txtKW.Value = ""
+    Me.txtUraian.Value = ""
+    Me.txtJumlah.Value = ""
+    Me.txtSetor.Value = ""
+    Me.cmbKategori.Value = ""
+    Me.cmbSubKategori.Clear
+    Me.cmbSubKategori.Enabled = False
+End Sub
+
+Private Sub CreateHeaders()
+    ' Buat header sesuai struktur yang diminta
+    Dim headers As Variant
+    headers = Array( _
+        "TGL.", "KW", "URAIAN", "KREDIT - KAS", _
+        "200 (Kode)", "200 (Nilai)", _
+        "400 (Kode)", "400 (Nilai)", _
+        "600 (Kode)", "600 (Nilai)", _
+        "800 (Kode)", "800 (Nilai)", _
+        "Uang yang di setor" _
+    )
+    
+    With ws
+        ' Tulis header
+        Dim i As Integer
+        For i = 0 To UBound(headers)
+            .Cells(1, i + 1).Value = headers(i)
+        Next i
+        
+        ' Format header
+        .Range("A1:M1").Font.Bold = True
+        .Range("A1:M1").HorizontalAlignment = xlCenter
+        .Columns("A:M").AutoFit
+    End With
+End Sub
+
+Private Sub cmbKategori_Change()
+    On Error GoTo ErrorHandler
+    Application.ScreenUpdating = False
+    
+    Me.cmbSubKategori.Enabled = True
+    Me.cmbSubKategori.Clear
+    Me.cmbSubKategori.Value = ""
+    
+    If Trim(Me.cmbKategori.Value) = "" Then
+        Me.cmbSubKategori.Enabled = False
+        Exit Sub
+    End If
+    
+    ' Isi subkategori berdasarkan kategori yang dipilih
+    Select Case UCase(Trim(Me.cmbKategori.Value))
+        Case "200 - ADMINISTRASI GEREJA"
+            With Me.cmbSubKategori
+                .AddItem "200.01.01 - Pendeta Pimpinan Jemaat"
+                .AddItem "200.01.02 - Vicaris dan Pendeta Khusus"
+                .AddItem "200.01.03 - Guru Jemaat"
+                .AddItem "200.01.04 - Sekretaris dan Bendahara Jemaat"
+                .AddItem "200.02.01 - Gaji Karyawan Tetap"
+                .AddItem "200.02.02 - Honor Karyawan Tidak Tetap"
+                .AddItem "200.03.01 - Listrik, Air, dan Telepon"
+                .AddItem "200.03.02 - Internet dan Komunikasi"
+                .AddItem "200.04.01 - Pemeliharaan Gedung"
+                .AddItem "200.04.02 - Kebersihan dan Keamanan"
+            End With
+            
+        Case "400 - PELAYANAN IBADAH"
+            With Me.cmbSubKategori
+                .AddItem "400.01.01 - Pengkhotbah Minggu: Pimpinan Pusat GKPI"
+                .AddItem "400.01.02 - Pengkhotbah Minggu: Dari Luar Kota"
+                .AddItem "400.01.03 - Pengkhotbah Minggu: Tamu Khusus"
+                .AddItem "400.02.01 - Musik dan Paduan Suara"
+                .AddItem "400.02.02 - Sound System dan Multimedia"
+                .AddItem "400.03.01 - Bahan Liturgi"
+                .AddItem "400.03.02 - Bahan Renungan"
+                .AddItem "400.04.01 - Konsumsi Panitia Ibadah"
+                .AddItem "400.04.02 - Transportasi Panitia"
+            End With
+            
+        Case "600 - PEMBINAAN & PELAYANAN"
+            With Me.cmbSubKategori
+                .AddItem "600.01.01 - Pendidikan Lanjutan untuk Pendeta"
+                .AddItem "600.01.02 - Penghargaan untuk Penatua"
+                .AddItem "600.02.01 - Kegiatan Pemuda"
+                .AddItem "600.02.02 - Kegiatan Remaja"
+                .AddItem "600.03.01 - Pelatihan Guru Sekolah Minggu"
+                .AddItem "600.03.02 - Bahan Ajar Sekolah Minggu"
+                .AddItem "600.04.01 - Kunjungan Pastoral"
+                .AddItem "600.04.02 - Konseling Jemaat"
+            End With
+            
+        Case "800 - BANTUAN & TUNJANGAN"
+            With Me.cmbSubKategori
+                .AddItem "800.01.01 - Bantuan ke Jemaat untuk musibah/bencana alam"
+                .AddItem "800.01.02 - Akomodasi Acara Penghiburan Ke Rumah Duka"
+                .AddItem "800.02.01 - Bantuan Pendidikan Anak Jemaat"
+                .AddItem "800.02.02 - Beasiswa Mahasiswa Teologi"
+                .AddItem "800.03.01 - Bantuan Sosial untuk Lansia"
+                .AddItem "800.03.02 - Bantuan Kesehatan Jemaat"
+                .AddItem "800.04.01 - Tunjangan Hari Raya"
+                .AddItem "800.04.02 - Bantuan Khusus"
+            End With
+    End Select
+    
+ExitHandler:
+    Application.ScreenUpdating = True
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Error saat memuat sub kategori: " & Err.Description, vbCritical
+    Resume ExitHandler
+End Sub
+
+Private Sub btnSubmit_Click()
+    Dim lastRow As Long
+    Dim jumlah As Double, setor As Double
+    Dim kategoriKode As String
+    
+    ' Validasi input
+    If Not ValidateInputs() Then Exit Sub
+    
+    ' Konversi nilai
+    If Not ConvertValues(jumlah, setor) Then Exit Sub
+    
+    ' Ambil kode kategori (200, 400, 600, atau 800)
+    kategoriKode = Left(Me.cmbKategori.Value, 3)
+    
+    ' Cari baris kosong berikutnya
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row + 1
+    
+    ' Simpan data ke worksheet
+    With ws
+        ' Kolom 1: Tanggal
+        .Cells(lastRow, 1).Value = CDate(Me.txtTanggal.Value)
+        .Cells(lastRow, 1).NumberFormat = "dd-mmm-yy"
+        
+        ' Kolom 2: KW
+        .Cells(lastRow, 2).Value = Me.txtKW.Value
+        
+        ' Kolom 3: Uraian
+        .Cells(lastRow, 3).Value = Me.txtUraian.Value
+        
+        ' Kolom 4: Kredit - Kas (jumlah total)
+        .Cells(lastRow, 4).Value = jumlah
+        .Cells(lastRow, 4).NumberFormat = "#,##0.00"
+        
+        ' Kolom 5-12: Kode dan Nilai per kategori
+        Select Case kategoriKode
+            Case "200"
+                .Cells(lastRow, 5).Value = Me.cmbSubKategori.Value
+                .Cells(lastRow, 6).Value = jumlah
+            Case "400"
+                .Cells(lastRow, 7).Value = Me.cmbSubKategori.Value
+                .Cells(lastRow, 8).Value = jumlah
+            Case "600"
+                .Cells(lastRow, 9).Value = Me.cmbSubKategori.Value
+                .Cells(lastRow, 10).Value = jumlah
+            Case "800"
+                .Cells(lastRow, 11).Value = Me.cmbSubKategori.Value
+                .Cells(lastRow, 12).Value = jumlah
+        End Select
+        
+        ' Format angka
+        Dim i As Integer
+        For i = 6 To 12 Step 2
+            .Cells(lastRow, i).NumberFormat = "#,##0.00"
+        Next i
+        
+        ' Kolom 13: Uang yang disetor
+        .Cells(lastRow, 13).Value = setor
+        .Cells(lastRow, 13).NumberFormat = "#,##0.00"
+        
+        ' Auto-fit kolom
+        .Columns("A:M").AutoFit
+    End With
+
+    ' Reset form
+    ResetForm
+    
+    MsgBox "Data berhasil disimpan di baris " & lastRow, vbInformation
+End Sub
+
+Private Function ValidateInputs() As Boolean
+    ' Validasi semua input wajib diisi
+    If Me.txtTanggal.Value = "" Then
+        MsgBox "Harap isi tanggal!", vbExclamation
+        Me.txtTanggal.SetFocus
+        Exit Function
+    End If
+    
+    If Me.txtKW.Value = "" Then
+        MsgBox "Harap isi KW!", vbExclamation
+        Me.txtKW.SetFocus
+        Exit Function
+    End If
+    
+    If Me.txtUraian.Value = "" Then
+        MsgBox "Harap isi uraian!", vbExclamation
+        Me.txtUraian.SetFocus
+        Exit Function
+    End If
+    
+    If Me.txtJumlah.Value = "" Then
+        MsgBox "Harap isi jumlah!", vbExclamation
+        Me.txtJumlah.SetFocus
+        Exit Function
+    End If
+    
+    If Me.cmbKategori.Value = "" Then
+        MsgBox "Harap pilih kategori!", vbExclamation
+        Me.cmbKategori.SetFocus
+        Exit Function
+    End If
+    
+    If Me.cmbSubKategori.Value = "" Then
+        MsgBox "Harap pilih sub kategori!", vbExclamation
+        Me.cmbSubKategori.SetFocus
+        Exit Function
+    End If
+    
+    ValidateInputs = True
+End Function
+
+Private Function ConvertValues(ByRef jumlah As Double, ByRef setor As Double) As Boolean
+    On Error Resume Next
+    ' Konversi nilai jumlah (gunakan titik sebagai desimal)
+    jumlah = CDbl(Replace(Me.txtJumlah.Value, ",", "."))
+    If Err.Number <> 0 Then
+        MsgBox "Format jumlah tidak valid! Gunakan angka atau desimal dengan titik", vbExclamation
+        ConvertValues = False
+        Exit Function
+    End If
+    
+    ' Konversi nilai setor (jika ada)
+    If Me.txtSetor.Value <> "" Then
+        setor = CDbl(Replace(Me.txtSetor.Value, ",", "."))
+        If Err.Number <> 0 Then
+            MsgBox "Format setor tidak valid! Gunakan angka atau desimal dengan titik", vbExclamation
+            ConvertValues = False
+            Exit Function
+        End If
+    Else
+        setor = 0
+    End If
+    
+    ConvertValues = True
+End Function
+
+Private Sub ResetForm()
+    ' Reset semua input ke nilai default
+    Me.txtTanggal.Value = Format(Date, "dd/mm/yyyy")
+    Me.txtKW.Value = ""
+    Me.txtUraian.Value = ""
+    Me.txtJumlah.Value = ""
+    Me.txtSetor.Value = ""
+    Me.cmbKategori.Value = ""
+    Me.cmbSubKategori.Clear
+    Me.cmbSubKategori.Enabled = False
+End Sub
+
+Private Sub btnCancel_Click()
+    Unload Me
+End Sub
+
+Private Sub txtJumlah_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    ' Hanya izinkan input angka, titik desimal, dan backspace
+    If Not (KeyAscii >= 48 And KeyAscii <= 57 Or KeyAscii = 46 Or KeyAscii = 8) Then
+        KeyAscii = 0
+        Beep
+    End If
+End Sub
+
+Private Sub txtSetor_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    ' Hanya izinkan input angka, titik desimal, dan backspace
+    If Not (KeyAscii >= 48 And KeyAscii <= 57 Or KeyAscii = 46 Or KeyAscii = 8) Then
+        KeyAscii = 0
+        Beep
+    End If
+End Sub
+
