@@ -24045,3 +24045,20 @@ Tentu, berikut adalah daftar kalimat gombal intelektual dan psikologis bernuansa
 ---
 
 Kalimat-kalimat di atas dirancang agar tetap elegan, tidak vulgar, dan memiliki unsur keilmuan serta kedalaman psikologis. Ingin dilanjutkan dengan versi puisi pendek atau gaya sastra klasik juga?
+
+------------------------------
+7 mei
+
+1. Module2 - Fungsi Tombol dan Sticky Button
+TampilkanFormPengeluaran(): Menampilkan form saat tombol diklik
+
+StickyButton(): Membuat tombol tetap terlihat saat scrolling
+
+2. Module3 - Pembuatan/Penyesuaian Tombol
+BuatAtauPerbaikiBtnFormTetap(): Fungsi utama yang:
+
+Membuat tombol baru jika belum ada
+
+Memperbaiki posisi tombol yang sudah ada
+
+Mengatur properti tombol (ukuran, teks, dll)s
