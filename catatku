@@ -24493,3 +24493,4 @@ Private Sub txtSetor_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 End Sub
 
 
+----------------------
