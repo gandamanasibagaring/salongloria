@@ -24062,3 +24062,434 @@ Membuat tombol baru jika belum ada
 Memperbaiki posisi tombol yang sudah ada
 
 Mengatur properti tombol (ukuran, teks, dll)s
+
+--------------------------------
+9 mei 
+
+formpengeluaran
+
+
+' --- Kode di belakang UserForm 'FormPengeluaran' ---
+Option Explicit
+
+' Variabel global untuk worksheet
+Dim ws As Worksheet
+
+Private Sub UserForm_Initialize()
+    ' Inisialisasi worksheet - gunakan sheet dengan nama "1"
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets("1")
+    On Error GoTo 0
+    
+    ' Jika sheet "1" tidak ada, buat baru
+    If ws Is Nothing Then
+        Set ws = ThisWorkbook.Sheets.Add(Before:=ThisWorkbook.Sheets(1))
+        ws.Name = "1"
+        CreateHeaders
+    End If
+    
+    ' Inisialisasi data kategori
+    InitializeKategori
+    
+    ' Set tanggal default ke hari ini dalam format yang diminta
+    Me.txtTanggal.Value = Format(Date, "dd-mmm-yy")
+    
+    ' Kosongkan field lainnya
+    ClearFormFields
+End Sub
+
+Private Sub InitializeKategori()
+    With Me.cmbKategori
+        .Clear
+        .AddItem "200 - ADMINISTRASI GEREJA"
+        .AddItem "400 - PELAYANAN IBADAH"
+        .AddItem "600 - PEMBINAAN & PELAYANAN"
+        .AddItem "800 - BANTUAN & TUNJANGAN"
+    End With
+End Sub
+
+Private Sub ClearFormFields()
+    Me.txtKW.Value = ""
+    Me.txtUraian.Value = ""
+    Me.txtJumlah.Value = ""
+    Me.txtSetor.Value = ""
+    Me.cmbKategori.Value = ""
+    Me.cmbSubKategori.Clear
+    Me.cmbSubKategori.Enabled = False
+End Sub
+
+Private Sub CreateHeaders()
+    ' Buat header sesuai struktur yang diminta
+    Dim headers As Variant
+    headers = Array( _
+        "tanggal", "kw", "uraian", "totalKas", "kodeSubKategori", _
+        "jumlah", "kodeSubKategori", "jumlah", _
+        "kodeSubKategori", "jumlah", _
+        "kodeSubKategori", "jumlah", _
+        "setor" _
+    )
+    
+    With ws
+        ' Tulis header
+        Dim i As Integer
+        For i = 0 To UBound(headers)
+            .Cells(1, i + 1).Value = headers(i)
+        Next i
+        
+        ' Format header
+        .Range("A1:M1").Font.Bold = True
+        .Range("A1:M1").HorizontalAlignment = xlCenter
+        .Columns("A:M").AutoFit
+    End With
+End Sub
+
+Private Sub cmbKategori_Change()
+    On Error GoTo ErrorHandler
+    Application.ScreenUpdating = False
+    
+    Me.cmbSubKategori.Enabled = True
+    Me.cmbSubKategori.Clear
+    Me.cmbSubKategori.Value = ""
+    
+    If Trim(Me.cmbKategori.Value) = "" Then
+        Me.cmbSubKategori.Enabled = False
+        Exit Sub
+    End If
+    
+    ' Isi subkategori berdasarkan kategori yang dipilih
+    Select Case UCase(Trim(Me.cmbKategori.Value))
+        Case "200 - ADMINISTRASI GEREJA"
+            LoadSubKategori200
+        Case "400 - PELAYANAN IBADAH"
+            LoadSubKategori400
+        Case "600 - PEMBINAAN & PELAYANAN"
+            LoadSubKategori600
+        Case "800 - BANTUAN & TUNJANGAN"
+            LoadSubKategori800
+    End Select
+    
+ExitHandler:
+    Application.ScreenUpdating = True
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Error saat memuat sub kategori: " & Err.Description, vbCritical
+    Resume ExitHandler
+End Sub
+
+Private Sub LoadSubKategori200()
+    With Me.cmbSubKategori
+        .AddItem "200.01.01 - Pendeta Pimpinan Jemaat"
+        .AddItem "200.01.02 - Vicaris dan Pendeta Khusus"
+        .AddItem "200.01.03 - Guru Jemaat"
+        .AddItem "200.01.04 - Sekretaris dan Bendahara Jemaat"
+        .AddItem "200.01.05.a - Pegawai Kantor (Administrasi): 2 orang"
+        .AddItem "200.01.06.a - Pegawai Kebersihan Gedung Gereja: 1 orang"
+        .AddItem "200.01.06.b - Pegawai Kebersihan Pekarangan Gereja: 1 orang"
+        .AddItem "200.01.06.c1 - Pegawai Supir Mobil Dinas & Ambulance"
+        .AddItem "200.01.06.c2 - Pegawai Jaga Malam"
+        .AddItem "200.01.06.d - Pegawai Kebersihan Gedung Multifungsi"
+        .AddItem "200.01.06.e - Pegawai Soundman"
+        .AddItem "200.01.07 - Administrasi Guru Sekolah Minggu (dan Remaja)"
+        .AddItem "200.01.08 - Pengawas Parkir Gereja (Minggu & Hari Besar)"
+        .AddItem "200.02.01 - Alat Tulis Kantor, Penggandaan dan Cetakan"
+        .AddItem "200.02.02 - Rapat dan Pertemuan Majelis Jemaat"
+        .AddItem "200.02.03 - Insentif/Lembur Pegawai"
+        .AddItem "200.02.04.a - Minum & Konsumsi Kantor, Jemaat"
+        .AddItem "200.02.04.b - Biaya Makan Tamu Gereja"
+        .AddItem "200.02.04.c - Biaya Snack untuk Pemusik & Songleader"
+        .AddItem "200.02.05 - Penyediaan Kolportase"
+        .AddItem "200.02.06 - Transport, Kurir, Benda Pos"
+        .AddItem "200.03.01.a - Snack dan minuman sermon penatua"
+        .AddItem "200.03.01.b - Penyediaan makanan pembukaan dan penutupan sermon penatua"
+        .AddItem "200.03.02 - Dana Pembinaan untuk Paduan Suara"
+        .AddItem "200.03.03.a - Syukuran Awal Tahun (Jemaat & Pendeta)"
+        .AddItem "200.03.03.b - Snack Kebaktian Awal Tahun Gereja"
+        .AddItem "200.03.03.c - Snack Paskah dan Buha-Buha Ijuk"
+        .AddItem "200.03.04 - Krans Bunga Dukacita bagi Anggota Jemaat"
+        .AddItem "200.03.05 - Bantuan Dukacita bagi Anggota Jemaat"
+        .AddItem "200.03.06.a - Bunga altar pada Kebaktian Minggu"
+        .AddItem "200.03.06.b - Dekorasi pada Kebaktian Hari Besar Kristen"
+        .AddItem "200.03.07 - Keamanan Acara Hari Besar Kristen"
+        .AddItem "200.03.08.a - Kontribusi & Registrasi Peserta Rapat Pendeta"
+        .AddItem "200.03.08.b - Perjalanan Dinas Peserta Rapat Pendeta (2 pendeta)"
+        .AddItem "200.03.09 - Perjalanan Dinas atas undangan Kantor Pusat"
+        .AddItem "200.03.10 - Sidang Umum Jemaat"
+        .AddItem "200.03.11.a - Biaya Tak Terduga (Pengurusan Sertifikat Tanah)"
+        .AddItem "200.03.11.b - Biaya Tak Terduga/Insidentil"
+        .AddItem "200.04.01 - Gedung Gereja, Rumah Dinas & Pekarangan"
+        .AddItem "200.04.02 - Inventaris Gereja"
+        .AddItem "200.05.01.a - Kijang Innova, Plat BK 1757 EJ"
+        .AddItem "200.05.01.b - Pajak Kendaraan Kijang Innova"
+        .AddItem "200.05.02.a - HIACE BK.7866 DP"
+        .AddItem "200.05.02.b - Pajak Kendaraan HIACE"
+        .AddItem "200.05.03.a - Roda 2: 1 unit, Plat BK. 5440 AGG"
+        .AddItem "200.05.03.b - Pajak Kendaraan Roda 2"
+        .AddItem "200.06.01 - Telepon, Speedy, MyRepublik dan WA"
+        .AddItem "200.07.01 - Jubah Penatua (Upah Jahit)"
+        .AddItem "200.07.02 - Peralatan & Perlengkapan Inventaris Gereja"
+        .AddItem "200.07.03 - Dekorasi dan Persiapan Natal"
+    End With
+End Sub
+
+Private Sub LoadSubKategori400()
+    With Me.cmbSubKategori
+        .AddItem "400.01.01 - Pengkhotbah Minggu: Pimpinan Pusat GKPI"
+        .AddItem "400.01.02 - Pengkhotbah Minggu: Dari Luar Kota"
+        .AddItem "400.01.03 - Pengkhotbah Minggu: Dari Dalam Kota"
+        .AddItem "400.01.04 - Pengkhotbah Minggu: Di Rumah Duka (Oleh Pendeta)"
+        .AddItem "400.01.05 - Pengkhotbah Minggu: Remaja"
+        .AddItem "400.02.01 - Pengkhotbah Kebaktian di Lingkungan (Wijk)"
+        .AddItem "400.02.02 - Pengkhotbah Kebaktian Pemuda-Pemudi/Remaja & GSM"
+        .AddItem "400.02.03 - Pengkhotbah Kebaktian Koor Ibu-Ibu"
+        .AddItem "400.02.04 - Pengkhotbah Kebaktian Ibu Hanna"
+        .AddItem "400.02.05 - Pengkhotbah Kebaktian Lanjut Usia (LANSIA)"
+        .AddItem "400.03.01 - Pengkhotbah Perjanjian/Pemberkatan Nikah"
+        .AddItem "400.03.02 - Pengkhotbah Penguburan Jenazah"
+        .AddItem "400.03.03 - Pengkhotbah di Rumah Duka (Oleh Penatua)"
+        .AddItem "400.04.01 - Minggu Pagi 08.00 WIB (@ 13 Orang)"
+        .AddItem "400.04.02 - Minggu Sore: Pukul 18.00 WIB (@ 13 Orang)"
+        .AddItem "400.04.03 - Sekolah Minggu dan Remaja"
+        .AddItem "400.04.04 - Perjanjian/Pemberkatan Pernikahan"
+        .AddItem "400.04.05 - Kebaktian pemberangkatan jenazah"
+        .AddItem "400.04.06 - Minggu Di Rumah Duka"
+        .AddItem "400.04.07 - Pelayanan di Rumah Duka"
+        .AddItem "400.04.08 - Guru Sekolah Minggu (Sermon & Mengajar)"
+        .AddItem "400.04.09 - Latihan Pemusik dan Songleader"
+        .AddItem "400.04.10 - Petugas Penghitung Kebaktian Minggu"
+        .AddItem "400.05.01 - Perjamuan Kudus di Gereja"
+        .AddItem "400.05.02 - Snack Ujian Tulisan & Lisan Pelajar Sidi"
+        .AddItem "400.06.01 - Perayaan HUT Jemaat"
+    End With
+End Sub
+
+Private Sub LoadSubKategori600()
+    With Me.cmbSubKategori
+        .AddItem "600.01.01 - Pendidikan Lanjutan untuk Pendeta"
+        .AddItem "600.01.02 - Penghargaan untuk Penatua"
+        .AddItem "600.01.03 - Pembinaan & Pelatihan Pelajar Sidi"
+        .AddItem "600.01.04 - Pembinaan Penatua se Resort Medan Barat"
+        .AddItem "600.02.01 - Pembinaan & Pelayan Rohani (PPR)"
+        .AddItem "600.02.02 - Pekabaran Injil"
+        .AddItem "600.02.03 - Diakoni Sosial"
+        .AddItem "600.02.04 - Musik, Nyanyian & Koor (MNK)"
+        .AddItem "600.02.05 - Sekolah Minggu"
+        .AddItem "600.02.06 - Remaja"
+        .AddItem "600.02.07 - Pemuda"
+        .AddItem "600.02.08 - Perempuan"
+        .AddItem "600.02.09 - Pria"
+        .AddItem "600.02.10 - Lansia"
+        .AddItem "600.02.11 - Kesehatan"
+        .AddItem "600.02.12 - Pendidikan"
+        .AddItem "600.02.13 - Usaha & Pengembangan Sumber Daya (UPSD)"
+        .AddItem "600.02.14 - Sarana & Prasarana"
+        .AddItem "600.02.15 - Natal Gabungan Seksi-Seksi (Natal II)"
+        .AddItem "600.03.01 - Target Ke Kantor Pusat GKPI"
+        .AddItem "600.03.02 - Biaya Tahun Renstra GKPI 2023"
+        .AddItem "600.03.03 - Kantor Sinode GKPI (Persembahan Kedua)"
+        .AddItem "600.04.01 - Target Ke GKPI Resort Medan Barat"
+    End With
+End Sub
+
+Private Sub LoadSubKategori800()
+    With Me.cmbSubKategori
+        .AddItem "800.01.01 - Bantuan ke Jemaat untuk musibah/bencana alam"
+        .AddItem "800.01.02 - Akomodasi Acara Penghiburan Ke Rumah Duka"
+        .AddItem "800.01.03 - Bantuan untuk Dana Pensiun Pendeta GKPI"
+        .AddItem "800.01.04 - Bantuan untuk PA. Mamre dan Yapentra"
+        .AddItem "800.01.05 - Bantuan Ke GKPI Lainnya"
+        .AddItem "800.01.06 - Bantuan Kepada Masyarakat di sekitar"
+        .AddItem "800.02.01 - Sekolah Minggu"
+        .AddItem "800.02.02 - Penatua Purna Bakti"
+        .AddItem "800.02.03 - Penatua Aktif"
+        .AddItem "800.02.04 - Calon Penatua Aktif"
+        .AddItem "800.02.05 - Pendeta GKPI Resort Medan Barat"
+        .AddItem "800.02.06 - Anggota Majelis Jemaat: Ketua Seksi & Penasehat"
+        .AddItem "800.02.07 - Guru-Guru Koor di Jemaat"
+        .AddItem "800.02.08 - Guru-Guru Sekolah Minggu"
+        .AddItem "800.02.09 - Pemusik: Pianis, Organis dan Saxophonis"
+        .AddItem "800.02.10 - Songleader"
+        .AddItem "800.02.11 - Petugas Live Streaming"
+    End With
+End Sub
+
+Private Sub btnSubmit_Click()
+    On Error GoTo ErrorHandler
+    Application.ScreenUpdating = False
+    
+    ' Validasi input
+    If Not ValidateInputs() Then Exit Sub
+    
+    ' Deklarasi variabel
+    Dim lastRow As Long
+    Dim jumlah As Double, setor As Double
+    Dim kodeSubKategori As String, uraianSubKategori As String, uraianUser As String
+    Dim parts() As String
+    Dim kategori As String
+    Dim totalKas As Double
+    
+    ' Konversi nilai
+    If Not ConvertValues(jumlah, setor) Then Exit Sub
+    
+    ' Hitung totalKas (jumlah pengeluaran + setoran)
+    totalKas = jumlah + setor
+    
+    ' Pisahkan kode subkategori dan uraiannya
+    parts = Split(Me.cmbSubKategori.Value, " - ")
+    kodeSubKategori = parts(0)
+    uraianSubKategori = IIf(UBound(parts) > 0, parts(1), "")
+    
+    ' Gunakan uraian user jika diisi, jika tidak gunakan uraian subkategori
+    uraianUser = IIf(Trim(Me.txtUraian.Value) = "", uraianSubKategori, Trim(Me.txtUraian.Value))
+    
+    ' Cari baris kosong berikutnya
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row + 1
+    
+    ' Simpan data ke worksheet
+    With ws
+        ' Kolom A (1): Tanggal (format dd-mmm-yy)
+        .Cells(lastRow, 1).Value = CDate(Me.txtTanggal.Value)
+        .Cells(lastRow, 1).NumberFormat = "dd-mmm-yy"
+        
+        ' Kolom B (2): Nomor Kwitansi
+        .Cells(lastRow, 2).Value = Me.txtKW.Value
+        
+        ' Kolom C (3): Uraian
+        .Cells(lastRow, 3).Value = uraianUser
+        
+        ' Kolom D (4): totalKas (jumlah dari F+H+J+L+M)
+        .Cells(lastRow, 4).Value = totalKas
+        .Cells(lastRow, 4).NumberFormat = "#,##0.00"
+        
+        ' Tentukan kategori yang dipilih
+        kategori = Left(Me.cmbKategori.Value, 3)
+        
+        ' Isi kolom berdasarkan kategori
+        Select Case kategori
+            Case "200"
+                .Cells(lastRow, 5).Value = kodeSubKategori  ' Kolom E (5)
+                .Cells(lastRow, 6).Value = jumlah           ' Kolom F (6)
+            Case "400"
+                .Cells(lastRow, 7).Value = kodeSubKategori  ' Kolom G (7)
+                .Cells(lastRow, 8).Value = jumlah           ' Kolom H (8)
+            Case "600"
+                .Cells(lastRow, 9).Value = kodeSubKategori  ' Kolom I (9)
+                .Cells(lastRow, 10).Value = jumlah          ' Kolom J (10)
+            Case "800"
+                .Cells(lastRow, 11).Value = kodeSubKategori ' Kolom K (11)
+                .Cells(lastRow, 12).Value = jumlah          ' Kolom L (12)
+        End Select
+        
+        ' Kolom M (13): Setoran kas
+        .Cells(lastRow, 13).Value = setor
+        
+        ' Format angka
+        Dim col As Variant
+        For Each col In Array(4, 6, 8, 10, 12, 13) ' Kolom dengan nilai uang
+            .Cells(lastRow, col).NumberFormat = "#,##0.00"
+        Next col
+        
+        ' Auto-fit kolom
+        .Columns("A:M").AutoFit
+    End With
+    
+    ' Reset form
+    ResetForm
+    
+    ' Tampilkan pesan sukses
+    MsgBox "Data berhasil disimpan di baris " & lastRow & " pada sheet '1'", vbInformation
+    
+ExitHandler:
+    Application.ScreenUpdating = True
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "Terjadi kesalahan saat menyimpan data: " & Err.Description, vbCritical
+    Resume ExitHandler
+End Sub
+
+Private Function ValidateInputs() As Boolean
+    ' Validasi input wajib diisi
+    If Me.txtTanggal.Value = "" Then
+        MsgBox "Harap isi tanggal!", vbExclamation
+        Me.txtTanggal.SetFocus
+        Exit Function
+    End If
+    
+    If Me.txtKW.Value = "" Then
+        MsgBox "Harap isi nomor kwitansi!", vbExclamation
+        Me.txtKW.SetFocus
+        Exit Function
+    End If
+    
+    If Me.txtJumlah.Value = "" Then
+        MsgBox "Harap isi jumlah pengeluaran!", vbExclamation
+        Me.txtJumlah.SetFocus
+        Exit Function
+    End If
+    
+    If Me.cmbKategori.Value = "" Then
+        MsgBox "Harap pilih kategori!", vbExclamation
+        Me.cmbKategori.SetFocus
+        Exit Function
+    End If
+    
+    If Me.cmbSubKategori.Value = "" Then
+        MsgBox "Harap pilih sub kategori!", vbExclamation
+        Me.cmbSubKategori.SetFocus
+        Exit Function
+    End If
+    
+    ValidateInputs = True
+End Function
+
+Private Function ConvertValues(ByRef jumlah As Double, ByRef setor As Double) As Boolean
+    On Error GoTo ErrorHandler
+    
+    ' Konversi nilai jumlah (gunakan titik sebagai desimal)
+    jumlah = CDbl(Replace(Me.txtJumlah.Value, ",", "."))
+    
+    ' Konversi nilai setor (jika ada)
+    If Me.txtSetor.Value <> "" Then
+        setor = CDbl(Replace(Me.txtSetor.Value, ",", "."))
+    Else
+        setor = 0
+    End If
+    
+    ConvertValues = True
+    Exit Function
+    
+ErrorHandler:
+    MsgBox "Format angka tidak valid! Gunakan angka atau desimal dengan titik", vbExclamation
+    ConvertValues = False
+End Function
+
+Private Sub ResetForm()
+    ' Set tanggal default ke hari ini
+    Me.txtTanggal.Value = Format(Date, "dd-mmm-yy")
+    
+    ' Kosongkan field lainnya
+    ClearFormFields
+End Sub
+
+Private Sub btnCancel_Click()
+    Unload Me
+End Sub
+
+Private Sub txtJumlah_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    ' Hanya izinkan input angka, titik desimal, dan backspace
+    If Not (KeyAscii >= 48 And KeyAscii <= 57 Or KeyAscii = 46 Or KeyAscii = 8) Then
+        KeyAscii = 0
+        Beep
+    End If
+End Sub
+
+Private Sub txtSetor_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    ' Hanya izinkan input angka, titik desimal, dan backspace
+    If Not (KeyAscii >= 48 And KeyAscii <= 57 Or KeyAscii = 46 Or KeyAscii = 8) Then
+        KeyAscii = 0
+        Beep
+    End If
+End Sub
+
+
