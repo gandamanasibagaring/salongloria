@@ -23067,8 +23067,6 @@ Mau saya bantu rekap jadi 1 file Excel atau PDF untuk disimpan dan dilaporkan ke
 /////////////////////////////////////////////////
 
 mencetak form otomatis vba
-
-
 Sub BuatFormPengeluaran()
 
     Dim UF As Object
@@ -23088,9 +23086,15 @@ Sub BuatFormPengeluaran()
     Dim top As Integer: top = 10
     Dim i As Integer
     
-    Dim labelNames As Variant, ctrlNames As Variant
+    ' Array untuk label dan kontrol
+    Dim labelNames As Variant, ctrlNames As Variant, ctrlTypes As Variant
     labelNames = Array("Tanggal", "KW", "Uraian", "Jumlah", "Kategori", "Sub Kategori", "Setor")
     ctrlNames = Array("txtTanggal", "txtKW", "txtUraian", "txtJumlah", "cmbKategori", "cmbSubKategori", "txtSetor")
+    ctrlTypes = Array("textbox", "textbox", "textbox", "textbox", "combobox", "combobox", "textbox")
+    
+    ' Tambahkan default value untuk tanggal
+    Dim defaultTanggal As String
+    defaultTanggal = Format(Date, "dd-mmm-yy")
     
     For i = 0 To UBound(labelNames)
         ' Label
@@ -23099,38 +23103,76 @@ Sub BuatFormPengeluaran()
             .Top = top
             .Left = 10
             .Width = 100
+            .Height = 20
         End With
         
-        ' TextBox atau ComboBox
-        If Left(ctrlNames(i), 3) = "cmb" Then
-            Set ctrl = designer.Controls.Add("Forms.ComboBox.1", ctrlNames(i), True)
-        Else
-            Set ctrl = designer.Controls.Add("Forms.TextBox.1", ctrlNames(i), True)
-        End If
-        With ctrl
-            .Top = top
-            .Left = 120
-            .Width = 200
-        End With
+        ' Kontrol input
+        Select Case ctrlTypes(i)
+            Case "combobox"
+                Set ctrl = designer.Controls.Add("Forms.ComboBox.1", ctrlNames(i), True)
+                With ctrl
+                    .Top = top
+                    .Left = 120
+                    .Width = 200
+                    .Height = 20
+                    .Style = 2 ' Dropdown style
+                End With
+                
+                ' Tambahkan contoh item untuk combobox
+                If ctrlNames(i) = "cmbKategori" Then
+                    ctrl.AddItem "Operasional"
+                    ctrl.AddItem "Sosial"
+                    ctrl.AddItem "Perlengkapan"
+                    ctrl.AddItem "Kegiatan"
+                ElseIf ctrlNames(i) = "cmbSubKategori" Then
+                    ctrl.AddItem "Pilih kategori terlebih dahulu"
+                End If
+                
+            Case Else ' textbox
+                Set ctrl = designer.Controls.Add("Forms.TextBox.1", ctrlNames(i), True)
+                With ctrl
+                    .Top = top
+                    .Left = 120
+                    .Width = 200
+                    .Height = 20
+                End With
+                
+                ' Set default value untuk tanggal
+                If ctrlNames(i) = "txtTanggal" Then
+                    ctrl.Text = defaultTanggal
+                End If
+        End Select
+        
         top = top + 30
     Next i
     
     ' Tombol Simpan
     With designer.Controls.Add("Forms.CommandButton.1", "btnSubmit", True)
         .Caption = "Simpan Data"
-        .Top = top
+        .Top = top + 10
         .Left = 120
         .Width = 100
+        .Height = 25
+        .Accelerator = "S"
     End With
     
     ' Tombol Batal
     With designer.Controls.Add("Forms.CommandButton.1", "btnCancel", True)
         .Caption = "Batal"
-        .Top = top
+        .Top = top + 10
         .Left = 230
         .Width = 100
+        .Height = 25
+        .Accelerator = "B"
     End With
-
+    
+    ' Set form properties
+    With VBComp.Properties
+        .Item("Width") = 350
+        .Item("Height") = top + 80
+        .Item("StartUpPosition") = 1 ' CenterScreen
+    End With
+    
     MsgBox "Form 'FormPengeluaran' berhasil dibuat. Silakan buka dari jendela UserForm.", vbInformation
 
 End Sub
