@@ -25861,3 +25861,44 @@ End Sub
 --------------------------------
 
 email timothyronald1756@gmail.com password lupuslupus 
+
+
+
+-------------------------------
+11 juli
+
+┌───────────────┐
+│  MAIN MODULE  │
+└───────┬───────┘
+        │
+        ├───────────────► ┌────────────────┐
+        │                 │ FormPengeluaran│
+        │                 └────────┬───────┘
+        │                          │
+        │                          ├───────► Initialize Form
+        │                          │
+        │                          ├───────► Kategori Change Handler
+        │                          │
+        │                          ├───────► Submit Button (Save to Sheet1)
+        │                          │
+        │                          └───────► Cancel Button
+        │
+        ├───────────────► ┌────────────────┐
+        │                 │  Proses Data   │
+        │                 │ (Sheet1→Sheet2)│
+        │                 └────────┬───────┘
+        │                          │
+        │                          └───────► Copy & Format Data
+        │
+        └───────────────► ┌────────────────┐
+                          │ Generate Report│
+                          │ (Sheet1→Sheet3)│
+                          └────────┬───────┘
+                                   │
+                                   ├───────► Process by Category/Subcategory
+                                   │
+                                   ├───────► Calculate Totals
+                                   │
+                                   └───────► Format Output
+
+============================================
