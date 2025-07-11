@@ -26081,8 +26081,16 @@ Private Sub cmbKategori_Change()
 End Sub
 
 Private Sub cmbSubKategori_Change()
-    ' Isi uraian otomatis dengan nilai subkategori yang dipilih
-    txtUraian.Value = cmbSubKategori.Value
+    ' Ambil hanya teks setelah tanda strip (-)
+    Dim fullText As String
+    Dim posDash As Integer
+    fullText = cmbSubKategori.Value
+    posDash = InStr(fullText, "-")
+    If posDash > 0 Then
+        txtUraian.Value = Trim(Mid(fullText, posDash + 1))
+    Else
+        txtUraian.Value = fullText
+    End If
 End Sub
 
 Private Sub btnSubmit_Click()
@@ -26099,11 +26107,17 @@ Private Sub btnSubmit_Click()
     ' Validasi input
     If Not ValidasiInput() Then Exit Sub
     
-    Set ws = ThisWorkbook.Sheets("1")
+    Set ws = ThisWorkbook.Sheets("Sheet1")
     
     ' Ambil nilai dari form
     selectedKategori = left(cmbKategori.Value, 3) ' Ambil 3 digit pertama (200, 400, etc)
-    jumlah = CDbl(txtJumlah.Value)
+    Dim setor As Double
+    If IsNumeric(txtSetor.Value) And Trim(txtSetor.Value) <> "" Then
+        setor = CDbl(txtSetor.Value)
+    Else
+        setor = 0
+    End If
+    jumlah = CDbl(txtJumlah.Value) + setor
     
     ' Tentukan kolom target berdasarkan kategori
     Select Case selectedKategori
@@ -26128,13 +26142,14 @@ Private Sub btnSubmit_Click()
     With ws
         ' Kolom dasar
         .Cells(lastRow, "A").Value = CDate(txtTanggal.Value) ' Tanggal
+        .Cells(lastRow, "A").NumberFormat = "dd-mmm-yy"      ' Format tampilan tanggal
         .Cells(lastRow, "B").Value = txtKW.Value ' Nomor KW
         .Cells(lastRow, "C").Value = txtUraian.Value ' Uraian
         .Cells(lastRow, "D").Value = jumlah ' Kredit (Kas Keluar)
         
         ' Isi berdasarkan kategori
         .Cells(lastRow, kategoriKolom).Value = cmbSubKategori.Value ' Kode Anggaran
-        .Cells(lastRow, nominalKolom).Value = jumlah ' Nominal
+        .Cells(lastRow, nominalKolom).Value = CDbl(txtJumlah.Value) ' Nominal kategori saja
         
         ' Keterangan tambahan
         .Cells(lastRow, "M").Value = txtSetor.Value
