@@ -27897,3 +27897,39 @@ End Sub
 sudah bisa memasang di sheet1 sheet2 dan sheet3secara bersamaan
 
 -----------------------------------------
+
+
+install chrome dari powershell admin buatkan perintahnya
+
+
+ChatGPT said:
+Berikut adalah perintah PowerShell (run as Administrator) untuk mengunduh dan menginstal Google Chrome secara otomatis:
+
+✅ Langkah: Jalankan PowerShell sebagai Administrator, lalu ketik perintah ini:
+powershell
+Copy
+Edit
+Start-BitsTransfer -Source "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -Destination "$env:TEMP\chrome_installer.exe"; Start-Process "$env:TEMP\chrome_installer.exe" -ArgumentList "/silent /install" -Wait
+🔍 Penjelasan Singkat:
+Start-BitsTransfer: mengunduh file installer Chrome dari internet.
+
+-Destination: menyimpan file di folder sementara.
+
+Start-Process: menjalankan installer Chrome secara silent (tanpa jendela pop-up).
+
+🚨 Catatan:
+Butuh koneksi internet aktif.
+
+Tidak akan muncul jendela pemasangan, karena ini silent install.
+
+Chrome akan terinstal untuk seluruh pengguna (default).
+
+Kalau kamu ingin versi portable, atau ingin memasang untuk pengguna tertentu saja, bisa aku bantu juga!
+
+
+
+
+
+
+
+
