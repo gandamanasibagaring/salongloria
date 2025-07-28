@@ -29303,3 +29303,35 @@ End Sub
 
 
 
+------------------------------------------
+
+| No | Penyakit                          | Obat yang sering digunakan                                                                           |
+| -- | --------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 1  | Common cold (flu biasa)           | Obat simptomatik (decongestant, dekongestan)                                                         |
+| 2  | Gastroenteritis (diare / muntah)  | Oralit, zinc                                                                                         |
+| 3  | Obesitas                          | Obat GLP-1 seperti **Ozempic** / lifestyle                                                           |
+| 4  | GERD (Heartburn)                  | Proton pump inhibitor (misal: omeprazol) ([theresafoodforthat.com][1], [The Wall Street Journal][2]) |
+| 5  | Hipertensi (tekanan darah tinggi) | ACE inhibitor (contoh: captopril) ([Verywell Health][3])                                             |
+| 6  | Diabetes tipe II                  | Metformin ([Verywell Health][3], [TIME][4])                                                          |
+| 7  | Infeksi saluran kemih (UTI)       | Antibiotik (misal: trimethoprim-sulfamethoxazole) ([medlistapp.paho.org][5])                         |
+| 8  | Infeksi saluran napas atas (URTI) | Antibiotik / simptomatik                                                                             |
+| 9  | Pneumonia                         | Antibiotik seperti amoksisilin atau makrolida ([Andedge][6])                                         |
+| 10 | Asma / COPD                       | Inhaler beta-agonist (Salbutamol)                                                                    |
+| 11 | Allergi rhinitis                  | Antihistamin oral (misal: loratadine)                                                                |
+| 12 | Depresi / Anxiety                 | SSRI (fluoxetine, sertraline)                                                                        |
+| 13 | Migraine                          | Triptans (sumatriptan) atau analgesik                                                                |
+| 14 | Osteoarthritis                    | NSAID (ibuprofen, naproxen)                                                                          |
+| 15 | Osteoporosis                      | Bisphosphonates (alendronate)                                                                        |
+| 16 | Penyakit jantung koroner (CAD)    | Statin (atorvastatin)                                                                                |
+| 17 | Stroke / TIA                      | Antiplatelet (aspirin) + kontrol tekanan                                                             |
+| 18 | TB (Tuberkulosis)                 | Regimen multi‑obat (rifampisin, isoniazid) ([Andedge][6])                                            |
+| 19 | Hepatitis B / C                   | Antiviral (tenofovir, sofosbuvir, dll.)                                                              |
+| 20 | HIV/AIDS                          | Kombinasi antiretroviral (zidovudine, lamivudine) ([deluxehospital.com][7])                          |
+
+[1]: https://www.theresafoodforthat.com/top-100-diseases-conditions-united-states/?utm_source=chatgpt.com "Diseases and Conditions - There's a Food for That"
+[2]: https://www.wsj.com/health/pharma/glp-1-drugs-health-benefits-4014d7d5?utm_source=chatgpt.com "Should Everyone Be Taking Ozempic? Doctors Say More People Could Benefit"
+[3]: https://www.verywellhealth.com/drug-induced-nutrient-deficiency-11762683?utm_source=chatgpt.com "10 Common Medications That May Be Disrupting Your Body's Nutrient Balance"
+[4]: https://time.com/6980440/eli-lilly/?utm_source=chatgpt.com "Eli Lilly"
+[5]: https://medlistapp.paho.org/en/list/11?utm_source=chatgpt.com "WHO Model List of Essential Medicines (2021) | List | Annotated Medicine and Device Lists"
+[6]: https://www.andedge.com/human-diseases/?utm_source=chatgpt.com "Human Diseases Tnpsc | Andedge"
+[7]: https://deluxehospital.com/health-articles/general-health-knowledge/an-educational-guide-to-400-common-medications-prescribed-in-ghana?utm_source=chatgpt.com "Deluxe Hospital"
