@@ -29335,3 +29335,1204 @@ End Sub
 [5]: https://medlistapp.paho.org/en/list/11?utm_source=chatgpt.com "WHO Model List of Essential Medicines (2021) | List | Annotated Medicine and Device Lists"
 [6]: https://www.andedge.com/human-diseases/?utm_source=chatgpt.com "Human Diseases Tnpsc | Andedge"
 [7]: https://deluxehospital.com/health-articles/general-health-knowledge/an-educational-guide-to-400-common-medications-prescribed-in-ghana?utm_source=chatgpt.com "Deluxe Hospital"
+
+
+-------------------------------------------
+
+4 agustus
+
+formpengeluaran:
+
+
+
+
+' Kode untuk FormPengeluaran (UserForm)
+Option Explicit
+
+Private Sub Label4_Click()
+
+End Sub
+
+Private Sub UserForm_Initialize()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim dictKategori As Object
+    Dim i As Long
+    Dim kode As String, nama As String
+    
+    ' Initialize form controls
+    txtTanggal.Value = Format(Date, "dd-mmm-yy")
+    txtJumlah.Value = "0"
+    
+    ' Set worksheet reference (change "Sheet4" to your actual sheet name)
+    Set ws = ThisWorkbook.Sheets("4")
+    Set dictKategori = CreateObject("Scripting.Dictionary")
+    
+    ' Find last row in Sheet4
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    
+    ' Loop through rows and populate unique categories
+    For i = 2 To lastRow
+        kode = Trim(ws.Cells(i, 1).Value)
+        nama = Trim(ws.Cells(i, 2).Value)
+        If Not dictKategori.exists(kode) Then
+            dictKategori.Add kode, nama
+        End If
+    Next i
+    
+    ' Populate category combo box
+    cmbKategori.Clear
+    Dim k As Variant
+    For Each k In dictKategori.keys
+        cmbKategori.AddItem k & " - " & dictKategori(k)
+    Next k
+    
+    ' Initialize subcategory combo box
+    cmbSubKategori.Clear
+    cmbSubKategori.AddItem "Pilih kategori terlebih dahulu"
+    cmbSubKategori.Enabled = False
+    cmbSubKategori.ListIndex = 0
+End Sub
+
+Private Sub cmbKategori_Change()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim kategoriKode As String
+    Dim kode As String, uraian As String
+    
+    ' Exit if no category selected
+    If cmbKategori.ListIndex = -1 Then Exit Sub
+    
+    ' Extract category code (e.g., "200" from "200 - ADMINISTRASI GEREJA")
+    kategoriKode = Trim(Split(cmbKategori.Value, "-")(0))
+    
+    ' Set worksheet reference
+    Set ws = ThisWorkbook.Sheets("4")
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    
+    ' Clear and enable subcategory combo box
+    cmbSubKategori.Clear
+    cmbSubKategori.Enabled = True
+    
+    ' Add subcategories based on category code with format "kode - uraian"
+    For i = 2 To lastRow
+        If Trim(ws.Cells(i, 1).Value) = kategoriKode Then
+            kode = Trim(ws.Cells(i, 3).Value)
+            uraian = Trim(ws.Cells(i, 4).Value)
+            cmbSubKategori.AddItem kode & " - " & uraian
+        End If
+    Next i
+    
+    ' If no subcategories found
+    If cmbSubKategori.ListCount = 0 Then
+        cmbSubKategori.AddItem "Subkategori tidak ditemukan"
+        cmbSubKategori.Enabled = False
+    End If
+    
+    ' Select first item if available
+    If cmbSubKategori.ListCount > 0 Then
+        cmbSubKategori.ListIndex = 0
+    End If
+End Sub
+
+Private Sub cmbSubKategori_Change()
+    Dim fullText As String
+    Dim posDash As Integer
+    
+    fullText = cmbSubKategori.Value
+    posDash = InStr(fullText, "-")
+    
+    If posDash > 0 Then
+        ' Ambil hanya bagian setelah tanda "-" (uraian)
+        txtUraian.Value = Trim(Mid(fullText, posDash + 1))
+    Else
+        ' Jika tidak ada tanda "-", tampilkan teks asli
+        txtUraian.Value = fullText
+    End If
+End Sub
+
+Private Sub btnSubmit_Click()
+    On Error GoTo ErrorHandler
+    
+    ' Process saving data to worksheet
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim selectedKategori As String
+    Dim kategoriKolom As String
+    Dim nominalKolom As String
+    Dim jumlah As Double
+    
+    ' Validate input
+    If Not ValidasiInput() Then Exit Sub
+    
+    Set ws = ThisWorkbook.Sheets("1")
+    
+    ' Get values from form
+    selectedKategori = Left(cmbKategori.Value, 3) ' Get first 3 digits (200, 400, etc)
+    Dim setor As Double
+    If IsNumeric(txtSetor.Value) And Trim(txtSetor.Value) <> "" Then
+        setor = CDbl(txtSetor.Value)
+    Else
+        setor = 0
+    End If
+    jumlah = CDbl(txtJumlah.Value) + setor
+    
+    ' Determine target columns based on category
+    Select Case selectedKategori
+        Case "200"
+            kategoriKolom = "E"
+            nominalKolom = "F"
+        Case "400"
+            kategoriKolom = "G"
+            nominalKolom = "H"
+        Case "600"
+            kategoriKolom = "I"
+            nominalKolom = "J"
+        Case "800"
+            kategoriKolom = "K"
+            nominalKolom = "L"
+    End Select
+    
+    ' Cek jika baris 3 kosong (belum ada judul)
+    If ws.Range("A3").Value = "" Then
+        lastRow = 3 ' Tulis di baris 3 jika kosong
+    Else
+        ' Jika baris 3 sudah ada judul, cari baris terakhir yang berisi data
+        lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row + 1
+    End If
+    
+    ' Fill data to sheet
+    With ws
+        ' Basic columns
+        .Cells(lastRow, "A").Value = CDate(txtTanggal.Value) ' Date
+        .Cells(lastRow, "A").NumberFormat = "dd-mmm-yy"      ' Date display format
+        .Cells(lastRow, "B").Value = txtKW.Value ' KW number
+        .Cells(lastRow, "C").Value = txtUraian.Value ' Description (hanya uraian)
+        .Cells(lastRow, "D").Value = jumlah ' Credit (Cash Out)
+        
+        ' Fill based on category
+        ' Ambil hanya kode subkategori (sebelum tanda "-")
+        Dim subKodeOnly As String
+        Dim posDash As Integer
+        posDash = InStr(cmbSubKategori.Value, "-")
+        If posDash > 0 Then
+            subKodeOnly = Trim(Left(cmbSubKategori.Value, posDash - 1))
+        Else
+            subKodeOnly = cmbSubKategori.Value
+        End If
+        
+        .Cells(lastRow, kategoriKolom).Value = subKodeOnly ' Hanya kode
+        .Cells(lastRow, nominalKolom).Value = CDbl(txtJumlah.Value) ' Category amount only
+        
+        ' Additional notes
+        .Cells(lastRow, "M").Value = txtSetor.Value
+    End With
+    
+    ' Clear form after save
+    BersihkanForm
+    
+    ' Run data grouping process
+    Application.ScreenUpdating = False ' Disable screen updating to speed up process
+    Call SalinTotalKeSheet3_Horizontal
+    Call kelompokkanData_Terstruktur
+    Application.ScreenUpdating = True ' Re-enable screen updating
+    
+    MsgBox "Data pengeluaran berhasil disimpan dan laporan telah diperbarui!", vbInformation
+    
+    Exit Sub
+    
+ErrorHandler:
+    Application.ScreenUpdating = True ' Ensure screen updating is re-enabled if error occurs
+    If Err.Number = 380 Then
+        MsgBox "Silakan pilih subkategori yang valid", vbExclamation
+        cmbSubKategori.SetFocus
+    Else
+        MsgBox "Error " & Err.Number & ": " & Err.Description, vbCritical
+    End If
+End Sub
+
+Private Function ValidasiInput() As Boolean
+    ValidasiInput = False
+    
+    ' Validate date
+    If Not IsDate(txtTanggal.Value) Then
+        MsgBox "Format tanggal tidak valid. Gunakan format DD-MMM-YY", vbExclamation
+        txtTanggal.SetFocus
+        Exit Function
+    End If
+    
+    ' Validate KW
+    If Trim(txtKW.Value) = "" Then
+        MsgBox "Nomor KW harus diisi", vbExclamation
+        txtKW.SetFocus
+        Exit Function
+    End If
+    
+    ' Validate description
+    If Trim(txtUraian.Value) = "" Then
+        MsgBox "Uraian pengeluaran harus diisi", vbExclamation
+        txtUraian.SetFocus
+        Exit Function
+    End If
+    
+    ' Validate amount
+    If Not IsNumeric(txtJumlah.Value) Or CDbl(txtJumlah.Value) <= 0 Then
+        MsgBox "Jumlah pengeluaran harus angka dan lebih dari 0", vbExclamation
+        txtJumlah.SetFocus
+        Exit Function
+    End If
+    
+    ' Validate category
+    If cmbKategori.ListIndex = -1 Then
+        MsgBox "Silakan pilih kategori pengeluaran", vbExclamation
+        cmbKategori.SetFocus
+        Exit Function
+    End If
+    
+    ' Validate subcategory
+    If cmbSubKategori.ListIndex = -1 Then
+        MsgBox "Silakan pilih sub kategori", vbExclamation
+        cmbSubKategori.SetFocus
+        Exit Function
+    End If
+    
+    ValidasiInput = True
+End Function
+
+Private Sub BersihkanForm()
+    ' Reset all inputs except date
+    txtKW.Value = ""
+    txtUraian.Value = ""
+    txtJumlah.Value = "0"
+    cmbKategori.ListIndex = -1
+    cmbSubKategori.Clear
+    cmbSubKategori.AddItem "Pilih kategori terlebih dahulu"
+    cmbSubKategori.Enabled = False
+    cmbSubKategori.ListIndex = 0
+    txtSetor.Value = ""
+End Sub
+
+Private Sub btnCancel_Click()
+    Unload Me
+End Sub
+
+Private Sub txtJumlah_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    ' Only allow numbers and backspace
+    If Not (KeyAscii >= 48 And KeyAscii <= 57 Or KeyAscii = 8 Or KeyAscii = 46) Then
+        KeyAscii = 0
+        Beep
+    End If
+End Sub
+
+
+--------------------------------------------
+module2
+
+
+Sub TampilkanFormPengeluaran()
+    FormPengeluaran.Show
+End Sub
+
+
+
+-------------------------------------------
+
+module3:
+
+
+
+Sub kelompokkanData_Terstruktur()
+    Dim wsSumber As Worksheet, wsTujuan As Worksheet, wsKategori As Worksheet
+    Dim wb As Workbook
+    Set wb = ThisWorkbook
+
+    ' Pastikan sheet sumber dan tujuan ada
+    On Error Resume Next
+    Set wsSumber = wb.Sheets("1")
+    Set wsTujuan = wb.Sheets("2")
+    Set wsKategori = wb.Sheets("4")
+    On Error GoTo 0
+
+    If wsSumber Is Nothing Or wsTujuan Is Nothing Or wsKategori Is Nothing Then
+        MsgBox "Sheet tidak ditemukan. Pastikan '1', '2', dan '4' tersedia."
+        Exit Sub
+    End If
+
+    ' Dapatkan dictionary kategori dari Sheet4
+    Dim dictKategori As Object
+    Set dictKategori = CreateObject("Scripting.Dictionary")
+    Call BacaKategoriDanSubkategori(wsKategori, dictKategori)
+    
+    ' Cek jika ada data
+    Dim lastRow As Long
+    lastRow = wsSumber.Cells(wsSumber.Rows.Count, 1).End(xlUp).Row
+    If lastRow < 4 Then
+        MsgBox "Tidak ada data untuk diproses."
+        Exit Sub
+    End If
+
+    ' Baca data
+    Dim data As Variant
+    data = wsSumber.Range("A1:L" & lastRow).Value
+
+    ' Inisialisasi dictionary untuk pengelompokan
+    Dim kelompok As Object
+    Set kelompok = CreateObject("Scripting.Dictionary")
+
+    ' Variabel untuk loop
+    Dim i As Long
+    Dim tgl As Variant, kwitansi As Variant, uraian As Variant, kas As Variant
+    Dim kodeSub As String, bulan As String
+    Dim IsUangSetoran As Boolean
+
+    ' Membaca data dan kelompokkan
+    For i = 4 To UBound(data, 1)
+        ' Baca data dasar
+        tgl = data(i, 1)
+        kwitansi = data(i, 2)
+        uraian = data(i, 3)
+        kas = data(i, 4)
+        
+        ' Tentukan bulan
+        If IsDate(tgl) And tgl <> "" Then
+            bulan = Format(tgl, "MMMM YYYY")
+        Else
+            bulan = "Tanggal Tidak Valid"
+        End If
+
+        ' Cek kriteria Uang Setoran
+        IsUangSetoran = False
+        If IsNumeric(kas) And kas <> "" Then
+            If Trim(data(i, 5)) = "" And Trim(data(i, 7)) = "" And _
+               Trim(data(i, 9)) = "" And Trim(data(i, 11)) = "" Then
+                IsUangSetoran = True
+            End If
+        End If
+
+        ' Tentukan kode subkategori
+        If IsUangSetoran Then
+            kodeSub = "Uang Setoran"
+        Else
+            ' Gabungkan kode subkategori jika ada
+            kodeSub = Trim(data(i, 5) & " " & data(i, 7) & " " & data(i, 9) & " " & data(i, 11))
+            kodeSub = WorksheetFunction.Trim(kodeSub)
+            If kodeSub = "" Then kodeSub = "Lainnya"
+        End If
+
+        ' Tambahkan ke dictionary
+        If Not kelompok.exists(bulan) Then
+            kelompok.Add bulan, CreateObject("Scripting.Dictionary")
+        End If
+
+        If Not kelompok(bulan).exists(kodeSub) Then
+            kelompok(bulan).Add kodeSub, New Collection
+        End If
+
+        ' Tambahkan data ke collection
+        kelompok(bulan)(kodeSub).Add Array(tgl, kwitansi, uraian, kas, kodeSub)
+    Next i
+
+    ' Bersihkan sheet tujuan
+    wsTujuan.Cells.Clear
+
+    ' Mulai tulis hasil ke Sheet2
+    Dim startRow As Long, startCol As Long
+    startCol = 1
+    Dim colSpacing As Long: colSpacing = 3
+
+    ' Urutkan bulan dengan aman
+    Dim bulanKeys() As Variant
+    bulanKeys = GetKeysAsArray(kelompok)
+    If Not IsEmpty(bulanKeys) Then
+        Call BubbleSort(bulanKeys)
+    End If
+
+    ' Loop melalui setiap bulan
+    Dim bulanKey As Variant, kodeSubKey As Variant
+    For Each bulanKey In bulanKeys
+        startRow = 1
+        
+        ' Tulis header bulan
+        With wsTujuan.Cells(startRow, startCol)
+            .Value = UCase(CStr(bulanKey))
+            .Font.Bold = True
+            .Font.Size = 12
+        End With
+        startRow = startRow + 1
+
+        ' Urutkan kode subkategori dengan aman
+        Dim kodeSubKeys() As Variant
+        kodeSubKeys = GetKeysAsArray(kelompok(bulanKey))
+        If Not IsEmpty(kodeSubKeys) Then
+            Call BubbleSort(kodeSubKeys)
+        End If
+
+        ' Loop melalui setiap kode subkategori
+        For Each kodeSubKey In kodeSubKeys
+            ' Tulis header subkategori
+            With wsTujuan.Cells(startRow, startCol)
+                .Value = "Subkategori: " & CStr(kodeSubKey)
+                .Font.Bold = True
+            End With
+            startRow = startRow + 1
+            
+            ' Tulis header kolom
+            With wsTujuan.Cells(startRow, startCol).Resize(1, 5)
+                .Value = Array("Tanggal", "Kwitansi", "Uraian", "Kas", "Kode Subkategori")
+                .Font.Bold = True
+                .Borders(xlEdgeBottom).LineStyle = xlContinuous
+            End With
+            startRow = startRow + 1
+
+            ' Tulis data
+            Dim dataItem As Variant
+            Dim totalKas As Double: totalKas = 0
+            Dim r As Long: r = 0
+            
+            For Each dataItem In kelompok(bulanKey)(kodeSubKey)
+                ' Pastikan ini array
+                If IsArray(dataItem) Then
+                    ' Tulis data dengan format
+                    With wsTujuan.Cells(startRow + r, startCol)
+                        .Value = dataItem(0) ' Tanggal
+                        .NumberFormat = "dd-mmm-yyyy"
+                    End With
+                    
+                    With wsTujuan.Cells(startRow + r, startCol + 1)
+                        .Value = dataItem(1) ' Kwitansi
+                    End With
+                    
+                    ' Kolom Uraian - dibatasi lebar dan wrap text
+                    With wsTujuan.Cells(startRow + r, startCol + 2)
+                        .Value = dataItem(2) ' Uraian
+                        .WrapText = True
+                        .ColumnWidth = 30 ' Lebar kolom uraian 30 karakter
+                        .Rows.RowHeight = 15 ' Tinggi baris disesuaikan
+                    End With
+                    
+                    ' Kolom Kas
+                    With wsTujuan.Cells(startRow + r, startCol + 3)
+                        If IsNumeric(dataItem(3)) Then
+                            .Value = dataItem(3)
+                            .NumberFormat = "#,##0"
+                            totalKas = totalKas + CDbl(dataItem(3))
+                        Else
+                            .Value = dataItem(3)
+                        End If
+                    End With
+                    
+                    ' Kode Subkategori
+                    With wsTujuan.Cells(startRow + r, startCol + 4)
+                        .Value = dataItem(4)
+                    End With
+                    
+                    r = r + 1
+                End If
+            Next dataItem
+
+            ' Tulis total kas
+            startRow = startRow + r
+            With wsTujuan.Cells(startRow, startCol)
+                .Value = "Total Kas " & CStr(kodeSubKey)
+                .Font.Bold = True
+            End With
+            With wsTujuan.Cells(startRow, startCol + 3)
+                .Value = totalKas
+                .NumberFormat = "#,##0"
+                .Font.Bold = True
+                .Borders(xlEdgeTop).LineStyle = xlContinuous
+            End With
+            startRow = startRow + 2
+        Next kodeSubKey
+
+        ' Geser ke kolom berikutnya
+        startCol = startCol + 6 + colSpacing
+    Next bulanKey
+
+    ' Format kolom secara spesifik
+    Dim lastCol As Long
+    lastCol = wsTujuan.Cells.Find("*", , xlFormulas, , xlByColumns, xlPrevious).Column
+    
+    For i = 1 To lastCol
+        Select Case i Mod (6 + colSpacing)
+            Case 1 ' Kolom Tanggal
+                wsTujuan.Columns(i).ColumnWidth = 12
+            Case 2 ' Kolom Kwitansi
+                wsTujuan.Columns(i).ColumnWidth = 15
+            Case 3 ' Kolom Uraian (sudah diatur sebelumnya)
+                ' Tidak perlu diubah lagi
+            Case 4 ' Kolom Kas
+                wsTujuan.Columns(i).ColumnWidth = 15
+            Case 5 ' Kolom Kode Subkategori
+                wsTujuan.Columns(i).ColumnWidth = 20
+            Case Else ' Kolom kosong antar kelompok
+                wsTujuan.Columns(i).ColumnWidth = 3
+        End Select
+    Next i
+
+    MsgBox "Pengelompokan data selesai dengan tampilan yang rapi."
+End Sub
+
+' Fungsi untuk mendapatkan keys dari dictionary sebagai array dengan aman
+Function GetKeysAsArray(dict As Object) As Variant
+    Dim keys() As Variant
+    Dim i As Long
+    
+    If dict.Count = 0 Then
+        GetKeysAsArray = Array()
+        Exit Function
+    End If
+    
+    ReDim keys(dict.Count - 1)
+    i = 0
+    
+    Dim key As Variant
+    For Each key In dict.keys
+        keys(i) = key
+        i = i + 1
+    Next key
+    
+    GetKeysAsArray = keys
+End Function
+
+' Fungsi BubbleSort yang diperbaiki untuk menangani berbagai tipe data
+Sub BubbleSort(arr() As Variant)
+    Dim i As Long, j As Long
+    Dim temp As Variant
+    
+    If UBound(arr) < LBound(arr) Then Exit Sub
+    
+    For i = LBound(arr) To UBound(arr) - 1
+        For j = i + 1 To UBound(arr)
+            ' Gunakan CStr untuk memastikan perbandingan string yang aman
+            If CStr(arr(i)) > CStr(arr(j)) Then
+                temp = arr(i)
+                arr(i) = arr(j)
+                arr(j) = temp
+            End If
+        Next j
+    Next i
+End Sub
+
+
+
+
+----------------------------------------------
+
+module 4:
+
+
+
+Sub SalinTotalKeSheet3_Horizontal()
+    ' Deklarasi semua variabel
+    Dim wsSumber As Worksheet, wsTujuan As Worksheet, wsAnggaran As Worksheet
+    Dim wb As Workbook
+    Dim data As Variant
+    Dim totalKas As Object, uraianDict As Object, subKategoriDict As Object
+    Dim allBulan As Object, kategoriDict As Object, totalPerKategoriBulan As Object
+    Dim totalPerKelompok As Object, totalKeseluruhanPerBulan As Object, uangSetoranDict As Object
+    Dim tempTotalPerKelompok As Object, bulanCol As Object, anggaranDict As Object
+    Dim allCategories As Object, allSubCategories As Object
+    Dim i As Long, tgl As Variant, kas As Double
+    Dim kodeSub As String, kategori As String, bulan As String
+    Dim kelompokKey As String, kelompokTotalKey As String, uniqueKey As String, totalKey As String
+    Dim bulanList() As String, idx As Long, colIndex As Long, rowIndex As Long
+    Dim bulanKey As Variant, key As Variant
+    Dim totalUangSetoran As Double, totalSubKategori As Double, totalKategori As Double
+    Dim totalKelompok As Double, totalKeseluruhan As Double
+    Dim lastCol As Long
+    Dim firstRowInCategory As Long
+    Dim isLastKategoriInKelompok As Boolean
+    Dim k As Variant, kategoriKey As Variant, subKategoriKey As Variant
+    Dim sortedKategoriKeys() As Variant, sortedSubKategoriKeys() As Variant
+    Dim anggaranKey As String
+    Dim hasDataInGroup As Boolean
+    
+    ' Set workbook dan worksheet
+    Set wb = ThisWorkbook
+    
+    ' Pastikan sheet sumber dan tujuan ada
+    On Error Resume Next
+    Set wsSumber = wb.Sheets("1")
+    Set wsTujuan = wb.Sheets("3")
+    Set wsAnggaran = wb.Sheets("4")
+    On Error GoTo 0
+    
+    If wsSumber Is Nothing Or wsTujuan Is Nothing Then
+        MsgBox "Sheet tidak ditemukan. Pastikan '1' dan '3' tersedia.", vbExclamation
+        Exit Sub
+    End If
+    
+    ' Inisialisasi dictionary anggaran
+    Set anggaranDict = CreateObject("Scripting.Dictionary")
+    If Not wsAnggaran Is Nothing Then
+        Call BacaAnggaranPendapatan(wsAnggaran, anggaranDict)
+    End If
+    
+    ' Ambil data dari sheet sumber
+    data = wsSumber.UsedRange.Value
+    
+    ' Pastikan ada data untuk diproses
+    If UBound(data, 1) < 4 Then
+        MsgBox "Tidak ada data untuk diproses.", vbExclamation
+        Exit Sub
+    End If
+    
+    ' Inisialisasi dictionary
+    Set totalKas = CreateObject("Scripting.Dictionary")
+    Set uraianDict = CreateObject("Scripting.Dictionary")
+    Set subKategoriDict = CreateObject("Scripting.Dictionary")
+    Set allBulan = CreateObject("Scripting.Dictionary")
+    Set kategoriDict = CreateObject("Scripting.Dictionary")
+    Set totalPerKategoriBulan = CreateObject("Scripting.Dictionary")
+    Set totalPerKelompok = CreateObject("Scripting.Dictionary")
+    Set totalKeseluruhanPerBulan = CreateObject("Scripting.Dictionary")
+    Set uangSetoranDict = CreateObject("Scripting.Dictionary")
+    Set allCategories = CreateObject("Scripting.Dictionary")
+    Set allSubCategories = CreateObject("Scripting.Dictionary")
+    
+    ' Inisialisasi uraian kode subkategori dari Sheet4
+    Call BacaKategoriDanSubkategori(wsAnggaran, uraianDict)
+    
+    ' Kumpulkan semua kategori dan subkategori dari uraianDict
+    For Each key In uraianDict.keys
+        ' Ambil kategori utama (6 karakter pertama)
+        If Len(key) >= 6 Then
+            kategori = Left(key, 6)
+        Else
+            kategori = key
+        End If
+        
+        ' Tambahkan ke dictionary kategori jika belum ada
+        If Not allCategories.exists(kategori) Then
+            allCategories.Add kategori, Nothing
+            allSubCategories.Add kategori, CreateObject("Scripting.Dictionary")
+        End If
+        
+        ' Tambahkan subkategori
+        If Not allSubCategories(kategori).exists(key) Then
+            allSubCategories(kategori).Add key, nothing
+        End If
+    Next key
+    
+    ' Proses data sumber
+    For i = 4 To UBound(data, 1)
+        ' Ambil nilai kas dari kolom 4
+        kas = 0
+        If Not IsEmpty(data(i, 4)) And IsNumeric(data(i, 4)) Then
+            kas = data(i, 4)
+        End If
+        
+        ' Skip jika tidak ada nilai kas
+        If kas = 0 Then
+            GoTo NextIteration
+        End If
+        
+        ' Ambil bulan dari tanggal (kolom 1)
+        If IsDate(data(i, 1)) Then
+            bulan = Format(data(i, 1), "mmmm yyyy")
+        Else
+            bulan = "Tidak Diketahui"
+        End If
+        
+        ' Tambahkan bulan ke dictionary jika belum ada
+        If Not allBulan.exists(bulan) Then
+            allBulan.Add bulan, nothing
+            totalKeseluruhanPerBulan.Add bulan, 0
+        End If
+        
+        ' Identifikasi apakah ini Uang Setoran
+        If IsUangSetoran(data, i) Then
+            ' Proses khusus untuk Uang Setoran
+            kategori = "Uang Setoran"
+            kodeSub = "Uang Setoran"
+            
+            ' Akumulasi total Uang Setoran per bulan
+            If uangSetoranDict.exists(bulan) Then
+                uangSetoranDict(bulan) = uangSetoranDict(bulan) + kas
+            Else
+                uangSetoranDict.Add bulan, kas
+            End If
+        Else
+            ' Proses untuk kategori lainnya
+            kodeSub = CleanCode(Trim(data(i, 5) & " " & data(i, 7) & " " & data(i, 9) & " " & data(i, 11)))
+            
+            ' Skip jika kode subkategori kosong
+            If kodeSub = "" Then
+                GoTo NextIteration
+            End If
+            
+            ' Ambil kategori utama (6 karakter pertama)
+            If Len(kodeSub) >= 6 Then
+                kategori = Left(kodeSub, 6)
+            Else
+                kategori = kodeSub
+            End If
+            
+            ' Tambahkan ke dictionary kategori jika belum ada
+            If Not kategoriDict.exists(kategori) Then
+                kategoriDict.Add kategori, nothing
+                subKategoriDict.Add kategori, CreateObject("Scripting.Dictionary")
+            End If
+            
+            ' Buat key unik untuk total kas
+            uniqueKey = kategori & "|" & kodeSub & "|" & bulan
+            
+            ' Akumulasi total kas per subkategori
+            If Not subKategoriDict(kategori).exists(kodeSub) Then
+                subKategoriDict(kategori).Add kodeSub, nothing
+            End If
+
+            If totalKas.exists(uniqueKey) Then
+                totalKas(uniqueKey) = totalKas(uniqueKey) + kas
+            Else
+                totalKas.Add uniqueKey, kas
+            End If
+            
+            ' Ambil 3 angka pertama untuk kelompok
+            If Len(kodeSub) >= 3 Then
+                kelompokKey = Left(kodeSub, 3)
+            Else
+                kelompokKey = kodeSub
+            End If
+
+            ' Akumulasi total per kelompok
+            kelompokTotalKey = kelompokKey & "|" & bulan
+            If totalPerKelompok.exists(kelompokTotalKey) Then
+                totalPerKelompok(kelompokTotalKey) = totalPerKelompok(kelompokTotalKey) + kas
+            Else
+                totalPerKelompok.Add kelompokTotalKey, kas
+            End If
+
+            ' Akumulasi total per kategori
+            totalKey = kategori & "|" & bulan
+            If totalPerKategoriBulan.exists(totalKey) Then
+                totalPerKategoriBulan(totalKey) = totalPerKategoriBulan(totalKey) + kas
+            Else
+                totalPerKategoriBulan.Add totalKey, kas
+            End If
+        End If
+        
+        ' Akumulasi total keseluruhan per bulan
+        totalKeseluruhanPerBulan(bulan) = totalKeseluruhanPerBulan(bulan) + kas
+        
+NextIteration:
+    Next i
+    
+    ' Bersihkan sheet tujuan dan siapkan header
+    wsTujuan.Cells.Clear
+    wsTujuan.Cells(1, 1).Value = "Kategori"
+    wsTujuan.Cells(1, 2).Value = "Kode Subkategori"
+    wsTujuan.Cells(1, 3).Value = "Uraian"
+    
+    ' Atur header bulan secara horizontal
+    idx = 0
+    ReDim bulanList(allBulan.Count - 1)
+    
+    For Each bulanKey In allBulan.keys
+        bulanList(idx) = bulanKey
+        idx = idx + 1
+    Next bulanKey
+    
+    ' Urutkan bulan secara kronologis
+    Call BubbleSort(bulanList)
+    
+    Set bulanCol = CreateObject("Scripting.Dictionary")
+    
+    colIndex = 4
+    For idx = LBound(bulanList) To UBound(bulanList)
+        bulanKey = bulanList(idx)
+        wsTujuan.Cells(1, colIndex).Value = bulanKey
+        bulanCol.Add bulanKey, colIndex
+        colIndex = colIndex + 1
+    Next idx
+    
+    ' Tambahkan kolom Total, Anggaran Pendapatan, dan Selisih
+    wsTujuan.Cells(1, colIndex).Value = "Total"
+    wsTujuan.Cells(1, colIndex + 1).Value = "Anggaran Pendapatan"
+    wsTujuan.Cells(1, colIndex + 2).Value = "Selisih"
+    
+    ' Mulai menulis data ke sheet tujuan
+    rowIndex = 2
+
+    ' Tulis Uang Setoran terlebih dahulu jika ada
+    If uangSetoranDict.Count > 0 Then
+        wsTujuan.Cells(rowIndex, 1).Value = "Uang Setoran"
+        wsTujuan.Cells(rowIndex, 2).Value = ""
+        wsTujuan.Cells(rowIndex, 3).Value = ""
+        
+        totalUangSetoran = 0
+        
+        For Each bulanKey In bulanCol.keys
+            If uangSetoranDict.exists(bulanKey) Then
+                wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = uangSetoranDict(bulanKey)
+                totalUangSetoran = totalUangSetoran + uangSetoranDict(bulanKey)
+                wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(200, 255, 200) ' Hijau muda
+            Else
+                wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+            End If
+        Next bulanKey
+        
+        ' Tulis total
+        wsTujuan.Cells(rowIndex, colIndex).Value = totalUangSetoran
+        wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(200, 255, 200)
+        
+        ' Kosongkan kolom anggaran pendapatan
+        wsTujuan.Cells(rowIndex, colIndex + 1).Value = ""
+        
+        ' Tambahkan formula selisih (REVISI: menggunakan relative reference)
+        wsTujuan.Cells(rowIndex, colIndex + 2).Formula = "=" & _
+            wsTujuan.Cells(rowIndex, colIndex).Address(RowAbsolute:=False, ColumnAbsolute:=False) & "-" & _
+            wsTujuan.Cells(rowIndex, colIndex + 1).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+        wsTujuan.Cells(rowIndex, colIndex + 2).NumberFormat = "#,##0"
+        
+        rowIndex = rowIndex + 1
+    End If
+
+    ' Proses kategori lainnya
+    Set tempTotalPerKelompok = CreateObject("Scripting.Dictionary")
+
+    ' Urutkan kategori dari allCategories (gabungan antara yang ada di data dan yang ada di uraianDict)
+    sortedKategoriKeys = GetSortedKeys(allCategories)
+    
+    ' Loop melalui setiap kategori
+    For Each kategoriKey In sortedKategoriKeys
+        ' Skip Uang Setoran jika sudah diproses
+        If kategoriKey = "Uang Setoran" Then
+            GoTo NextKategori
+        End If
+        
+        firstRowInCategory = rowIndex
+
+        ' Ambil kelompok dari 3 angka pertama kategori
+        kelompokKey = Left(kategoriKey, 3)
+
+        ' Inisialisasi total sementara per kelompok
+        If Not tempTotalPerKelompok.exists(kelompokKey) Then
+            tempTotalPerKelompok.Add kelompokKey, CreateObject("Scripting.Dictionary")
+        End If
+
+        ' Urutkan subkategori dari allSubCategories (gabungan antara yang ada di data dan yang ada di uraianDict)
+        sortedSubKategoriKeys = GetSortedKeys(allSubCategories(kategoriKey))
+        
+        ' Loop melalui subkategori
+        For Each subKategoriKey In sortedSubKategoriKeys
+            ' Tulis data kategori dan subkategori
+            wsTujuan.Cells(rowIndex, 1).Value = kategoriKey
+            wsTujuan.Cells(rowIndex, 2).Value = subKategoriKey
+            
+            ' Tambahkan uraian jika ada
+            If uraianDict.exists(subKategoriKey) Then
+                wsTujuan.Cells(rowIndex, 3).Value = uraianDict(subKategoriKey)
+            Else
+                wsTujuan.Cells(rowIndex, 3).Value = "Uraian Tidak Diketahui"
+            End If
+            
+            ' Tulis total per bulan
+            totalSubKategori = 0
+            For Each bulanKey In bulanCol.keys
+                uniqueKey = kategoriKey & "|" & subKategoriKey & "|" & bulanKey
+                If totalKas.exists(uniqueKey) Then
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalKas(uniqueKey)
+                    totalSubKategori = totalSubKategori + totalKas(uniqueKey)
+                    
+                    ' Akumulasi total kelompok
+                    kelompokTotalKey = kelompokKey & "|" & bulanKey
+                    If tempTotalPerKelompok(kelompokKey).exists(bulanKey) Then
+                        tempTotalPerKelompok(kelompokKey)(bulanKey) = tempTotalPerKelompok(kelompokKey)(bulanKey) + totalKas(uniqueKey)
+                    Else
+                        tempTotalPerKelompok(kelompokKey).Add bulanKey, totalKas(uniqueKey)
+                    End If
+                Else
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                End If
+            Next bulanKey
+            
+            ' Tulis total subkategori
+            wsTujuan.Cells(rowIndex, colIndex).Value = totalSubKategori
+            wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(146, 208, 80) ' Hijau
+            
+            ' Isi kolom anggaran pendapatan jika ada data di Sheet4
+            anggaranKey = subKategoriKey & "|" & bulanKey
+            If anggaranDict.exists(anggaranKey) Then
+                wsTujuan.Cells(rowIndex, colIndex + 1).Value = anggaranDict(anggaranKey)
+            Else
+                wsTujuan.Cells(rowIndex, colIndex + 1).Value = 0
+            End If
+            
+            ' Tambahkan formula selisih (REVISI: menggunakan relative reference)
+            wsTujuan.Cells(rowIndex, colIndex + 2).Formula = "=" & _
+                wsTujuan.Cells(rowIndex, colIndex).Address(RowAbsolute:=False, ColumnAbsolute:=False) & "-" & _
+                wsTujuan.Cells(rowIndex, colIndex + 1).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+            wsTujuan.Cells(rowIndex, colIndex + 2).NumberFormat = "#,##0"
+            
+            rowIndex = rowIndex + 1
+        Next subKategoriKey
+        
+        ' Tulis total kategori hanya jika ada transaksi untuk kategori ini
+        If kategoriDict.exists(kategoriKey) Then
+            wsTujuan.Cells(rowIndex, 1).Value = "Total " & kategoriKey
+            wsTujuan.Cells(rowIndex, 2).Value = ""
+            wsTujuan.Cells(rowIndex, 3).Value = ""
+            
+            totalKategori = 0
+            For Each bulanKey In bulanCol.keys
+                totalKey = kategoriKey & "|" & bulanKey
+                If totalPerKategoriBulan.exists(totalKey) Then
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalPerKategoriBulan(totalKey)
+                    totalKategori = totalKategori + totalPerKategoriBulan(totalKey)
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(146, 208, 80) ' Hijau
+                Else
+                    wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                End If
+            Next bulanKey
+            
+            wsTujuan.Cells(rowIndex, colIndex).Value = totalKategori
+            wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(146, 208, 80)
+            
+            ' Kosongkan kolom anggaran pendapatan
+            wsTujuan.Cells(rowIndex, colIndex + 1).Value = ""
+            
+            ' Tambahkan formula selisih (REVISI: menggunakan relative reference)
+            wsTujuan.Cells(rowIndex, colIndex + 2).Formula = "=" & _
+                wsTujuan.Cells(rowIndex, colIndex).Address(RowAbsolute:=False, ColumnAbsolute:=False) & "-" & _
+                wsTujuan.Cells(rowIndex, colIndex + 1).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+            wsTujuan.Cells(rowIndex, colIndex + 2).NumberFormat = "#,##0"
+            
+            rowIndex = rowIndex + 1
+        End If
+
+        ' Cek apakah ini kategori terakhir dalam kelompok
+        isLastKategoriInKelompok = True
+        For Each k In sortedKategoriKeys
+            If Left(k, 3) = kelompokKey And k > kategoriKey Then
+                isLastKategoriInKelompok = False
+                Exit For
+            End If
+        Next k
+
+        ' Jika ini kategori terakhir dalam kelompok, tulis total kelompok
+        If isLastKategoriInKelompok Then
+            ' Hitung total kelompok dari tempTotalPerKelompok
+            hasDataInGroup = False
+            
+            ' Cek apakah ada data dalam kelompok ini
+            For Each bulanKey In bulanCol.keys
+                kelompokTotalKey = kelompokKey & "|" & bulanKey
+                If tempTotalPerKelompok(kelompokKey).exists(bulanKey) Then
+                    hasDataInGroup = True
+                    Exit For
+                End If
+            Next bulanKey
+            
+            If hasDataInGroup Then
+                wsTujuan.Cells(rowIndex, 1).Value = "Total Kelompok " & kelompokKey
+                wsTujuan.Cells(rowIndex, 2).Value = ""
+                wsTujuan.Cells(rowIndex, 3).Value = ""
+
+                totalKelompok = 0
+                For Each bulanKey In bulanCol.keys
+                    kelompokTotalKey = kelompokKey & "|" & bulanKey
+                    If tempTotalPerKelompok(kelompokKey).exists(bulanKey) Then
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = tempTotalPerKelompok(kelompokKey)(bulanKey)
+                        totalKelompok = totalKelompok + tempTotalPerKelompok(kelompokKey)(bulanKey)
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(255, 255, 0) ' Kuning
+                    Else
+                        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = 0
+                    End If
+                Next bulanKey
+
+                wsTujuan.Cells(rowIndex, colIndex).Value = totalKelompok
+                wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(255, 255, 0)
+                
+                ' Kosongkan kolom anggaran pendapatan
+                wsTujuan.Cells(rowIndex, colIndex + 1).Value = ""
+                
+                ' Tambahkan formula selisih (REVISI: menggunakan relative reference)
+                wsTujuan.Cells(rowIndex, colIndex + 2).Formula = "=" & _
+                    wsTujuan.Cells(rowIndex, colIndex).Address(RowAbsolute:=False, ColumnAbsolute:=False) & "-" & _
+                    wsTujuan.Cells(rowIndex, colIndex + 1).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+                wsTujuan.Cells(rowIndex, colIndex + 2).NumberFormat = "#,##0"
+                
+                rowIndex = rowIndex + 1
+            End If
+        End If
+        
+NextKategori:
+    Next kategoriKey
+
+    ' Tulis Total Keseluruhan
+    wsTujuan.Cells(rowIndex, 1).Value = "Total Keseluruhan"
+    wsTujuan.Cells(rowIndex, 2).Value = ""
+    wsTujuan.Cells(rowIndex, 3).Value = ""
+    
+    totalKeseluruhan = 0
+    For Each bulanKey In bulanCol.keys
+        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Value = totalKeseluruhanPerBulan(bulanKey)
+        totalKeseluruhan = totalKeseluruhan + totalKeseluruhanPerBulan(bulanKey)
+        wsTujuan.Cells(rowIndex, bulanCol(bulanKey)).Interior.Color = RGB(0, 176, 240) ' Biru
+    Next bulanKey
+    
+    wsTujuan.Cells(rowIndex, colIndex).Value = totalKeseluruhan
+    wsTujuan.Cells(rowIndex, colIndex).Interior.Color = RGB(0, 176, 240)
+    
+    ' Kosongkan kolom anggaran pendapatan
+    If IsEmpty(wsTujuan.Cells(rowIndex, colIndex + 1).Value) Then
+        wsTujuan.Cells(rowIndex, colIndex + 1).Value = ""
+    End If
+    
+    ' Tambahkan formula selisih (REVISI: menggunakan relative reference)
+    wsTujuan.Cells(rowIndex, colIndex + 2).Formula = "=" & _
+        wsTujuan.Cells(rowIndex, colIndex).Address(RowAbsolute:=False, ColumnAbsolute:=False) & "-" & _
+        wsTujuan.Cells(rowIndex, colIndex + 1).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+    wsTujuan.Cells(rowIndex, colIndex + 2).NumberFormat = "#,##0"
+    
+    ' Format angka sebagai currency
+    lastCol = wsTujuan.Cells(1, wsTujuan.Columns.Count).End(xlToLeft).Column
+    wsTujuan.Range(wsTujuan.Cells(2, 4), wsTujuan.Cells(rowIndex, lastCol)).NumberFormat = "#,##0"
+    
+    ' Auto fit kolom
+    wsTujuan.Columns.AutoFit
+    
+    MsgBox "Proses selesai. Data berhasil disalin ke Sheet 3.", vbInformation
+End Sub
+
+' Fungsi dan subrutin pendukung lainnya tetap sama seperti sebelumnya
+Sub BacaAnggaranPendapatan(ws As Worksheet, dict As Object)
+    Dim data As Variant
+    Dim i As Long, j As Long
+    Dim kodeSub As String, bulan As String
+    Dim key As String
+    
+    data = ws.UsedRange.Value
+    
+    If UBound(data, 1) < 2 Or UBound(data, 2) < 4 Then Exit Sub ' Minimal header + 1 baris dan beberapa kolom
+
+    For i = 2 To UBound(data, 1)
+        If Trim(data(i, 2)) <> "" Then
+            kodeSub = Trim(data(i, 2)) ' Asumsikan kolom ke-2 adalah Kode Subkategori
+            
+            For j = 4 To UBound(data, 2)
+                If Trim(data(1, j)) <> "" Then
+                    bulan = Trim(data(1, j))
+                    key = kodeSub & "|" & bulan
+                    If IsNumeric(data(i, j)) Then
+                        dict(key) = data(i, j)
+                    Else
+                        dict(key) = 0
+                    End If
+                End If
+            Next j
+        End If
+    Next i
+End Sub
+
+Function GetSortedKeys(dict As Object) As Variant
+    Dim keys() As Variant
+    Dim i As Long, j As Long
+    Dim temp As Variant
+    
+    ' Ambil semua kunci dari dictionary
+    keys = dict.keys
+    
+    ' Urutkan kunci menggunakan bubble sort
+    For i = LBound(keys) To UBound(keys) - 1
+        For j = i + 1 To UBound(keys)
+            If keys(i) > keys(j) Then
+                temp = keys(i)
+                keys(i) = keys(j)
+                keys(j) = temp
+            End If
+        Next j
+    Next i
+    
+    GetSortedKeys = keys
+End Function
+
+Function IsUangSetoran(data As Variant, rowIndex As Long) As Boolean
+    ' Cek 1: Jika semua kolom kode kosong (5,7,9,11) dan kolom nilai (4) terisi
+    If Trim(data(rowIndex, 5) & data(rowIndex, 7) & data(rowIndex, 9) & data(rowIndex, 11)) = "" And _
+       Not IsEmpty(data(rowIndex, 4)) Then
+        IsUangSetoran = True
+        Exit Function
+    End If
+    
+    ' Cek 2: Jika ada keterangan "Uang Setoran" di kolom 13
+    If Not IsEmpty(data(rowIndex, 13)) Then
+        If InStr(1, CStr(data(rowIndex, 13)), "Uang Setoran", vbTextCompare) > 0 Then
+            IsUangSetoran = True
+            Exit Function
+        End If
+    End If
+    
+    IsUangSetoran = False
+End Function
+
+Function CleanCode(kode As String) As String
+    ' Hapus spasi dan karakter khusus
+    Dim result As String
+    Dim i As Long
+    
+    result = ""
+    For i = 1 To Len(kode)
+        Dim c As String
+        c = Mid(kode, i, 1)
+        
+        If c Like "[0-9]" Or c Like "[a-zA-Z]" Or c = "." Then
+            result = result & c
+        End If
+    Next i
+    
+    CleanCode = result
+End Function
+
+Sub BubbleSort(arr() As String)
+    Dim i As Long, j As Long
+    Dim temp As String
+    
+    For i = LBound(arr) To UBound(arr) - 1
+        For j = i + 1 To UBound(arr)
+            ' Coba konversi ke tanggal untuk perbandingan
+            Dim date1 As Date, date2 As Date
+            On Error Resume Next
+            date1 = CDate(arr(i))
+            date2 = CDate(arr(j))
+            On Error GoTo 0
+            
+            ' Jika bisa dikonversi ke tanggal, bandingkan sebagai tanggal
+            If IsDate(arr(i)) And IsDate(arr(j)) Then
+                If date1 > date2 Then
+                    temp = arr(i)
+                    arr(i) = arr(j)
+                    arr(j) = temp
+                End If
+            Else
+                ' Jika tidak, bandingkan sebagai string
+                If arr(i) > arr(j) Then
+                    temp = arr(i)
+                    arr(i) = arr(j)
+                    arr(j) = temp
+                End If
+            End If
+        Next j
+    Next i
+End Sub
+
+Sub BacaKategoriDanSubkategori(ws As Worksheet, dict As Object)
+    Dim lastRow As Long, i As Long
+    Dim kodeSub As String, namaSub As String
+    
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    
+    For i = 2 To lastRow
+        kodeSub = Trim(ws.Cells(i, 3).Value)
+        namaSub = Trim(ws.Cells(i, 4).Value)
+        
+        If kodeSub <> "" And namaSub <> "" Then
+            If Not dict.exists(kodeSub) Then
+                dict.Add kodeSub, namaSub
+            End If
+        End If
+    Next i
+End Sub
