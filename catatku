@@ -30850,3 +30850,29 @@ Sekarang **semua URL pada semua file dikonfigurasi dalam 1 file config.php** den
 - ✅ **Fleksibel dan scalable**
 
 Semua perbaikan telah selesai dan siap digunakan! 🎉
+
+
+
+
+
+
+
+
+import os
+
+output_file = "gabungan_proyek.txt"
+base_folder = "path/ke/proyekmu"  # ganti dengan lokasi folder proyek
+
+with open(output_file, "w", encoding="utf-8") as outfile:
+    for root, _, files in os.walk(base_folder):
+        for file in files:
+            if file.endswith((".html", ".css", ".js", ".txt", ".md")):  # filter jenis file
+                filepath = os.path.join(root, file)
+                outfile.write(f"\n\n===== {filepath} =====\n\n")
+                try:
+                    with open(filepath, "r", encoding="utf-8") as infile:
+                        outfile.write(infile.read())
+                except:
+                    outfile.write("[Gagal membaca file ini]\n")
+
+print(f"Selesai! Semua file disatukan di {output_file}")
