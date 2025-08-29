@@ -31023,3 +31023,133 @@ Kalau ekstensi buka login lewat browser/iframe, fingerprint seperti ini bisa iku
 ---
 
 Mau aku bikinkan **script PowerShell sekali jalan** yang langsung nampilin semua fingerprint di atas dalam satu output biar gampang cek?
+
+
+
+
+
+
+
+
+
+cookie augment:
+
+
+[
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1787980856,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "ajs_user_id",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "560eea13-4502-4e6f-8c60-a8283ffc1427"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1787981111,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "ph_phc_Kc4h1nMQmkyKUo9uGYXOCt25GiiXwguFcnWr1Xhl6bW_posthog",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "%7B%22distinct_id%22%3A%22560eea13-4502-4e6f-8c60-a8283ffc1427%22%2C%22%24sesid%22%3A%5B1756445111651%2C%220198f445-8f75-70bc-846e-6fa7cfd39ac4%22%2C1756444856181%5D%2C%22%24session_is_sampled%22%3Atrue%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22https%3A%2F%2Fauth.augmentcode.com%2F%22%2C%22u%22%3A%22https%3A%2F%2Fapp.augmentcode.com%2Faccount%2Fsubscription%22%7D%7D"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1764220854,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "_fbp",
+        "path": "/",
+        "sameSite": null,
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "fb.1.1756444854918.660228671450420205"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1791004854.650103,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "_ga_F6GPDJDCJY",
+        "path": "/",
+        "sameSite": null,
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "GS2.1.s1756444810$o1$g1$t1756444853$j16$l0$h0"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1787980856,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "ajs_anonymous_id",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "c277212b-37b3-483f-8ef9-4e5223bf1ffe"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1791004854.604628,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "_ga",
+        "path": "/",
+        "sameSite": null,
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "GA1.1.280209313.1756444811"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1764220811,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "_gcl_au",
+        "path": "/",
+        "sameSite": null,
+        "secure": false,
+        "session": false,
+        "storeId": null,
+        "value": "1.1.153718444.1756444811"
+    },
+    {
+        "domain": ".augmentcode.com",
+        "expirationDate": 1764220854,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "_rdt_uuid",
+        "path": "/",
+        "sameSite": "strict",
+        "secure": true,
+        "session": false,
+        "storeId": null,
+        "value": "1756444854834.32434010-b3ae-436b-9167-7a0de6258603"
+    },
+    {
+        "domain": "app.augmentcode.com",
+        "hostOnly": true,
+        "httpOnly": true,
+        "name": "_session",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": true,
+        "storeId": null,
+        "value": "eyJvYXV0aDI6c3RhdGUiOiJoQ0phdVozMEhGUWlaMHVST0k2TkFXOWdFUDBsa3NMQmdnN1dZNldSTnRZIiwib2F1dGgyOmNvZGVWZXJpZmllciI6Ii1PcjY0UllUaFJsQ0tZZ1IydWRQOUJPb0FNVElkR1ZDcmU2cmZVYlY2cDgiLCJ1c2VyIjp7InVzZXJJZCI6IjU2MGVlYTEzLTQ1MDItNGU2Zi04YzYwLWE4MjgzZmZjMTQyNyIsInRlbmFudElkIjoiMzc0OWRkZWJiYzNiNzhhNDFiYTI4MzY5N2UxZmQzMjMiLCJ0ZW5hbnROYW1lIjoiZDgtZGlzY292ZXJ5NSIsInNoYXJkTmFtZXNwYWNlIjoiZDgiLCJlbWFpbCI6ImRhbmdwaHVvbmdrdWNiejQyMjFAZ21haWwuY29tIiwicm9sZXMiOltdLCJjcmVhdGVkQXQiOjE3NTY0NDQ4NDk5MTUsInNlc3Npb25JZCI6IjEwZWFkMjE3LTc2YWQtNDRkMC1hNmI5LTM3ODY0ZDZhZmYzMCJ9fQ%3D%3D.6VMg5z0q5CkojyoHFl02pndVk042wf8%2FCUm3l6zl4IE"
+    }
+]
