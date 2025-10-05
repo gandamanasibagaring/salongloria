@@ -31260,3 +31260,10 @@ Salam Hangat,
 💙 Tim DomaiNesia
 ----------------------------------------------------
 terakhur apk jemaat update tanpa tenant itu jemaat5oktobersatu.7z ya
+
+-- Password: admin123
+INSERT INTO users (username, password, role, tenant_id, nama_lengkap, email) VALUES
+('admin_medankota', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1, 'Admin Medan Kota', 'admin.medan@gkpi.org'),
+('admin_padangbulan', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 2, 'Admin Padang Bulan', 'admin.padangbulan@gkpi.org'),
+('admin_lontung', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 3, 'Admin Lontung', 'admin.lontung@gkpi.org'),
+('admin_bengkulu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 4, 'Admin Bengkulu', 'admin.bengkulu@gkpi.org');
