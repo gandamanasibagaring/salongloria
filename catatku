@@ -31267,3 +31267,27 @@ INSERT INTO users (username, password, role, tenant_id, nama_lengkap, email) VAL
 ('admin_padangbulan', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 2, 'Admin Padang Bulan', 'admin.padangbulan@gkpi.org'),
 ('admin_lontung', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 3, 'Admin Lontung', 'admin.lontung@gkpi.org'),
 ('admin_bengkulu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 4, 'Admin Bengkulu', 'admin.bengkulu@gkpi.org');
+
+
+
+ini kan aplikasinya akan di gunakan untuk beberapa gereja gkpi di beberapa provinsi. jd masing masing provinsi satu superadmin dan lingkungan masing masing dan admin biasa masing masing yg terpisah. aku mau kamu buatkan sistem nya yg bisa terpisah2 masing masing kota tersebut.Masalah yang Teridentifikasi:
+Tidak ada pemisahan data berdasarkan gereja/tenant
+
+Semua admin bisa melihat semua data tanpa filter
+
+Public form mengirim data ke pool yang sama tanpa identifikasi gereja
+
+Super admin melihat semua pengajuan dari semua gereja
+
+
+------------------------------
+ini kan aplikasinya akan di gunakan untuk beberapa gereja gkpi di beberapa provinsi. jd masing masing provinsi satu superadmin dan lingkungan masing masing dan admin biasa masing masing yg terpisah saat login ada fitur pilih gereja yg terikat pada masing2 databaseuser gereja masing masing. jangan sampe ada user dengan gereja lain akses ke database jemaat gereja lain. . aku mau kamu buatkan sistem nya yg bisa terpisah2 masing masing kota tersebut.
+
+Masalah yang Teridentifikasi di aplikasiku sekarang yg perlu kamu perbaiki:
+Tidak ada pemisahan data berdasarkan gereja/tenant
+
+Semua admin bisa melihat semua data tanpa filter jd buatkan filter nya
+
+Public form mengirim data ke pool yang sama tanpa identifikasi gereja
+
+Super admin di gereja yg dia pegang melihat semua pengajuan dari semua gereja. harusnya ada  tingkatan hak akses yaitu superadmin masing masing gereja yg bisa hapus masing masing pengajuan atau edit data, admin masing masing gereja yang bisa mengajukan di gerejanya, lalu user publik tanpa login yg bisa add form secara publik dan masuk ke pengajuan, lalu ada pendeta bishop yg bisa membuat user baru untuk superadmin di salah satu gereja jd buat formnya jika yg login adalah bishop dan buat data dummy nya password untuk akun bishop adalah @Gkpitumanggor1964.  ini database nya masih belum di kotak kotakin per masing masing gereja data jemaatnya. coba perbaiki. klo ada yg perlu di buat data dummy laksanakan.
