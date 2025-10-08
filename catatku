@@ -47511,3 +47511,81 @@ DROP TABLE IF EXISTS
 
 -- Aktifkan kembali foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+
+-----------------------------------------
+gkpimedan.com untuk file config/database.php:
+
+<?php
+// Database configuration for gkpimedan.com
+$host = 'localhost';
+$dbname = 'gkpimeda_db';
+$username = 'gkpimeda_superadmin';
+$password = 'XL2its5qrf2wigr';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false // Use native prepared statements
+    ]);
+} catch (PDOException $e) {
+    error_log("Database connection failed: " . $e->getMessage());
+    die("Database connection failed. Please try again later.");
+}
+
+// Backward compatibility function for mysqli
+function getDB() {
+    global $pdo;
+    return $pdo;
+}
+
+// Prepared statement helper functions
+function executeQuery($sql, $params = []) {
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    } catch (PDOException $e) {
+        error_log("SQL Error: " . $e->getMessage() . " - Query: " . $sql);
+        throw new Exception("Database error occurred");
+    }
+}
+
+function fetchAll($sql, $params = []) {
+    $stmt = executeQuery($sql, $params);
+    return $stmt->fetchAll();
+}
+
+function fetchOne($sql, $params = []) {
+    $stmt = executeQuery($sql, $params);
+    return $stmt->fetch();
+}
+
+function insert($table, $data) {
+    global $pdo;
+
+    $columns = implode(', ', array_keys($data));
+    $placeholders = ':' . implode(', :', array_keys($data));
+
+    $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+    executeQuery($sql, $data);
+
+    return $pdo->lastInsertId();
+}
+
+function update($table, $data, $where, $where_params = []) {
+    $set_clause = implode(', ', array_map(function($col) {
+        return "$col = :$col";
+    }, array_keys($data)));
+
+    $sql = "UPDATE $table SET $set_clause WHERE $where";
+    $params = array_merge($data, $where_params);
+
+    $stmt = executeQuery($sql, $params);
+    return $stmt->rowCount();
+}
+?>
