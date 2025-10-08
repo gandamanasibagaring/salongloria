@@ -47466,3 +47466,22 @@ telegram Mr.Href:
 pake nomor tri 0895321882844
 
 
+-- Non-aktifkan foreign key checks sementara
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Hapus semua tabel yang ada
+DROP TABLE IF EXISTS 
+    `annual_contributions`,
+    `event_attendances`, 
+    `events`,
+    `staging_family_members`,
+    `staging_families`,
+    `family_members`, 
+    `families`,
+    `church_neighborhoods`,
+    `users`,
+    `tenants`,
+    `churches`;
+
+-- Aktifkan kembali foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
