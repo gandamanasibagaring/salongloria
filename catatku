@@ -47485,3 +47485,29 @@ DROP TABLE IF EXISTS
 
 -- Aktifkan kembali foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+
+tanpa foreing cek
+
+
+-- Nonaktifkan foreign key checks
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Hapus semua tabel (urutan tidak penting saat FOREIGN_KEY_CHECKS=0)
+DROP TABLE IF EXISTS 
+    `annual_contributions`,
+    `event_attendances`, 
+    `events`,
+    `staging_family_members`,
+    `staging_families`,
+    `family_members`, 
+    `families`,
+    `members`,
+    `church_neighborhoods`,
+    `users`,
+    `tenants`,
+    `churches`;
+
+-- Aktifkan kembali foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
