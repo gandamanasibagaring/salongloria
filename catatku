@@ -47589,3 +47589,11 @@ function update($table, $data, $where, $where_params = []) {
     return $stmt->rowCount();
 }
 ?>
+-----------------------------------
+9 OKTOBER
+
+BUAT RESPONSIF DI HP
+JANGAN ADA TERLIHAT PHP DI LINK NYA
+TESTING SEMUA FORM
+UBAH TESTE
+INSTAL CODEMIUM
