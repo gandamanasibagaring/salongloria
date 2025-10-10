@@ -31221,6 +31221,14 @@ gkpimeda_db
 user gkpimeda_superadmin
 password XL2its5qrf2wigr
 
+
+<?php
+// Database configuration for gkpimedan.com
+$host = 'localhost';
+$dbname = 'gkpimeda_db';
+$username = 'gkpimeda_superadmin';
+$password = 'XL2its5qrf2wigr';
+
 logo
 Informasi akun hosting
 Paket Hosting Super 3.0 - ID
