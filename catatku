@@ -48197,3 +48197,83 @@ Sekarang sistem sudah sesuai dengan hierarki yang Anda minta:
 - ✅ **Admin dan Regular** tidak bisa akses halaman manajemen
 
 Silakan test dengan login menggunakan akun yang berbeda untuk melihat perbedaan hak aksesnya! 🎉
+
+
+
+----------------------------
+11 okt 25
+
+All Users and Passwords - GKPI System
+👥 Complete User List
+ID	Username	Role	Gereja	Kota	Provinsi	Password	Dibuat
+13	admin_bandung	Admin Gereja	GKPI Bandung	Bandung	Jawa Barat	password123	11/10/2025
+2	sekretaris	Admin Gereja	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+10	admin_padang_bulan	Admin Gereja	GKPI Padang Bulan	Medan	Sumatera Utara	password123	11/10/2025
+11	admin_siantar	Admin Gereja	GKPI Pem. Siantar	Pematang Siantar	Sumatera Utara	password123	11/10/2025
+14	admin_surabaya	Admin Gereja	GKPI Surabaya	Surabaya	Jawa Timur	password123	11/10/2025
+15	ketua_medan	Ketua (Pusat)	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+3	bendahara	Regular User	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+20	super_bandung	Super Admin Cabang	GKPI Bandung	Bandung	Jawa Barat	password123	11/10/2025
+19	super_jakarta	Super Admin Cabang	GKPI JAKARTA	Jakarta	DKI Jakarta	password123	11/10/2025
+4	ketua	Super Admin Cabang	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+1	pendeta	Super Admin Cabang	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+12	pendeta_jakarta	Super Admin Cabang	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+5	superadmin	Super Admin Cabang	GKPI MEDAN KOTA	Medan	Sumatera Utara	password123	11/10/2025
+16	super_padang_bulan	Super Admin Cabang	GKPI Padang Bulan	Medan	Sumatera Utara	password123	11/10/2025
+17	super_siantar	Super Admin Cabang	GKPI Pem. Siantar	Pematang Siantar	Sumatera Utara	password123	11/10/2025
+21	super_surabaya	Super Admin Cabang	GKPI Surabaya	Surabaya	Jawa Timur	password123	11/10/2025
+18	super_tebing_tinggi	Super Admin Cabang	GKPI Tebing Tinggi	Tebing Tinggi	Sumatera Utara	password123	11/10/2025
+📊 User Distribution by Role
+Admin Gereja: 5 user(s)
+
+Ketua (Pusat): 1 user(s)
+
+Regular User: 1 user(s)
+
+Super Admin Cabang: 10 user(s)
+
+🏢 User Distribution by Church
+GKPI Bandung: 2 user(s)
+
+GKPI MEDAN KOTA: 7 user(s)
+
+GKPI Padang Bulan: 2 user(s)
+
+GKPI Pem. Siantar: 2 user(s)
+
+GKPI Surabaya: 2 user(s)
+
+GKPI JAKARTA: 1 user(s)
+
+GKPI Tebing Tinggi: 1 user(s)
+
+🔐 Login Credentials Summary
+Gereja Pusat (Akses Semua Data):
+Pendeta: pendeta / password123
+Ketua: ketua_medan / password123
+Super Admin Cabang (Akses Terbatas):
+Padang Bulan: super_padang_bulan / password123
+Siantar: super_siantar / password123
+Tebing Tinggi: super_tebing_tinggi / password123
+Jakarta: super_jakarta / password123
+Bandung: super_bandung / password123
+Surabaya: super_surabaya / password123
+Admin & Regular Users:
+Admin Medan: sekretaris / password123
+Regular Medan: bendahara / password123
+🎯 Access Control Summary
+Pendeta & Ketua (Gereja Pusat):
+✅ Akses penuh ke semua data gereja
+✅ Bisa manage semua user (super admin, admin, regular)
+✅ Bisa approve pengajuan anggota dari semua gereja
+✅ Bisa akses semua fitur sistem
+❌ Tidak bisa manage pendeta dan ketua lain
+Super Admin Cabang:
+✅ Akses penuh ke data gereja cabangnya
+✅ Bisa manage user admin dan regular di gerejanya
+✅ Bisa approve pengajuan anggota dari admin/form WhatsApp
+✅ Bisa akses semua fitur sistem untuk gerejanya
+❌ Tidak bisa akses data gereja lain
+❌ Tidak bisa manage super admin lain
+✅ System Ready!
+Sistem GKPI siap digunakan dengan hierarki akses yang tepat
