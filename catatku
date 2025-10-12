@@ -48439,3 +48439,925 @@ Berdasarkan pengecekan dan implementasi yang telah dilakukan, berikut adalah **r
 - **System Status:** Gunakan `backup_monitor.php` untuk status sistem
 
 **Sistem backup otomatis sudah siap digunakan!** 🎉
+
+
+--------------------------------
+Gabung.php:
+mengabungkan beberapa file jd satu txt:
+
+
+<?php
+// File: C:\xampp\htdocs\jemaat\gabung_file.php
+
+// Fungsi untuk mendapatkan semua file dalam direktori dan subdirektori
+function getAllFiles($dir, $baseDir = '') {
+    $files = [];
+    $items = scandir($dir);
+    
+    foreach ($items as $item) {
+        if ($item == '.' || $item == '..') continue;
+        
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+        $relativePath = ($baseDir ? $baseDir . '/' : '') . $item;
+        
+        if (is_dir($path)) {
+            // Jika direktori, rekursif cari file di dalamnya
+            $files = array_merge($files, getAllFiles($path, $relativePath));
+        } else {
+            // Jika file (semua ekstensi), tambahkan ke array
+            $files[$relativePath] = [
+                'path' => $path,
+                'extension' => pathinfo($path, PATHINFO_EXTENSION),
+                'size' => filesize($path),
+                'modified' => filemtime($path)
+            ];
+        }
+    }
+    
+    return $files;
+}
+
+// Fungsi untuk membaca konten file dengan security check
+function getFileContentSafe($filePath) {
+    $base_dir = 'C:/xampp/htdocs/jemaat';
+    $real_base = realpath($base_dir);
+    $real_file = realpath($filePath);
+    
+    if ($real_file && strpos($real_file, $real_base) === 0 && is_file($real_file)) {
+        $content = file_get_contents($real_file);
+        return $content;
+    } else {
+        return "// Error: File tidak dapat diakses atau tidak ditemukan: " . $filePath;
+    }
+}
+
+// Fungsi untuk format ukuran file
+function formatBytes($size, $precision = 2) {
+    if ($size == 0) return '0 B';
+    
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $bytes = max($size, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+    $bytes /= pow(1024, $pow);
+    
+    return round($bytes, $precision) . ' ' . $units[$pow];
+}
+
+// Handle AJAX request untuk mendapatkan konten file
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'get_file_content') {
+    header('Content-Type: text/plain; charset=utf-8');
+    if (isset($_POST['file_path'])) {
+        $file_path = $_POST['file_path'];
+        echo getFileContentSafe($file_path);
+    } else {
+        echo "// Error: Parameter file_path tidak diberikan";
+    }
+    exit;
+}
+
+// Ambil semua file
+$baseDir = 'C:/xampp/htdocs/jemaat';
+$allFiles = getAllFiles($baseDir);
+
+// Kelompokkan file berdasarkan ekstensi untuk filter
+$extensions = [];
+foreach ($allFiles as $fileInfo) {
+    $ext = $fileInfo['extension'] ?: 'no-extension';
+    if (!in_array($ext, $extensions)) {
+        $extensions[] = $ext;
+    }
+}
+sort($extensions);
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penggabung File - Copy ke Clipboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            min-height: 80vh;
+        }
+        
+        .sidebar {
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            padding: 25px;
+            overflow-y: auto;
+        }
+        
+        .content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        select, input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .file-list { 
+            height: 500px;
+            overflow-y: auto; 
+            border: 2px solid #e9ecef; 
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .file-item { 
+            padding: 15px;
+            background: white; 
+            border-bottom: 1px solid #f1f3f4; 
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .file-item:hover { 
+            background: #f8f9fa; 
+        }
+        
+        .file-item.selected {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .folder { 
+            font-weight: 600; 
+            color: #2c3e50; 
+            padding: 15px;
+            background: #e9ecef;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .file-details {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .file-extension {
+            background: #3498db;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .file-size {
+            color: #495057;
+        }
+        
+        .file-path {
+            color: #adb5bd;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .actions { 
+            margin: 20px 0; 
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        button { 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white; 
+            border: none; 
+            padding: 15px 25px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+        }
+        
+        .btn-copy:hover {
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-copy.copied {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        .btn-reset:hover {
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+        }
+        
+        .preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .preview-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview { 
+            flex: 1;
+            background: #1e1e1e; 
+            color: #d4d4d4;
+            padding: 20px; 
+            white-space: pre-wrap; 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .select-all { 
+            margin-bottom: 15px; 
+            padding: 15px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #bbdefb;
+        }
+        
+        .stats {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #c8e6c9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .file-count {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .extension-badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        input[type="checkbox"] {
+            margin: 0;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        
+        label {
+            cursor: pointer;
+            user-select: none;
+            margin: 0;
+        }
+        
+        .search-box input {
+            width: 100%;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.error {
+            background: #e74c3c;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .file-list {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .file-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .file-details {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+        }
+        
+        /* Scrollbar styling */
+        .file-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .file-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .file-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .file-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 File Merger & Clipboard</h1>
+            <p>Pilih file dan langsung copy ke clipboard dengan satu klik!</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="controls">
+                    <div class="filter-section">
+                        <div class="filter-group">
+                            <label>🔍 Cari File:</label>
+                            <input type="text" id="searchFilter" placeholder="Ketik nama file...">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>📄 Filter Ekstensi:</label>
+                            <select id="extensionFilter">
+                                <option value="all">Semua Ekstensi</option>
+                                <?php foreach ($extensions as $ext): ?>
+                                    <option value="<?php echo $ext; ?>"><?php echo strtoupper($ext); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div>
+                        📊 <strong><?php echo count($allFiles); ?></strong> file ditemukan
+                        <span class="extension-badge"><?php echo count($extensions); ?> ekstensi</span>
+                    </div>
+                    <div id="selectedStats">
+                        ✅ <strong>0</strong> dipilih
+                    </div>
+                </div>
+                
+                <div class="select-all">
+                    <input type="checkbox" id="selectAll">
+                    <label for="selectAll"><strong>Pilih Semua yang Tampil</strong></label>
+                </div>
+                
+                <div class="file-list" id="fileListContainer">
+                    <?php
+                    $currentFolder = '';
+                    $folderFiles = [];
+                    
+                    // Kelompokkan file berdasarkan folder
+                    foreach ($allFiles as $relativePath => $fileInfo) {
+                        $folder = dirname($relativePath);
+                        if ($folder === '.') {
+                            $folder = 'Root';
+                        }
+                        
+                        if (!isset($folderFiles[$folder])) {
+                            $folderFiles[$folder] = [];
+                        }
+                        $folderFiles[$folder][] = [
+                            'relativePath' => $relativePath,
+                            'fileInfo' => $fileInfo,
+                            'filename' => basename($relativePath)
+                        ];
+                    }
+                    
+                    // Tampilkan file berdasarkan folder
+                    foreach ($folderFiles as $folder => $files) {
+                        echo '<div class="folder" data-folder="' . htmlspecialchars($folder) . '">';
+                        echo '📁 ' . htmlspecialchars($folder);
+                        echo ' <span class="file-count">' . count($files) . '</span>';
+                        echo '</div>';
+                        
+                        foreach ($files as $file) {
+                            $extension = $file['fileInfo']['extension'] ?: 'no-ext';
+                            echo '<div class="file-item" data-extension="' . $extension . '" data-folder="' . htmlspecialchars($folder) . '" data-path="' . htmlspecialchars($file['fileInfo']['path']) . '">';
+                            echo '<input type="checkbox" class="file-checkbox" data-path="' . htmlspecialchars($file['fileInfo']['path']) . '">';
+                            echo '<div class="file-info">';
+                            echo '<div class="file-name">';
+                            echo '📄 ' . htmlspecialchars($file['filename']);
+                            echo '</div>';
+                            echo '<div class="file-details">';
+                            echo '<span class="file-extension">' . strtoupper($extension) . '</span>';
+                            echo '<span class="file-size">' . formatBytes($file['fileInfo']['size']) . '</span>';
+                            echo '</div>';
+                            echo '<div class="file-path">' . htmlspecialchars($file['relativePath']) . '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    }
+                    
+                    if (empty($allFiles)) {
+                        echo '<div class="empty-state">';
+                        echo '<div class="icon">📁</div>';
+                        echo '<h3>Tidak ada file ditemukan</h3>';
+                        echo '<p>Folder C:\\xampp\\htdocs\\jemaat kosong atau tidak dapat diakses</p>';
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <div>
+                            <strong>📋 Preview & Hasil</strong>
+                            <small style="opacity: 0.8; margin-left: 10px;">Konten akan muncul di sini</small>
+                        </div>
+                        <div id="previewStats">0 file dipilih</div>
+                    </div>
+                    <div class="preview" id="previewContent">
+// Pilih file dari panel kiri untuk melihat preview di sini
+// Hasil gabungan file akan ditampilkan di area ini
+// Klik tombol "Copy ke Clipboard" untuk menyalin hasilnya
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button type="button" id="btnCopy" class="btn-copy">
+                        📋 Copy ke Clipboard
+                    </button>
+                    <button type="button" id="btnReset" class="btn-reset">
+                        🔄 Reset Pilihan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        ✅ Berhasil disalin ke clipboard!
+    </div>
+
+    <script>
+        let selectedFiles = new Set();
+        let combinedContent = '';
+        
+        // Fungsi untuk update statistik
+        function updateStats() {
+            const selectedCount = selectedFiles.size;
+            document.getElementById('selectedStats').innerHTML = 
+                '✅ <strong>' + selectedCount + '</strong> dipilih';
+            document.getElementById('previewStats').textContent = 
+                selectedCount + ' file dipilih';
+        }
+        
+        // Fungsi untuk update preview
+        async function updatePreview() {
+            if (selectedFiles.size === 0) {
+                document.getElementById('previewContent').textContent = 
+                    '// Pilih file dari panel kiri untuk melihat preview di sini\n' +
+                    '// Hasil gabungan file akan ditampilkan di area ini\n' +
+                    '// Klik tombol "Copy ke Clipboard" untuk menyalin hasilnya';
+                combinedContent = '';
+                return;
+            }
+            
+            // Show loading in preview
+            document.getElementById('previewContent').innerHTML = 
+                '<div style="display: flex; align-items: center; gap: 10px; color: #3498db;">' +
+                '<div class="loading"></div> Memuat konten file...' +
+                '</div>';
+            
+            try {
+                // Build combined content
+                combinedContent = "// File yang digabungkan\n";
+                combinedContent += "// Dibuat pada: " + new Date().toLocaleString() + "\n";
+                combinedContent += "// Total file: " + selectedFiles.size + "\n\n";
+                
+                let loadedCount = 0;
+                
+                for (const filePath of selectedFiles) {
+                    const response = await fetch('<?php echo $_SERVER["PHP_SELF"]; ?>', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'action=get_file_content&file_path=' + encodeURIComponent(filePath)
+                    });
+                    
+                    const content = await response.text();
+                    const fileName = filePath.split(/[\\/]/).pop();
+                    
+                    combinedContent += "\n" + "=".repeat(80) + "\n";
+                    combinedContent += "===== " + filePath + " =====\n";
+                    combinedContent += "=".repeat(80) + "\n\n";
+                    combinedContent += content + "\n";
+                    
+                    loadedCount++;
+                    
+                    // Update loading progress
+                    document.getElementById('previewContent').innerHTML = 
+                        '<div style="display: flex; align-items: center; gap: 10px; color: #3498db;">' +
+                        '<div class="loading"></div> Memuat file (' + loadedCount + '/' + selectedFiles.size + ')...' +
+                        '</div>';
+                }
+                
+                document.getElementById('previewContent').textContent = combinedContent;
+                
+            } catch (error) {
+                document.getElementById('previewContent').textContent = 
+                    '❌ Error memuat konten file:\n' + error.message;
+                console.error('Error loading file content:', error);
+            }
+        }
+        
+        // Fungsi untuk copy ke clipboard
+        async function copyToClipboard() {
+            if (selectedFiles.size === 0) {
+                showToast('❌ Pilih setidaknya satu file!', 'error');
+                return;
+            }
+            
+            if (!combinedContent) {
+                await updatePreview();
+            }
+            
+            try {
+                await navigator.clipboard.writeText(combinedContent);
+                showToast('✅ Berhasil disalin ke clipboard!');
+                
+                // Update button state
+                const btn = document.getElementById('btnCopy');
+                btn.innerHTML = '✅ Tersalin!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '📋 Copy ke Clipboard';
+                    btn.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback untuk browser yang tidak support clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = combinedContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                showToast('✅ Berhasil disalin ke clipboard!');
+            }
+        }
+        
+        // Fungsi untuk show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type === 'error' ? 'error' : 'show');
+            if (type !== 'error') {
+                toast.classList.add('show');
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Fungsi untuk filter file
+        function filterFiles() {
+            const extensionFilter = document.getElementById('extensionFilter').value;
+            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+            
+            const fileItems = document.querySelectorAll('.file-item');
+            let visibleCount = 0;
+            
+            fileItems.forEach(item => {
+                const extension = item.getAttribute('data-extension');
+                const fileName = item.querySelector('.file-name').textContent.toLowerCase();
+                const filePath = item.querySelector('.file-path').textContent.toLowerCase();
+                
+                const extensionMatch = extensionFilter === 'all' || extension === extensionFilter;
+                const searchMatch = !searchFilter || 
+                    fileName.includes(searchFilter) || 
+                    filePath.includes(searchFilter);
+                
+                if (extensionMatch && searchMatch) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Sembunyikan folder yang kosong
+            const folders = document.querySelectorAll('.folder');
+            folders.forEach(folder => {
+                const folderName = folder.getAttribute('data-folder');
+                const folderFiles = document.querySelectorAll('.file-item[data-folder="' + folderName + '"]:not([style*="display: none"])');
+                
+                if (folderFiles.length > 0) {
+                    folder.style.display = 'flex';
+                } else {
+                    folder.style.display = 'none';
+                }
+            });
+            
+            updateStats();
+        }
+        
+        // Event Listeners
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const visibleCheckboxes = document.querySelectorAll('.file-item:not([style*="display: none"]) .file-checkbox');
+            visibleCheckboxes.forEach(checkbox => {
+                const filePath = checkbox.getAttribute('data-path');
+                if (this.checked) {
+                    selectedFiles.add(filePath);
+                    checkbox.checked = true;
+                    checkbox.closest('.file-item').classList.add('selected');
+                } else {
+                    selectedFiles.delete(filePath);
+                    checkbox.checked = false;
+                    checkbox.closest('.file-item').classList.remove('selected');
+                }
+            });
+            updateStats();
+            updatePreview();
+        });
+        
+        // File checkbox change
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('file-checkbox')) {
+                const filePath = e.target.getAttribute('data-path');
+                if (e.target.checked) {
+                    selectedFiles.add(filePath);
+                    e.target.closest('.file-item').classList.add('selected');
+                } else {
+                    selectedFiles.delete(filePath);
+                    e.target.closest('.file-item').classList.remove('selected');
+                }
+                updateStats();
+                updatePreview();
+            }
+        });
+        
+        // File item click (toggle selection)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.file-item') && !e.target.matches('input[type="checkbox"]')) {
+                const fileItem = e.target.closest('.file-item');
+                const checkbox = fileItem.querySelector('.file-checkbox');
+                const filePath = checkbox.getAttribute('data-path');
+                
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    selectedFiles.add(filePath);
+                    fileItem.classList.add('selected');
+                } else {
+                    selectedFiles.delete(filePath);
+                    fileItem.classList.remove('selected');
+                }
+                updateStats();
+                updatePreview();
+            }
+        });
+        
+        // Filter events
+        document.getElementById('searchFilter').addEventListener('input', filterFiles);
+        document.getElementById('extensionFilter').addEventListener('change', filterFiles);
+        
+        // Button events
+        document.getElementById('btnCopy').addEventListener('click', copyToClipboard);
+        
+        document.getElementById('btnReset').addEventListener('click', function() {
+            selectedFiles.clear();
+            document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.file-item').classList.remove('selected');
+            });
+            document.getElementById('selectAll').checked = false;
+            updateStats();
+            updatePreview();
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</body>
+</html>
+
+
+---------------------------------------
