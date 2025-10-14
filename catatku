@@ -49361,3 +49361,117 @@ sort($extensions);
 
 
 ---------------------------------------
+
+14 oktober 25
+
+hapus database jemaat di phpmyadmin:
+Untuk menghapus semua database dengan urutan constraint yang benar, Anda perlu memperhatikan urutan penghapusan tabel berdasarkan foreign key constraints. Berikut adalah script DROP TABLE dengan urutan yang tepat:
+
+```sql
+-- Nonaktifkan foreign key checks sementara
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Mulai menghapus tabel dalam urutan yang benar (dari child ke parent)
+
+-- 1. Hapus tabel-tabel yang memiliki foreign key ke tabel utama
+DROP TABLE IF EXISTS `edit_requests`;
+DROP TABLE IF EXISTS `event_attendances`;
+DROP TABLE IF EXISTS `annual_contributions`;
+DROP TABLE IF EXISTS `monthly_contributions`;
+DROP TABLE IF EXISTS `backup_log`;
+DROP TABLE IF EXISTS `share_tracking`;
+DROP TABLE IF EXISTS `staging_family_members`;
+DROP TABLE IF EXISTS `staging_families`;
+DROP TABLE IF EXISTS `user_neighborhoods`;
+DROP TABLE IF EXISTS `children`;
+DROP TABLE IF EXISTS `guardians`;
+DROP TABLE IF EXISTS `fathers`;
+DROP TABLE IF EXISTS `mothers`;
+DROP TABLE IF EXISTS `family_members`;
+DROP TABLE IF EXISTS `events`;
+
+-- 2. Hapus tabel-tabel utama
+DROP TABLE IF EXISTS `members`;
+DROP TABLE IF EXISTS `families`;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `church_neighborhoods`;
+DROP TABLE IF EXISTS `tenants`;
+DROP TABLE IF EXISTS `churches`;
+
+-- Aktifkan kembali foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
+```
+
+**Penjelasan urutan penghapusan:**
+
+1. **Tabel dengan foreign key multiple**: `edit_requests`, `event_attendances`, dll.
+2. **Tabel transaksi/child**: `annual_contributions`, `monthly_contributions`
+3. **Tabel log/tracking**: `backup_log`, `share_tracking`
+4. **Tabel staging**: `staging_family_members`, `staging_families`
+5. **Tabel relasi many-to-many**: `user_neighborhoods`
+6. **Tabel data keluarga**: `children`, `guardians`, `fathers`, `mothers`, `family_members`
+7. **Tabel events**: `events`
+8. **Tabel utama**: `members`, `families`
+9. **Tabel users**: `users`
+10. **Tabel referensi**: `church_neighborhoods`, `tenants`, `churches`
+
+**Atau jika ingin lebih sederhana, bisa menggunakan pendekatan ini:**
+
+```sql
+-- Nonaktifkan foreign key checks
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Dapatkan semua nama tabel
+SELECT CONCAT('DROP TABLE IF EXISTS `', TABLE_NAME, '`;') 
+FROM information_schema.TABLES 
+WHERE TABLE_SCHEMA = 'gkpimeda_db';
+
+-- Hasil query di atas akan menghasilkan DROP statements untuk semua tabel
+-- Kemudian jalankan DROP statements tersebut
+
+-- Aktifkan kembali foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;
+```
+
+**Untuk eksekusi langsung, gunakan script ini:**
+
+```sql
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS 
+    `edit_requests`,
+    `event_attendances`, 
+    `annual_contributions`,
+    `monthly_contributions`,
+    `backup_log`,
+    `share_tracking`,
+    `staging_family_members`,
+    `staging_families`,
+    `user_neighborhoods`,
+    `children`,
+    `guardians`,
+    `fathers`,
+    `mothers`,
+    `family_members`,
+    `events`,
+    `members`,
+    `families`,
+    `users`,
+    `church_neighborhoods`,
+    `tenants`,
+    `churches`;
+
+SET FOREIGN_KEY_CHECKS = 1;
+```
+
+**Catatan penting:**
+- `SET FOREIGN_KEY_CHECKS = 0` menonaktifkan pengecekan foreign key sementara
+- Urutan penghapusan dari child table ke parent table
+- Pastikan Anda benar-benar ingin menghapus semua data, karena ini tidak dapat dibatalkan
+- Disarankan untuk backup database terlebih dahulu sebelum menjalankan perintah ini
+
+
+
+
+
+
