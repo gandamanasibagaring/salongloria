@@ -60305,3 +60305,250 @@ Mari saya buat API endpoint untuk menerima data dari aplikasi keuangan:
 2. **Konfigurasi API key** dan URL server
 3. **Test integrasi** dengan data sample
 4. **Setup webhook** untuk sinkronisasi otomatis 
+
+
+# **Panduan Setup Integrasi untuk Orang Awam**
+
+## **1. Setup API di Aplikasi Jemaat**
+
+### **Apa itu API?**
+API adalah "jembatan" yang memungkinkan aplikasi teste (lokal) berkomunikasi dengan aplikasi jemaat (server online) untuk mengambil data anggota.
+
+### **Langkah-langkah:**
+
+#### **Step 1: Upload File API**
+```
+1. Buka folder aplikasi jemaat di server online
+2. Masuk ke folder "api"
+3. Upload file: get_members_for_contribution.php
+4. Pastikan file tersimpan dengan benar
+```
+
+#### **Step 2: Konfigurasi Database**
+```
+1. Buka file: config/config.php
+2. Pastikan koneksi database sudah benar
+3. Test koneksi database
+```
+
+#### **Step 3: Test API**
+```
+1. Buka browser
+2. Ketik: https://jemaat.gkpi.com/api/get_members_for_contribution.php?api_key=test
+3. Jika muncul data JSON, berarti API berhasil
+```
+
+---
+
+## **2. Konfigurasi API Key di Aplikasi Teste**
+
+### **Apa itu API Key?**
+API Key adalah "kunci" yang memungkinkan aplikasi teste mengakses data dari aplikasi jemaat dengan aman.
+
+### **Langkah-langkah:**
+
+#### **Step 1: Buat API Key**
+```
+1. Buka file: api/get_members_for_contribution.php
+2. Cari baris: $api_key = 'your_api_key_here';
+3. Ganti dengan kunci yang aman, contoh: 'GKPI2024_SECURE_KEY_123'
+4. Simpan file
+```
+
+#### **Step 2: Update Aplikasi Teste**
+```
+1. Buka file: js/transaction_form.js
+2. Cari baris: this.apiKey = 'your_api_key_here';
+3. Ganti dengan kunci yang sama: 'GKPI2024_SECURE_KEY_123'
+4. Simpan file
+```
+
+#### **Step 3: Update URL Server**
+```
+1. Buka file: js/transaction_form.js
+2. Cari baris: this.jemaatApiUrl = 'https://jemaat.gkpi.com/api/get_members_for_contribution.php';
+3. Pastikan URL sesuai dengan server Anda
+4. Simpan file
+```
+
+---
+
+## **3. Test Integrasi dengan Data Sample**
+
+### **Apa itu Test Integrasi?**
+Test integrasi adalah cara untuk memastikan bahwa aplikasi teste dapat mengambil data dari aplikasi jemaat dengan benar.
+
+### **Langkah-langkah:**
+
+#### **Step 1: Test API Langsung**
+```
+1. Buka browser
+2. Ketik: https://jemaat.gkpi.com/api/get_members_for_contribution.php?api_key=GKPI2024_SECURE_KEY_123
+3. Harus muncul data anggota dalam format JSON
+4. Jika error, cek API key dan koneksi database
+```
+
+#### **Step 2: Test Form Input Transaksi**
+```
+1. Buka aplikasi teste
+2. Masuk ke halaman input transaksi
+3. Pilih jurnal: "penerimaan jemaat"
+4. Pilih kategori: "500.01.01"
+5. Harus muncul dropdown anggota
+6. Pilih salah satu anggota
+7. Cek apakah uraian terisi otomatis
+```
+
+#### **Step 3: Test Simpan Transaksi**
+```
+1. Isi form transaksi lengkap
+2. Klik "Simpan Transaksi"
+3. Cek apakah transaksi tersimpan di database lokal
+4. Cek apakah data ter-sync ke aplikasi jemaat
+5. Cek tabel monthly_contributions di aplikasi jemaat
+```
+
+#### **Step 4: Test Error Handling**
+```
+1. Matikan koneksi internet
+2. Coba input transaksi
+3. Harus muncul pesan error yang jelas
+4. Nyalakan kembali internet
+5. Coba lagi, harus berhasil
+```
+
+---
+
+## **4. Deploy ke Production**
+
+### **Apa itu Deploy?**
+Deploy adalah proses memindahkan aplikasi dari lingkungan testing ke lingkungan production (live) yang digunakan pengguna.
+
+### **Langkah-langkah:**
+
+#### **Step 1: Backup Data**
+```
+1. Backup database aplikasi jemaat
+2. Backup database aplikasi teste
+3. Simpan backup di tempat aman
+4. Catat tanggal backup
+```
+
+#### **Step 2: Update Production Server**
+```
+1. Upload file API ke server production
+2. Update konfigurasi database
+3. Test koneksi database
+4. Test API endpoint
+```
+
+#### **Step 3: Update Aplikasi Teste**
+```
+1. Upload file form transaksi ke aplikasi teste
+2. Update konfigurasi API key
+3. Update URL server
+4. Test koneksi ke server production
+```
+
+#### **Step 4: Final Testing**
+```
+1. Test input transaksi dengan data real
+2. Cek sinkronisasi data
+3. Cek log error
+4. Cek performa aplikasi
+```
+
+#### **Step 5: Monitoring**
+```
+1. Setup monitoring error
+2. Setup log aktivitas
+3. Cek koneksi database secara berkala
+4. Backup data secara berkala
+```
+
+---
+
+## **Troubleshooting Umum**
+
+### **Error: "API key tidak valid"**
+```
+Solusi:
+1. Cek API key di kedua aplikasi harus sama
+2. Cek format API key (tidak ada spasi)
+3. Restart aplikasi
+```
+
+### **Error: "Tidak bisa mengambil data anggota"**
+```
+Solusi:
+1. Cek koneksi internet
+2. Cek URL server
+3. Cek koneksi database
+4. Cek log error
+```
+
+### **Error: "Transaksi tidak ter-sync"**
+```
+Solusi:
+1. Cek koneksi ke server jemaat
+2. Cek format data yang dikirim
+3. Cek log integrasi
+4. Test manual sync
+```
+
+### **Error: "Form tidak muncul dropdown"**
+```
+Solusi:
+1. Cek JavaScript console
+2. Cek koneksi ke API
+3. Cek format data response
+4. Cek browser compatibility
+```
+
+---
+
+## **Tips untuk Pemula**
+
+### **1. Selalu Backup**
+- Backup sebelum melakukan perubahan
+- Simpan backup di tempat aman
+- Test backup secara berkala
+
+### **2. Test di Environment Terpisah**
+- Jangan test langsung di production
+- Gunakan environment testing terlebih dahulu
+- Pastikan semua fitur berfungsi
+
+### **3. Dokumentasi**
+- Catat semua perubahan yang dilakukan
+- Simpan konfigurasi API key
+- Buat panduan untuk tim
+
+### **4. Monitoring**
+- Cek log error secara berkala
+- Monitor performa aplikasi
+- Cek koneksi database
+
+### **5. Support**
+- Siapkan kontak support
+- Buat dokumentasi troubleshooting
+- Training untuk pengguna
+
+---
+
+## **Checklist Deploy**
+
+- [ ] API berhasil di-upload ke server jemaat
+- [ ] API key dikonfigurasi dengan benar
+- [ ] URL server sudah benar
+- [ ] Test API berhasil
+- [ ] Test form input transaksi
+- [ ] Test simpan transaksi
+- [ ] Test sinkronisasi data
+- [ ] Test error handling
+- [ ] Backup data
+- [ ] Monitoring setup
+- [ ] Dokumentasi lengkap
+- [ ] Training pengguna
+
+Dengan mengikuti panduan ini, Anda dapat mengintegrasikan aplikasi teste dengan aplikasi jemaat secara aman dan efektif.
