@@ -60136,10 +60136,10 @@ tbody tr:hover {
     }
 }
 
-
+Aku mau mengkoneksikan antara dua aplikasi, dua aplikasi jemaah dengan aplikasi laporan keuangan.Bagaimana caranya?Jadi nanti data dari wakti bulan lalu kemasuk nanti ke laporan aplikasi jemaah. Ketika nanti misalkan di input dari input transaksi pada aplikasi laporan keuangan dengan kategorinya 500.01.01. Tapi nanti dia bisa otomatis masuk ke aplikasi jemaah. Padahal aplikasi laporan keuangan itu dari lokal PC. Nanti dia ngirim melalui format data JSON atau apa gitu terserah secara online menuju ke server online Gkpi.com Jadi tugasmu adalah untuk membuatkan perubahan program antara aplikasi jokron keuangan dengan aplikasi jemaah ini. Gara-gara apa yang perlu ditambahkan gitu. Jadi misalkan ada input alshcd jurnal penerimaan jemaah dengan kode kategori 500.01.01 dengan urayan yang disebutkan misalkan bakti bulanan dengan nomor register Sekian-sekian nanti itu yang jadi foreign key masuk ke database aplikasi jemaat dengan nomor register yg sama berarti udah bayar untuk bakti bulanan pada waktu tertentu tadi. Jadi database laporan keuangan datanya sama mengirimkan ke database jemaat
 
 ini solusinya 
-
+Aku mau mengkoneksikan antara dua aplikasi, dua aplikasi jemaah dengan aplikasi laporan keuangan.Bagaimana caranya?Jadi nanti data dari wakti bulan lalu kemasuk nanti ke laporan aplikasi jemaah. Ketika nanti misalkan di input dari input transaksi pada aplikasi laporan keuangan dengan kategorinya 500.01.01. Tapi nanti dia bisa otomatis masuk ke aplikasi jemaah. Padahal aplikasi laporan keuangan itu dari lokal PC. Nanti dia ngirim melalui format data JSON atau apa gitu terserah secara online menuju ke server online Gkpi.com Jadi tugasmu adalah untuk membuatkan perubahan program antara aplikasi jokron keuangan dengan aplikasi jemaah ini. Gara-gara apa yang perlu ditambahkan gitu. Jadi misalkan ada input alshcd jurnal penerimaan jemaah dengan kode kategori 500.01.01 dengan urayan yang disebutkan misalkan bakti bulanan dengan nomor register Sekian-sekian nanti itu yang jadi foreign key masuk ke database aplikasi jemaat dengan nomor register yg sama berarti udah bayar untuk bakti bulanan pada waktu tertentu tadi. Jadi database laporan keuangan datanya sama mengirimkan ke database jemaat
 Ah, saya paham! Jadi alurnya adalah:
 
 **Aplikasi Keuangan (Lokal PC)** → **Server Online GKPI.com** → **Aplikasi Jemaat**
