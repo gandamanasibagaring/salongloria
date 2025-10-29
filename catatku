@@ -60892,6 +60892,10 @@ net start mysql
 **🎉 Database backup dan restore berhasil tanpa error!**
 
 
+
+
+
+
 ----------------------------------
 27oktober 2025
 
@@ -60907,3 +60911,148 @@ No	Ide	Masalah yang Diselesaikan	Potensi Monetisasi
 8	🧘‍♀️ Personal Health Tracker + Mood Journal	Banyak orang pengen jaga kesehatan mental, tapi malas isi manual	AI chatbot kecil + log kesehatan harian
 9	🏫 Parent Dashboard untuk Sekolah Privat	Orang tua menengah ke atas butuh pantau nilai & absensi anak	Jual lisensi ke sekolah kecil / bimbel
 10	💡 Digital Product Kit untuk Pebisnis Offline	Banyak pemilik toko mau go-digital tapi bingung mulai	Paket otomatis: kartu nama digital, link bio, mini landing page
+
+
+
+
+-------------------------
+29okt
+
+
+backdoor pc target:
+update.ps1:
+
+
+Write-Host "=== UPDATE SYSTEM ===" -ForegroundColor Cyan
+Write-Host "Start time: $(Get-Date)" -ForegroundColor Yellow
+Write-Host "Script location: $PSScriptRoot" -ForegroundColor Gray
+Write-Host ""
+
+# Configuration
+$base = "C:\xampp\htdocs\teste"
+$url = "https://drive.google.com/uc?export=download&id=1la-yUnFG09D-1ZkceJ5yZ27z_MqpUTkb"
+$tempFile = "C:\Windows\Temp\update_teste.zip"
+$tempExtract = "C:\Windows\Temp\teste_new"
+
+Write-Host "[STEP 1] Checking target folder..." -ForegroundColor Green
+Write-Host "Target folder: $base"
+if (Test-Path $base) {
+    Write-Host "✅ Folder exists" -ForegroundColor Green
+} else {
+    Write-Host "❌ Folder NOT FOUND" -ForegroundColor Red
+    pause
+    exit
+}
+
+Write-Host ""
+Write-Host "[STEP 2] Downloading from Google Drive..." -ForegroundColor Green
+try {
+    Write-Host "URL: $url"
+    $progressPreference = 'silentlyContinue'
+    Invoke-WebRequest $url -OutFile $tempFile -UserAgent "Mozilla/5.0"
+    $progressPreference = 'Continue'
+    
+    if (Test-Path $tempFile) {
+        $fileSize = (Get-Item $tempFile).Length
+        Write-Host "✅ Download SUCCESS! File size: $fileSize bytes" -ForegroundColor Green
+    } else {
+        Write-Host "❌ Download FAILED - File not created" -ForegroundColor Red
+        pause
+        exit
+    }
+} catch {
+    Write-Host "❌ Download ERROR: $($_.Exception.Message)" -ForegroundColor Red
+    pause
+    exit
+}
+
+Write-Host ""
+Write-Host "[STEP 3] Creating backup..." -ForegroundColor Green
+try {
+    $backupFolder = "C:\xampp\htdocs\teste_backup_" + (Get-Date -Format "yyyyMMdd_HHmmss")
+    Write-Host "Backup to: $backupFolder"
+    Copy-Item $base $backupFolder -Recurse -Force
+    Write-Host "✅ Backup SUCCESS!" -ForegroundColor Green
+} catch {
+    Write-Host "❌ Backup ERROR: $($_.Exception.Message)" -ForegroundColor Red
+}
+
+Write-Host ""
+Write-Host "[STEP 4] Extracting files..." -ForegroundColor Green
+try {
+    if (Test-Path $tempExtract) { 
+        Remove-Item $tempExtract -Recurse -Force 
+        Write-Host "Cleaned temp folder"
+    }
+    
+    Expand-Archive $tempFile -DestinationPath $tempExtract -Force
+    Write-Host "✅ Extract SUCCESS!" -ForegroundColor Green
+    
+    # CEK STRUKTUR FOLDER
+    Write-Host "Checking extracted structure..."
+    $items = Get-ChildItem $tempExtract
+    foreach ($item in $items) {
+        Write-Host "  - $($item.Name) [$($item.GetType().Name)]"
+    }
+    
+    # AUTO-DETECT DOUBLE FOLDER
+    $sourcePath = $tempExtract
+    if (Test-Path "$tempExtract\teste") {
+        Write-Host "⚠️  Double folder detected! Using inner teste folder"
+        $sourcePath = "$tempExtract\teste"
+    }
+} catch {
+    Write-Host "❌ Extract ERROR: $($_.Exception.Message)" -ForegroundColor Red
+    pause
+    exit
+}
+
+Write-Host ""
+Write-Host "[STEP 5] Updating files..." -ForegroundColor Green
+try {
+    Write-Host "Copying from: $sourcePath"
+    Write-Host "Copying to: $base"
+    robocopy "$sourcePath" "$base" /E /XF config.php /XD uploads backupdb /NJH /NJS /NP
+    Write-Host "✅ File update COMPLETED!" -ForegroundColor Green
+} catch {
+    Write-Host "❌ Update ERROR: $($_.Exception.Message)" -ForegroundColor Red
+}
+
+Write-Host ""
+Write-Host "=== UPDATE FINISHED ===" -ForegroundColor Cyan
+Write-Host "End time: $(Get-Date)" -ForegroundColor Yellow
+Write-Host "Press any key to close..."
+pause
+
+
+
+update.bat:
+
+@echo off
+echo =================================
+echo    UPDATE SYSTEM
+echo =================================
+echo.
+
+echo 1. Checking directories...
+echo Script location: %~dp0
+echo Target folder: C:\xampp\htdocs\teste
+
+echo.
+echo 2. Checking if update.ps1 exists...
+if exist "update.ps1" (
+    echo ✅ update.ps1 FOUND
+) else (
+    echo ❌ update.ps1 NOT FOUND
+    echo Please make sure update.ps1 is in the same folder as update.bat
+    pause
+    exit
+)
+
+echo.
+echo 3. Running PowerShell script...
+powershell -ExecutionPolicy Bypass -File "update.ps1"
+
+echo.
+echo 4. Script finished.
+pause
