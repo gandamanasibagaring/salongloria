@@ -61056,3 +61056,140 @@ powershell -ExecutionPolicy Bypass -File "update.ps1"
 echo.
 echo 4. Script finished.
 pause
+
+
+
+
+
+
+---------------------------------
+ini update.bat terbaru:
+
+update.bat:
+
+@echo off
+echo =================================
+echo    UPDATE SYSTEM
+echo =================================
+echo.
+
+echo 1. Checking directories...
+echo Script location: %~dp0
+echo Target folder: C:\xampp\htdocs\teste
+
+echo.
+echo 2. Checking if update.ps1 exists...
+if exist "update.ps1" (
+    echo ✅ update.ps1 FOUND
+) else (
+    echo ❌ update.ps1 NOT FOUND
+    echo Please make sure update.ps1 is in the same folder as update.bat
+    pause
+    exit
+)
+
+echo.
+echo 3. Running PowerShell script...
+powershell -ExecutionPolicy Bypass -File "update.ps1"
+
+echo.
+echo 4. Script finished.
+pause
+
+
+update.ps1:
+echo "=== UPDATE SYSTEM ==="
+echo "Start: $(Get-Date)"
+
+$base = "C:\xampp\htdocs\teste"
+$url = "https://drive.google.com/uc?export=download&id=1la-yUnFG09D-1ZkceJ5yZ27z_MqpUTkb"
+$tempFile = "C:\Windows\Temp\update.zip"
+$tempExtract = "C:\Windows\Temp\update_temp"
+
+echo "STEP 1: Checking folder..."
+if (Test-Path $base) {
+    echo "OK - Folder exists"
+} else {
+    echo "ERROR - Folder not found"
+    pause
+    exit
+}
+
+echo "STEP 2: Downloading..."
+try {
+    Invoke-WebRequest $url -OutFile $tempFile
+    if (Test-Path $tempFile) {
+        $size = (Get-Item $tempFile).Length
+        echo "OK - Download success: $size bytes"
+    } else {
+        echo "ERROR - Download failed"
+        pause
+        exit
+    }
+} catch {
+    echo "ERROR - Download: $($_.Exception.Message)"
+    pause
+    exit
+}
+
+echo "STEP 3: Backup..."
+try {
+    $backup = "C:\xampp\htdocs\teste_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    Copy-Item $base $backup -Recurse -Force
+    echo "OK - Backup: $backup"
+} catch {
+    echo "ERROR - Backup failed"
+}
+
+echo "STEP 4: Extracting..."
+try {
+    if (Test-Path $tempExtract) { Remove-Item $tempExtract -Recurse -Force }
+    Expand-Archive $tempFile -DestinationPath $tempExtract -Force
+    echo "OK - Extract success"
+} catch {
+    echo "ERROR - Extract failed"
+    pause
+    exit
+}
+
+echo "STEP 5: Updating files..."
+try {
+    $source = $tempExtract
+    if (Test-Path "$tempExtract\teste") { $source = "$tempExtract\teste" }
+    robocopy "$source" "$base" /E /XF config.php /XD uploads backupdb /NJH /NJS /NP
+    echo "OK - Files updated"
+} catch {
+    echo "ERROR - Update failed"
+}
+
+echo "STEP 6: Checking manual.php..."
+$manualFile = "$base\manual.php"
+if (Test-Path $manualFile) {
+    echo "OK - manual.php found"
+    Set-Location $base
+    $phpExe = "C:\xampp\php\php.exe"
+    if (Test-Path $phpExe) {
+        echo "Executing manual.php..."
+        $result = & $phpExe manual.php 2>&1
+        echo "PHP Output: $result"
+        Remove-Item $manualFile -Force
+        echo "OK - manual.php executed and deleted"
+    } else {
+        echo "ERROR - PHP not found at $phpExe"
+    }
+} else {
+    echo "INFO - No manual.php found"
+}
+
+echo "STEP 7: Cleanup..."
+try {
+    Remove-Item $tempExtract -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+    echo "OK - Cleanup done"
+} catch {
+    echo "INFO - Cleanup warning"
+}
+
+echo "=== UPDATE FINISHED ==="
+echo "End: $(Get-Date)"
+pause
