@@ -61202,3 +61202,191 @@ if exist "update.ps1" (
 --------------------------
 30okt 
                                                                                                                         C:\Users\GANDATEK>"C:\xampp\php\php.exe" -r "echo 'upload_max_filesize: '.ini_get('upload_max_filesize'), PHP_EOL; echo 'post_max_size: '.ini_get('post_max_size'), PHP_EOL; echo 'max_file_uploads: '.ini_get('max_file_uploads'), PHP_EOL;"   upload_max_filesize: 40M                                                                                                post_max_size: 40M                                                                                                      max_file_uploads: 20                                                                                                                                                                                                                            C:\Users\GANDATEK>"C:\xampp\php\php.exe" -r "$d='C:/xampp/htdocs/jemaat/uploads/';$f=$d.'test_write.tmp';if(!is_dir($d)){echo 'ERROR: folder tidak ada',PHP_EOL;}elseif(!is_writable($d)){echo 'ERROR: tidak writable',PHP_EOL;}elseif(file_put_contents($f,'test')){unlink($f);echo 'SUCCESS: uploads writable',PHP_EOL;}else{echo 'ERROR: tidak bisa tulis file',PHP_EOL;}"                                                                                                                   SUCCESS: uploads writable                                                                                                                                                                                                                       C:\Users\GANDATEK>                                                                                                                                                                                                                                                                                                                                
+
+                                                                                                                -----------------------------------------
+
+                                                                                                                4 nov:
+                                                                                                                update.bat:
+update.bat:
+
+
+@echo off
+chcp 65001 > nul
+echo =================================
+echo    UPDATE SYSTEM
+echo =================================
+echo.
+
+echo 1. Checking directories...
+echo Script location: %~dp0
+echo Target folder: C:\xampp\htdocs\teste
+
+echo.
+echo 2. Checking if update.ps1 exists...
+if exist "%~dp0update.ps1" (
+    echo ✅ update.ps1 FOUND
+) else (
+    echo ❌ update.ps1 NOT FOUND
+    echo Please make sure update.ps1 is in the same folder as update.bat
+    pause
+    exit /b
+)
+
+echo.
+echo 3. Running PowerShell script...
+cd /d "%~dp0"
+powershell -ExecutionPolicy Bypass -File "update.ps1"
+
+echo.
+echo 4. Script finished.
+pause
+
+
+
+
+update.ps1:
+Write-Host "=== UPDATE SYSTEM ===" -ForegroundColor Cyan
+Write-Host "Start: $(Get-Date)"
+
+$base = "C:\xampp\htdocs\teste"
+$url = "https://drive.google.com/uc?export=download&id=1la-yUnFG09D-1ZkceJ5yZ27z_MqpUTkb"
+$tempFile = "C:\Windows\Temp\update.zip"
+$tempExtract = "C:\Windows\Temp\update_temp"
+
+Write-Host "STEP 1: Checking folder..." -ForegroundColor Yellow
+if (Test-Path $base) {
+    Write-Host "OK - Folder exists" -ForegroundColor Green
+} else {
+    Write-Host "WARNING - Folder not found: $base" -ForegroundColor Yellow
+    Write-Host "Creating folder..." -ForegroundColor Yellow
+    try {
+        New-Item -ItemType Directory -Path $base -Force | Out-Null
+        if (Test-Path $base) {
+            Write-Host "OK - Folder created successfully" -ForegroundColor Green
+        } else {
+            Write-Host "ERROR - Failed to create folder" -ForegroundColor Red
+            Write-Host "Press any key to continue..."
+            $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+            exit
+        }
+    } catch {
+        Write-Host "ERROR - Failed to create folder: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Press any key to continue..."
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+        exit
+    }
+}
+
+Write-Host "STEP 2: Downloading..." -ForegroundColor Yellow
+try {
+    $tempDir = Split-Path $tempFile -Parent
+    if (!(Test-Path $tempDir)) {
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+    }
+    
+    Invoke-WebRequest -Uri $url -OutFile $tempFile -UserAgent "Mozilla/5.0"
+    
+    if (Test-Path $tempFile) {
+        $size = (Get-Item $tempFile).Length
+        Write-Host "OK - Download success: $size bytes" -ForegroundColor Green
+    } else {
+        Write-Host "ERROR - Download failed: File not created" -ForegroundColor Red
+        Write-Host "Press any key to continue..."
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+        exit
+    }
+} catch {
+    Write-Host "ERROR - Download failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Press any key to continue..."
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    exit
+}
+
+Write-Host "STEP 3: Backup..." -ForegroundColor Yellow
+try {
+    $backup = "C:\xampp\htdocs\teste_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    if (Test-Path $backup) {
+        Remove-Item $backup -Recurse -Force
+    }
+    
+    # Only create backup if the target folder has files
+    if (Test-Path "$base\*") {
+        Copy-Item $base $backup -Recurse -Force
+        Write-Host "OK - Backup created: $backup" -ForegroundColor Green
+    } else {
+        Write-Host "INFO - No files to backup (folder is empty)" -ForegroundColor Blue
+    }
+} catch {
+    Write-Host "WARNING - Backup failed: $($_.Exception.Message)" -ForegroundColor Yellow
+    Write-Host "Continuing without backup..." -ForegroundColor Yellow
+}
+
+Write-Host "STEP 4: Extracting..." -ForegroundColor Yellow
+try {
+    if (Test-Path $tempExtract) { 
+        Remove-Item $tempExtract -Recurse -Force 
+    }
+    
+    Expand-Archive -Path $tempFile -DestinationPath $tempExtract -Force
+    Write-Host "OK - Extract success" -ForegroundColor Green
+} catch {
+    Write-Host "ERROR - Extract failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Press any key to continue..."
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    exit
+}
+
+Write-Host "STEP 5: Updating files..." -ForegroundColor Yellow
+try {
+    $source = $tempExtract
+    if (Test-Path "$tempExtract\teste") { 
+        $source = "$tempExtract\teste" 
+    }
+    
+    & robocopy "$source" "$base" /E /XF config.php /XD uploads backupdb /NJH /NJS /NP
+    Write-Host "OK - Files updated" -ForegroundColor Green
+} catch {
+    Write-Host "ERROR - Update failed: $($_.Exception.Message)" -ForegroundColor Red
+}
+
+Write-Host "STEP 6: Checking manual.php..." -ForegroundColor Yellow
+$manualFile = "$base\manual.php"
+if (Test-Path $manualFile) {
+    Write-Host "manual.php found" -ForegroundColor Green
+    
+    $phpExe = "C:\xampp\php\php.exe"
+    if (Test-Path $phpExe) {
+        Write-Host "Executing manual.php..." -ForegroundColor Yellow
+        try {
+            $result = & $phpExe $manualFile 2>&1
+            Write-Host "PHP Output: $result" -ForegroundColor Gray
+            Remove-Item $manualFile -Force
+            Write-Host "manual.php executed and deleted" -ForegroundColor Green
+        } catch {
+            Write-Host "WARNING - manual.php execution failed: $($_.Exception.Message)" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "ERROR - PHP not found at $phpExe" -ForegroundColor Red
+    }
+} else {
+    Write-Host "INFO - No manual.php found" -ForegroundColor Blue
+}
+
+Write-Host "STEP 7: Cleanup..." -ForegroundColor Yellow
+try {
+    if (Test-Path $tempExtract) {
+        Remove-Item $tempExtract -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if (Test-Path $tempFile) {
+        Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+    }
+    Write-Host "OK - Cleanup done" -ForegroundColor Green
+} catch {
+    Write-Host "WARNING - Cleanup incomplete: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
+Write-Host "=== UPDATE FINISHED ===" -ForegroundColor Cyan
+Write-Host "End: $(Get-Date)" -ForegroundColor Gray
+Write-Host "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+                                                                                                                
