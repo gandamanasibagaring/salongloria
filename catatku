@@ -61390,3 +61390,40 @@ Write-Host "End: $(Get-Date)" -ForegroundColor Gray
 Write-Host "Press any key to continue..."
 $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
                                                                                                                 
+
+
+
+updateupload.bat=utk ambil folder lalu di zip kan:
+
+@echo off
+echo.
+set /p "SOURCE=Masukkan path folder yang akan di-zip: "
+if not exist "%SOURCE%" (
+    echo ERROR: Folder tidak ditemukan!
+    pause
+    exit /b
+)
+
+:: NAMA FILE ZIP TETAP TESTE.ZIP
+set "ZIP=%~dp0teste.zip"
+
+echo Membuat ZIP dari: %SOURCE%
+echo Menyimpan ke: %ZIP%
+if exist "%ZIP%" del "%ZIP%"
+
+cd /d "%SOURCE%"
+:: Hapus file/folder yang tidak diinginkan sementara dari exclude list
+set EXCLUDE_LIST=config.php,uploads,backupdb
+
+powershell -Command "Compress-Archive -Path '*' -DestinationPath '%ZIP%'"
+
+if exist "%ZIP%" (
+    echo.
+    echo BERHASIL: %ZIP%
+    echo Upload ke Google Drive dan rename jadi latest.zip
+    echo.
+) else (
+    echo GAGAL membuat ZIP
+)
+
+pause
