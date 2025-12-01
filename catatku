@@ -61131,73 +61131,9 @@ if exist "update.ps1" (
                                                                                                     pause
                                                                                                         exit
                                                                                                         }
-
-                                                                                                        echo "STEP 3: Backup..."
-                                                                                                        try {
-                                                                                                            $backup = "C:\xampp\htdocs\teste_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-                                                                                                                Copy-Item $base $backup -Recurse -Force
-                                                                                                                    echo "OK - Backup: $backup"
-                                                                                                                    } catch {
-                                                                                                                        echo "ERROR - Backup failed"
-                                                                                                                        }
-
-                                                                                                                        echo "STEP 4: Extracting..."
-                                                                                                                        try {
-                                                                                                                            if (Test-Path $tempExtract) { Remove-Item $tempExtract -Recurse -Force }
-                                                                                                                                Expand-Archive $tempFile -DestinationPath $tempExtract -Force
-                                                                                                                                    echo "OK - Extract success"
-                                                                                                                                    } catch {
-                                                                                                                                        echo "ERROR - Extract failed"
-                                                                                                                                            pause
-                                                                                                                                                exit
-                                                                                                                                                }
-
-                                                                                                                                                echo "STEP 5: Updating files..."
-                                                                                                                                                try {
-                                                                                                                                                    $source = $tempExtract
-                                                                                                                                                        if (Test-Path "$tempExtract\teste") { $source = "$tempExtract\teste" }
-                                                                                                                                                            robocopy "$source" "$base" /E /XF config.php /XD uploads backupdb /NJH /NJS /NP
-                                                                                                                                                                echo "OK - Files updated"
-                                                                                                                                                                } catch {
-                                                                                                                                                                    echo "ERROR - Update failed"
-                                                                                                                                                                    }
-
-                                                                                                                                                                    echo "STEP 6: Checking manual.php..."
-                                                                                                                                                                    $manualFile = "$base\manual.php"
-                                                                                                                                                                    if (Test-Path $manualFile) {
-                                                                                                                                                                        echo "OK - manual.php found"
-                                                                                                                                                                            Set-Location $base
-                                                                                                                                                                                $phpExe = "C:\xampp\php\php.exe"
-                                                                                                                                                                                    if (Test-Path $phpExe) {
-                                                                                                                                                                                            echo "Executing manual.php..."
-                                                                                                                                                                                                    $result = & $phpExe manual.php 2>&1
-                                                                                                                                                                                                            echo "PHP Output: $result"
-                                                                                                                                                                                                                    Remove-Item $manualFile -Force
-                                                                                                                                                                                                                            echo "OK - manual.php executed and deleted"
-                                                                                                                                                                                                                                } else {
-                                                                                                                                                                                                                                        echo "ERROR - PHP not found at $phpExe"
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                                                echo "INFO - No manual.php found"
-                                                                                                                                                                                                                                                }
-
-                                                                                                                                                                                                                                                echo "STEP 7: Cleanup..."
-                                                                                                                                                                                                                                                try {
+                                                                                                                                                                                                try {
                                                                                                                                                                                                                                                     Remove-Item $tempExtract -Recurse -Force -ErrorAction SilentlyContinue
                                                                                                                                                                                                                                                         Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
-                                                                                                                                                                                                                                                            echo "OK - Cleanup done"
-                                                                                                                                                                                                                                                            } catch {
-                                                                                                                                                                                                                                                                echo "INFO - Cleanup warning"
-                                                                                                                                                                                                                                                                }
-
-                                                                                                                                                                                                                                                                echo "=== UPDATE FINISHED ==="
-                                                                                                                                                                                                                                                                echo "End: $(Get-Date)"
-                                                                                                                                                                                                                                                                pause
-
-
-
-                                                                                                                                                                                                                                                                
-
 
 --------------------------
 30okt 
@@ -61206,7 +61142,7 @@ if exist "update.ps1" (
                                                                                                                 -----------------------------------------
 
                                                                                                                 4 nov:
-                                                                                                                update.bat:
+                                                                                                                update.ba:
 update.bat:
 
 
@@ -61633,3 +61569,4117 @@ Subkategori: 0
 Kategori: 0
 
 Subkategori: 0
+
+
+-------------------------------
+8nov
+
+token github gandamana:Skip to content
+Navigation Menu
+Settings
+Developer Settings
+
+Type / to search
+Fine-grained personal access tokens
+These are fine-grained, repository-scoped tokens suitable for personal API use and for using Git over HTTPS.
+
+@gandamanasibagaring
+november2025
+Never used •
+Expires on Mon, Dec 8 2025
+Make sure to copy your personal access token now as you will not be able to see this again.
+
+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
+Copied!
+Footer
+© 2025 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
+Copied!
+tes 
+
+
+------------------------------------------
+10 nov 2025
+
+-ambil ps1 dan batch
+-ambil file zip teste 
+-upload ke drive new version update file
+
+
+
+-------------------------
+13nov:
+-- ============================================
+-- Script SQL untuk Cek Data Baru dari Add Form
+-- ============================================
+-- Script ini untuk mengecek data yang baru dimasukkan dari add_form.php
+-- Jalankan script ini di phpMyAdmin atau MySQL client
+-- JANGAN dieksekusi otomatis, jalankan manual sesuai kebutuhan
+-- ============================================
+
+-- 1. CEK DATA STAGING FAMILIES (Keluarga yang Baru Diajukan)
+-- Menampilkan semua keluarga yang baru diajukan, diurutkan dari yang terbaru
+SELECT 
+    sf.id,
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.address AS 'Alamat',
+    sf.phone AS 'Telepon',
+    sf.status AS 'Status',
+    sf.submitted_by AS 'ID User Pengaju',
+    sf.created_at AS 'Tanggal Diajukan',
+    sf.updated_at AS 'Tanggal Diupdate',
+    sf.church_id AS 'ID Gereja'
+FROM staging_families sf
+ORDER BY sf.created_at DESC
+LIMIT 50;
+
+-- 2. CEK DATA STAGING FAMILY MEMBERS (Anggota Keluarga yang Baru Diajukan)
+-- Menampilkan semua anggota keluarga yang baru diajukan
+SELECT 
+    sfm.id,
+    sfm.staging_family_id AS 'ID Keluarga',
+    sf.family_name AS 'Nama Keluarga',
+    sfm.name AS 'Nama Anggota',
+    sfm.relationship AS 'Hubungan',
+    sfm.gender AS 'Jenis Kelamin',
+    sfm.birth_date AS 'Tanggal Lahir',
+    sfm.confirmation_date AS 'Tanggal Sidi',
+    sfm.phone AS 'Telepon',
+    sfm.occupation AS 'Pekerjaan',
+    sfm.education AS 'Pendidikan',
+    sfm.status AS 'Status',
+    sfm.created_at AS 'Tanggal Dibuat'
+FROM staging_family_members sfm
+INNER JOIN staging_families sf ON sfm.staging_family_id = sf.id
+ORDER BY sfm.created_at DESC
+LIMIT 100;
+
+-- 3. CEK DATA BARU HARI INI (Staging Families)
+-- Menampilkan keluarga yang diajukan hari ini
+SELECT 
+    sf.id,
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.status AS 'Status',
+    sf.created_at AS 'Tanggal Diajukan',
+    COUNT(sfm.id) AS 'Jumlah Anggota'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+WHERE DATE(sf.created_at) = CURDATE()
+GROUP BY sf.id, sf.family_name, sf.neighborhood, sf.status, sf.created_at
+ORDER BY sf.created_at DESC;
+
+-- 4. CEK DATA BARU 7 HARI TERAKHIR (Staging Families)
+-- Menampilkan keluarga yang diajukan dalam 7 hari terakhir
+SELECT 
+    sf.id,
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.status AS 'Status',
+    sf.created_at AS 'Tanggal Diajukan',
+    COUNT(sfm.id) AS 'Jumlah Anggota'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+WHERE sf.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+GROUP BY sf.id, sf.family_name, sf.neighborhood, sf.status, sf.created_at
+ORDER BY sf.created_at DESC;
+
+-- 5. CEK DATA PENDING (Belum Diproses)
+-- Menampilkan semua pengajuan yang masih pending
+SELECT 
+    sf.id,
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.address AS 'Alamat',
+    sf.phone AS 'Telepon',
+    sf.status AS 'Status',
+    sf.created_at AS 'Tanggal Diajukan',
+    u.username AS 'Pengaju',
+    COUNT(sfm.id) AS 'Jumlah Anggota'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+LEFT JOIN users u ON sf.submitted_by = u.id
+WHERE sf.status = 'pending'
+GROUP BY sf.id, sf.family_name, sf.neighborhood, sf.address, sf.phone, sf.status, sf.created_at, u.username
+ORDER BY sf.created_at DESC;
+
+-- 6. DETAIL LENGKAP KELUARGA DAN ANGGOTANYA (Untuk ID Tertentu)
+-- Ganti ? dengan ID staging_family yang ingin dicek
+-- Contoh: WHERE sf.id = 25
+SELECT 
+    sf.id AS 'ID Keluarga',
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.address AS 'Alamat',
+    sf.phone AS 'Telepon',
+    sf.status AS 'Status',
+    sf.created_at AS 'Tanggal Diajukan',
+    sf.updated_at AS 'Tanggal Diupdate',
+    u.username AS 'Pengaju',
+    sfm.id AS 'ID Anggota',
+    sfm.name AS 'Nama Anggota',
+    sfm.relationship AS 'Hubungan',
+    sfm.gender AS 'Jenis Kelamin',
+    sfm.birth_date AS 'Tanggal Lahir',
+    sfm.confirmation_date AS 'Tanggal Sidi',
+    sfm.phone AS 'Telepon Anggota',
+    sfm.occupation AS 'Pekerjaan',
+    sfm.education AS 'Pendidikan',
+    sfm.status AS 'Status Anggota'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+LEFT JOIN users u ON sf.submitted_by = u.id
+WHERE sf.id = ?  -- Ganti dengan ID yang ingin dicek
+ORDER BY 
+    CASE sfm.relationship
+        WHEN 'bapa' THEN 1
+        WHEN 'ibu' THEN 2
+        WHEN 'anak' THEN 3
+        WHEN 'tanggungan' THEN 4
+        ELSE 5
+    END;
+
+-- 7. STATISTIK PENGAJUAN PER LINGKUNGAN
+-- Menampilkan jumlah pengajuan per lingkungan
+SELECT 
+    sf.neighborhood AS 'Lingkungan',
+    COUNT(DISTINCT sf.id) AS 'Jumlah Keluarga',
+    COUNT(sfm.id) AS 'Jumlah Anggota',
+    SUM(CASE WHEN sf.status = 'pending' THEN 1 ELSE 0 END) AS 'Pending',
+    SUM(CASE WHEN sf.status = 'approved' THEN 1 ELSE 0 END) AS 'Approved',
+    SUM(CASE WHEN sf.status = 'rejected' THEN 1 ELSE 0 END) AS 'Rejected'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+GROUP BY sf.neighborhood
+ORDER BY sf.neighborhood;
+
+-- 8. CEK DATA YANG SUDAH DI-APPROVE DAN MASUK KE TABEL UTAMA
+-- Menampilkan data yang sudah di-approve dan masuk ke families
+SELECT 
+    f.id AS 'ID Family',
+    f.family_name AS 'Nama Keluarga',
+    f.neighborhood AS 'Lingkungan',
+    f.created_at AS 'Tanggal Dibuat',
+    COUNT(fm.id) AS 'Jumlah Anggota'
+FROM families f
+LEFT JOIN family_members fm ON f.id = fm.family_id
+WHERE f.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+GROUP BY f.id, f.family_name, f.neighborhood, f.created_at
+ORDER BY f.created_at DESC;
+
+-- 9. CEK FILE UPLOAD YANG DIUPLOAD
+-- Menampilkan file-file yang diupload (jika ada kolom untuk file)
+SELECT 
+    sfm.id,
+    sfm.name AS 'Nama Anggota',
+    sfm.birth_certificate AS 'Sertifikat Lahir',
+    sfm.baptism_certificate AS 'Sertifikat Baptis',
+    sfm.confirmation_certificate AS 'Sertifikat Sidi',
+    sfm.marriage_certificate AS 'Sertifikat Nikah',
+    sfm.death_certificate AS 'Sertifikat Kematian'
+FROM staging_family_members sfm
+WHERE sfm.birth_certificate IS NOT NULL 
+   OR sfm.baptism_certificate IS NOT NULL
+   OR sfm.confirmation_certificate IS NOT NULL
+   OR sfm.marriage_certificate IS NOT NULL
+   OR sfm.death_certificate IS NOT NULL
+ORDER BY sfm.created_at DESC
+LIMIT 50;
+
+-- 10. CEK DATA BERDASARKAN TANGGAL TERTENTU
+-- Ganti tanggal sesuai kebutuhan (format: 'YYYY-MM-DD')
+-- Contoh: WHERE DATE(sf.created_at) = '2025-11-13'
+SELECT 
+    sf.id,
+    sf.family_name AS 'Nama Keluarga',
+    sf.neighborhood AS 'Lingkungan',
+    sf.status AS 'Status',
+    sf.created_at AS 'Tanggal Diajukan',
+    COUNT(sfm.id) AS 'Jumlah Anggota'
+FROM staging_families sf
+LEFT JOIN staging_family_members sfm ON sf.id = sfm.staging_family_id
+WHERE DATE(sf.created_at) = '2025-11-13'  -- Ganti dengan tanggal yang diinginkan
+GROUP BY sf.id, sf.family_name, sf.neighborhood, sf.status, sf.created_at
+ORDER BY sf.created_at DESC;
+
+-- ============================================
+-- CATATAN:
+-- 1. Ganti tanda ? dengan nilai yang sesuai jika diperlukan
+-- 2. Sesuaikan tanggal di query #10 dengan tanggal yang ingin dicek
+-- 3. Sesuaikan LIMIT jika ingin melihat lebih banyak/m sedikit data
+-- 4. Query ini hanya untuk READ, tidak akan mengubah data
+-- ============================================
+
+
+
+
+LAPORAN INVESTIGASI  PROFIL SUBJEK  
+Kode Referensi: MDNCIV2024087  
+  
+
+
+
+ I. IDENTITAS SUBJEK
+
+Nama Lengkap:  
+MARIA HANNA RONGKAP ROULI BR. SIMORANGKIR  
+Alias/Nama Varian:  
+Hana, Bu Hana, Kak Hana, Maria Hanna, Hanna Simorangkir  
+
+Identitas Resmi:  
+ KTP: 1275014307790004 atau 1275011205710004    
+ No. Agen Pos: Hanna 20114C2  
+
+Domisili & Area Aktivitas:  
+Medan, Sumatera Utara (Lokasi spesifik: Sei Serayu, Polonia, Setiabudi, Gama City Medan)
+
+
+
+ II. KONTAK & REGISTRASI DIGITAL
+
+Kontak Telepon:  
+ +6282160744847 (Telkomsel  Terdaftar 28 Feb 2018)  
+ +6285277755322 (Telkomsel  Terdaftar 22 Nov 2018)  
+ +6219566091457 (Terdaftar 3 Jun 2020)  
+ +6281361756500 (Terdaftar 6 Des 2018)
+
+Akun Email:  
+ kedaiindonesia20@gmail.com  
+ kph.store1979@gmail.com (terverifikasi aktif)
+ akun spotify aktif
+
+Aktivitas Digital:  
+ Last Active Marketplace: 3 Agustus 2018  
+ Password Hash: fe037b7dabfffb87c9bc68edbdd2a20b8188d32abe2d4f51e913094af775a5b2af1eada09e2cb165d6d25d5bf2c644bd (dengan salt: c66c)
+ Hash mengkonfirmasi:
+SHA-384
+SHA3-384
+Skein-512(384)
+Skein-1024(384)
+Bit length: 384 bit (96 chars × 4 bits/char 
+Mungkin ini hash untuk:
+Data integrity check
+Database record identifier
+Checksum file
+Session token
+
+
+ III. LATAR BELAKANG & PROFESI
+
+Pendidikan:  
+ SMA Santo Thomas 2 Medan  
+ Departemen Arsitektur, Fakultas Teknik USU (perlu uji)
+
+Aktivitas Profesional:  
+1. Bidang Pos: Agen Pos (No. ID Hanna 20114C2)  
+2. Bidang Profesional: Arsitek, Desain Interior, Kontraktor (Gama City Medan)  
+3. Keorganisasian: Diduga Kepala Bidang DPP AAPI  
+4. Perbankan: Memiliki rekening Bank Mandiri, BCA, dan BNI  
+5. Transportasi: Pengguna Lion Air
+
+Entitas Bisnis:  
+ KPH STORE (terdaftar dengan nama MARIA HANNA RR SIMORANGKIR)
+
+
+
+ IV. JARINGAN RELASI
+
+Keluarga & Personal:  
+Gladine, Deborah, Kyren, Inang Maria, Om Hendra, Linda, Daniel
+
+Jaringan Profesional:  
+ AAPI (Asosiasi Agen Pos Indonesia)  
+ Angkasa Raya  
+ Royal Gaudium
+
+
+
+ V. ANALISIS DATA
+
+Pola Aktivitas:  
+Multiregistrasi telepon dengan provider sama dalam periode berdekatan  
+Penggunaan multiple identitas untuk berbagai keperluan  
+Aktivitas terpadu antara jasa pos, properti, dan retail (KPH STORE)  
+Koneksi luas di sektor formal dan informal
+
+Potensi Kerentanan:  
+ Verifikasi diperlukan untuk keabsahan data ganda KTP  
+ Pola password yang terenkripsi namun dengan salt custom   
+
+
+
+ VI. REKOMENDASI INVESTIGASI
+
+1. Verifikasi Legalitas:  
+    Konfirmasi status keanggotaan AAPI  
+    Audit id agen pos dan kontraktor
+
+2. Pemetaan Jaringan:  
+    Identifikasi hubungan dengan entitas Angkasa Raya dan Royal Gaudium  
+    Pelacakan koneksi keluarga dan profesional
+
+3. Monitoring Keuangan:  
+    Tracking transaksi perbankan (Mandiri, BCA, BNI)  
+    Audit alur dana antar entitas bisnis
+
+
+
+Catatan:  
+Laporan ini disusun dengan tingkat akurasi tertentu. dilarang sebarkan info ini. 
+
+
+
+
+
+
+
+
+
+ 
+
+LAPORAN INVESTIGASI  PROFIL SUBJEK  
+ I. IDENTITAS SUBJEK
+
+   Nama Lengkap: MARIA HANNA RONGKAP ROULI BR. SIMORANGKIR
+   Nama Panggilan/Alt: Hana, Bu Hana, Kak Hana, Maria Hanna, Hanna Simorangkir
+   KTP: Punya dua nomor (1275014307790004 / 1275011205710004). Perlu dicek mana yang bener.
+   Base & Area Main: Medan, Sumut. Bisa ketemu di sekitar Sei Serayu, Polonia, Setiabudi, sama Gama City Medan.
+
+
+
+II. KONTAK & REGISTRASI DIGITAL
+
+   No. HP: Punya banyak, pake Telkomsel semua.
+       +6282160744847 (aktif sejak 2018)
+       +6285277755322 (aktif sejak 2018)
+       +6219566091457 (aktif 2020)
+       +6281361756500 (aktif 2018)
+   Email:
+       kedaiindonesia20@gmail.com
+       kph.store1979@gmail.com (ini yang aktif)
+   Aktivitas Digital:
+       Terakhir aktif jualan online: Agustus 2018 (udah lama banget).
+       Passwordnya dienkripsi pake sistem hash yang cukup kuat (SHA-384, dll), jadi kemungkinan datanya dari suatu sistem.
+  
+       Last Active Marketplace: 3 Agustus 2018  
+       Password Hash: fe037b7dabfffb87c9bc68edbdd2a20b8188d32abe2d4f51e913094af775a5b2af1eada09e2cb165d6d25d5bf2c644bd (dengan salt: c66c)
+       Hash mengkonfirmasi:
+      SHA-384
+      SHA3-384
+      Skein-512(384)
+      Skein-1024(384)
+      Bit length: 384 bit (96 chars × 4 bits/char 
+      Mungkin ini hash untuk:
+      Data integrity check
+      Database record identifier
+      Checksum file
+      Session token
+
+
+III. LATAR BELAKANG & PEKERJAAN
+
+   Sekolah: SMA Santo Thomas 2 Medan.
+   Kuliah:  Arsitektur USU, tapi perlu investigasi.
+   Hustle/Mata Pencaharian:
+   Agen Pos (ID: Hanna 20114C2).
+   Arsitek & Kontraktor (di Gama City Medan).
+   jadi Pengurus di organisasi Agen Pos (DPP AAPI).
+   Punya rekening Bank Mandiri, BCA, BNI.
+   tercatat naik Lion Air.
+   Usaha: Punya toko namanya KPH STORE.
+   Bidang Properti: Kontraktor di Gama City Medan, Arsitek, dan punya Hanna Design (Konsultan Bangunan) perlu di uji
+
+
+IV. JARINGAN RELASI
+
+   Keluarga/Teman Dekat:
+   Anak: Gladine, Kyren.
+   Koneksi Lain: Deborah, Inang Maria, Om Hendra/Bg Hendra, Linda, Daniel, Bg Rales, Pak Jolly, Dokter Astri.
+   Koneksi Profesional:
+       AAPI (Asosiasi Agen Pos Indonesia)
+       Angkasa Raya
+       Royal Gaudium
+
+
+
+V. ANALISIS DATA
+ 
+   Pake identitas yang agak beda-beda untuk urusan yang berbeda.
+   Kegiatannya nyambung semua: dari jasa pos, properti, sampe retail.
+   Punya koneksi yang luas, baik di sektor formal maupun informal.
+   Peringatan:
+   Data KTP dobel, perlu klarifikasi mana yang asli.
+   Sistem passwordnya unik, butuh analisis lebih lanjut.
+   ada aktivitas terkait properti/jaminan.
+
+
+VI. YANG PERLU DILANJUTIN (REKOMENDASI)
+
+Cek Legalitas:
+       Pastikan status dia di AAPI beneran.
+       Audit ID Agen Pos dan izin kontraktornya.
+Gali Jaringannya:
+       Cari tau hubungannya sama "Angkasa Raya" dan "Royal Gaudium".
+       Lacak koneksi keluarganya yang bisa berpengaruh.
+Intip Arus Keuangan:
+       Pantau transaksi di rekening Bank Mandiri, BCA, BNI-nya.
+       Telusur aliran duit antar usahanya.
+
+
+
+CATATAN:
+Info ini tahap investigasi, jadi jangan disebarin! Butuh konfirmasi lebih lanjut buat semuanya.
+ 
+
+
+
+ anaknya Gladine Deborah Romauli Simbolon 
+ Fakultas Psikologi USU 
+ aktif Bem Usu
+ ngurus media sosial Bem content 
+  dari [SMA St Thomas 1 Medan]
+
+
+
+  email tahir sotarduga simbolon:
+  tahir.simbolon971@gmail.com
+
+  VGWZW70
+
+  BukalaPak (1 results):
+Record #1
+Email: tahir.simbolon@yahoo.com
+FullName: Tahir Sotarduga Simbolon
+NickName: tahirsimbolon
+Password(bcrypt): $2a$10$XkXVucNhQL3oajMYsh/ADuSp3uD.fJkny7/PrnmI/e2p4c92nKkkG
+Salt: 42xrwtFLnHyli5M6CPf
+
+==================================================
+
+Dukcapil (1 results):
+Record #1
+Address: jl sei serayu komp the mansion no.6 rt 0 rw null tanjung rejo medan sunggal kota medan sumatera utara
+BDay: 12-05-1971
+District: tanjung rejo
+FullName: tahir sotarduga simbolon, a.md
+Gender: male
+Location: medan sunggal
+Passport: 1275011205710004
+Phone: 6281361756500
+Region: kota medan
+
+==================================================
+
+IndonesiaCarOwner (2 results):
+Record #1
+Address: JL.PEMBANGUNAN NO.45 MEDAN
+AutoBrand: SUZUKI
+AutoNumber: BK6476EB
+BPKB: 2601073B
+Color: HITAM||HITAM
+EngineNumber: E108-ID-103033
+FullName: TAHIR SOTARDUGA SIMBOLON
+Type: RC 100 S (TORNADO-GX)
+VIN: MHDRC100NSJ-102902
+VehicleYear: 1995||0
+
+Record #2
+Address: JL.TA.HAMZAH K.TBI B.08 LK.VI KEL.JATI KARYA KEC.BINJAI UTARA BINJAI
+AutoBrand: TOYOTA
+AutoNumber: BK1722RM
+BPKB: R
+Color: PUTIH||HITAM
+EngineNumber: DER7789
+FullName: TAHIR SOTARDUGA SIMBOLON A. MD
+Type: NEW AVANZA VELOZ 1.5 M/T
+VIN: MHKM1CA4JEK081519
+VehicleYear: 2014||0
+
+==================================================
+
+Tokopedia (1 results):
+Record #1
+BDay: 1971-05-12
+Email: tahir.simbolon@yahoo.com
+FullName: Tahir Sotarduga Simbolon
+Gender: 1
+LastActive: 2020-01-16 22:44:25.280193
+Phone: 6281361756500
+RegDate: 2016-06-14 22:37:51.227846
+
+
+
+
+
+Dukcapil (1 results):
+Record #1
+Address: jl sei serayu komp the mansion no.6 rt 0 rw null tanjung rejo medan sunggal kota medan sumatera utara
+BDay: 12-05-1971
+District: tanjung rejo
+FullName: tahir sotarduga simbolon, a.md
+Gender: male
+Location: medan sunggal
+Passport: 1275011205710004
+Phone: 6281361756500
+Region: kota medan
+
+==================================================
+
+KomInfo Indonesia (1 results):
+Record #1
+Passport: 1275011205710004
+Phone: 6281361756500
+Provider: TELKOMSEL
+RegDate: 2018-04-09
+
+==================================================
+
+Tokopedia (2 results):
+Record #1
+Email: kph.store1979@gmail.com
+FullName: KPH STORE
+Gender: 0
+LastActive: 2018-12-06 18:58:47.846551
+Password(Hash): fe037b7dabfffb87c9bc68edbdd2a20b8188d32abe2d4f51e913094af775a5b2af1eada09e2cb165d6d25d5bf2c644bd
+Phone: 6281361756500
+RegDate: 2018-12-06 18:56:35
+Salt: c66c
+
+Record #2
+BDay: 1971-05-12
+Email: tahir.simbolon@yahoo.com
+FullName: Tahir Sotarduga Simbolon
+Gender: 1
+LastActive: 2020-01-16 22:44:25.280193
+Phone: 6281361756500
+RegDate: 2016-06-14 22:37:51.227846
+
+
+
+
+
+
+------------------------------
+
+Canva (1 results):
+Record #1
+Email: gladine.deborah2006@gmail.com
+Lang: id-ID
+NickName: gladine.deborah2006
+RegDate: 2017-08-05 11:06:32
+
+==================================================
+
+Dubsmash (2 results):
+Record #1
+Country: US
+Email: gladine.deborah2006@gmail.coid
+Lang: en
+Password(pbkdf2): pbkdf2_sha256$20000$TrXeiPQF3sYd$f0vl+TeKFRmDFx63OV31ARG8N2Hy4e6H0gVBq37y7uY=
+
+Record #2
+Country: US
+Email: gladine.deborah2006@gmail.com
+Lang: en
+Password(pbkdf2): pbkdf2_sha256$24000$AuYj0YoxvoU9$z+BKJl/bFQHJAUfvjOhf6yafdw7X6MCKiN305pfWs4c=
+
+==================================================
+
+Jack Vosmyorkin (2 results):
+Record #1
+Address: 34637 SANTIAM HWY LEBANON LINN OR 97355
+FullName: GLADINE BURKHOLDER
+Relatives: DEBORAH GROVE K 544984596, AUDREY RUCK L 526423071, ALVIN GROVE H 542746605, LINDSEY RUCK D 099224590  
+SSN: 236593717
+
+Record #2
+Address: 4436 BRENTWAY DR 8 MEMPHIS SHELBY TN 38118
+FullName: GLADINE GREGORY G
+Relatives: DEBORAH HOLDER KAY 429110415, ANITA MONTGOMERY 410484066, LENETHA EDWARDS L 411191796, MONTGOMERY ANITA 410484066, RICKY MONTGOMERY RICARDO 410236152, TEDRICK ROBINSON 413377232, VICKY GREGORY 432359957  
+SSN: 430744870
+
+==================================================
+
+PdiPerjuangan.id 2025 (1 results):
+Record #1
+Age: 17
+City: KOTA MEDAN
+District: MEDAN SUNGGAL
+FullName: GLADINE DEBORAH ROMAULI SIMBOLON
+Gender: P
+Location: TANJUNG REJO
+Region: TANJUNG REJO
+State: Sumut 
+
+==================================================
+
+Tokopedia (1 results):
+Record #1
+Email: gladine.deborah2006@gmail.com
+FullName: Gladine Deborah
+Gender: 2
+RegDate: 2018-02-15 16:59:21.100103
+
+
+
+
+
+
+
+----------------------------------------2
+
+20 nov 
+cek lap sheet 2 di gkpi lama dan di teste baru skrg apa udah sama.pasang db 2 aja
+
+
+
+Oke, aku buatkan **tabel super sederhana** berisi *apa saja yang perlu kamu download* untuk melakukan flashing Advan X Tab (Unisoc).
+Tabel ini *aman*, hanya berupa **nama-nama file**, bukan link langsung.
+
+Kamu tinggal cari file-file ini di Google / YouTube / Forum HP.
+
+---
+
+# 📦 **TABEL FILE YANG PERLU DIDOWNLOAD UNTUK FLASHING ADVAN X TAB**
+
+| **Kategori**              | **Nama File yang Dicari**                                       | **Fungsi / Kenapa Perlu**                                               |
+| ------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 🔌 **Driver**             | **Unisoc / Spreadtrum USB Driver**                              | Agar tablet terdeteksi oleh laptop. Tanpa ini proses flash tidak jalan. |
+| 🛠 **Flash Tool**         | **SPD Flash Tool** (ResearchDownload.exe / UpgradeDownload.exe) | Aplikasi utama untuk memasukkan firmware ke tablet.                     |
+| 📱 **Firmware**           | **Firmware Advan X Tab (.PAC)**                                 | Sistem Android baru yang akan di-install ke tablet. Harus sesuai model! |
+| 🔍 **Pendukung Opsional** | Minimal ADB Driver (opsional)                                   | Kadang diperlukan kalau device sulit terdeteksi.                        |
+| 🔧 **USB Tool**           | LiveSuit / Phoenix (TIDAK PERLU)                                | Boleh diabaikan karena bukan chipset Allwinner.                         |
+| 🔋 **Utility**            | Spreadtrum SCI Diag Tool (opsional)                             | Untuk cek hardware, tidak wajib untuk pemula.                           |
+
+---
+
+# 🟦 *File yang wajib banget hanya 3:*
+
+| **WAJIB**                                             | **Keterangan**                |
+| ----------------------------------------------------- | ----------------------------- |
+| ✔ Driver Unisoc                                       | Supaya tablet terdeteksi      |
+| ✔ SPD Flash Tool (ResearchDownload / UpgradeDownload) | Aplikasi untuk flashing       |
+| ✔ Firmware .PAC                                       | Isi Android baru untuk tablet |
+
+---
+
+# 🟦 Kalau kamu mau, aku bisa buatkan tabel versi “link pencarian Google”
+
+Contoh:
+
+| File           | Ketik di Google                           |
+| -------------- | ----------------------------------------- |
+| Driver Unisoc  | `Download Unisoc USB Driver latest`       |
+| SPD Flash Tool | `SPD Flash Tool ResearchDownload latest`  |
+| Firmware X Tab | `Firmware Advan X Tab T310 .PAC download` |
+
+---
+
+# 🔥 Mau aku lengkapi tabelnya sesuai **model tablet kamu**?
+
+Aku butuh 1 hal:
+
+📸 **Foto bagian belakang tablet / tulis model lengkapnya.**
+
+Biar aku buatkan tabel download yang *paling akurat untuk model itu*.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// File yang digabungkan
+// Dibuat pada: 11/20/2025, 10:43:39 PM
+// Total file: 6
+// Direktori: C:\xampp\htdocs\teste17novsatu\teste
+
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\config.php =====
+================================================================================
+
+<?php
+// Error reporting untuk development (comment untuk production)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Konfigurasi Database
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'gereja');
+
+// Koneksi ke Database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if ($conn->connect_error) {
+    die("Koneksi gagal: " . $conn->connect_error);
+}
+
+// Set timezone
+date_default_timezone_set('Asia/Jakarta');
+
+// Base URL Configuration
+// Deteksi otomatis base URL atau set manual
+function getBaseUrl() {
+    // Check if running from CLI
+    if (php_sapi_name() === 'cli') {
+        return 'http://localhost/teste';
+    }
+    
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $path = dirname($script);
+
+    // Normalisasi path
+    $path = str_replace('\\', '/', $path);
+    $path = rtrim($path, '/');
+
+    return $protocol . $host . $path;
+}
+
+// Set base URL
+define('BASE_URL', getBaseUrl()); // Auto-detection untuk development
+
+// Manual base URL untuk production (uncomment dan edit sesuai domain, lalu comment baris di atas)
+// define('BASE_URL', 'http://localhost/teste');
+// define('BASE_URL', 'https://yourdomain.com/gereja');
+// define('BASE_URL', 'https://gerejaku.com/keuangan');
+
+// Hapus/komentari fungsi URL helper dari config.php untuk menghindari konflik
+// Semua fungsi URL helper sekarang ada di includes/url_helper.php
+/*
+// Helper functions untuk URL - DIPINDAH KE includes/url_helper.php
+function url($path = '') {
+    $path = ltrim($path, '/');
+    return BASE_URL . ($path ? '/' . $path : '');
+}
+
+function asset($path = '') {
+    return url($path);
+}
+
+function redirect($path = '') {
+    header('Location: ' . url($path));
+    exit;
+}
+
+// Helper functions untuk file paths - DIPINDAH KE includes/url_helper.php
+function base_path($path = '') {
+    return __DIR__ . ($path ? DIRECTORY_SEPARATOR . $path : '');
+}
+
+function views_path($path = '') {
+    return base_path('views' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
+}
+
+function include_view($view) {
+    return include views_path($view);
+}
+*/
+
+// Ambil daftar jurnal dari database
+$daftar_jurnal = [];
+$sql = "SELECT id_jurnal, kode_jurnal, nama_jurnal FROM jurnal ORDER BY id_jurnal";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $daftar_jurnal[$row['id_jurnal']] = $row['nama_jurnal'];
+    }
+} else {
+    // Fallback jika tabel jurnal kosong atau error
+    $daftar_jurnal = [
+        1 => 'Pengeluaran Jemaat',
+        2 => 'Penerimaan Jemaat',
+        3 => 'Penerimaan Saldo Bank',
+        4 => 'Penerimaan GSG',
+        5 => 'JURNAL PENERIMAAN JEMAAT SALDO BANK MANDIRI'
+    ];
+}
+?>
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\functions.php =====
+================================================================================
+
+<?php
+function showForm() {
+    global $conn, $daftar_jurnal;
+    
+    // Ambil data jurnal
+    $jurnal = [];
+    $sql = "SELECT * FROM jurnal ORDER BY nama_jurnal";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $jurnal[] = $row;
+        }
+    }
+    
+    // Ambil data kategori untuk jurnal pertama sebagai default
+    $kategori = [];
+    if (!empty($jurnal)) {
+        $first_journal = $jurnal[0]['id_jurnal'];
+        $sql = "SELECT * FROM kategori WHERE id_jurnal = ? ORDER BY kode_kategori";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $first_journal);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while($row = $result->fetch_assoc()) {
+            $kategori[] = $row;
+        }
+    }
+    
+    include 'views/form.php';
+}
+
+function getKategoriByJurnal() {
+    global $conn;
+    
+    $id_jurnal = isset($_GET['id_jurnal']) ? intval($_GET['id_jurnal']) : 0;
+    
+    $kategori = [];
+    $sql = "SELECT * FROM kategori WHERE id_jurnal = ? ORDER BY kode_kategori";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_jurnal);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while($row = $result->fetch_assoc()) {
+        $kategori[] = $row;
+    }
+    
+    header('Content-Type: application/json');
+    echo json_encode($kategori);
+    exit;
+}
+
+function getSubkategori() {
+    global $conn;
+    
+    $id_kategori = isset($_GET['id_kategori']) ? intval($_GET['id_kategori']) : 0;
+    
+    // Debug log
+    error_log("getSubkategori called with id_kategori: " . $id_kategori);
+    
+    $subkategori = [];
+    $sql = "SELECT * FROM subkategori WHERE id_kategori = ? ORDER BY kode_subkategori";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_kategori);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while($row = $result->fetch_assoc()) {
+        $subkategori[] = $row;
+    }
+    
+    // Debug log
+    error_log("Subkategori found: " . count($subkategori));
+    error_log("Data: " . json_encode($subkategori));
+    
+    header('Content-Type: application/json');
+    echo json_encode($subkategori);
+    exit;
+}
+
+function sanitizeSimple($input) {
+    // Hapus karakter tanda baca sederhana kecuali spasi, huruf, angka, dash dan slash
+    return preg_replace('/[^a-zA-Z0-9\s\-\/]/', '', trim($input));
+}
+
+/**
+ * Dapatkan pengaturan nomor kwitansi awal
+ * @return int Nomor awal kwitansi
+ */
+function getKwitansiStartNumber() {
+    global $conn;
+    
+    // Cek apakah tabel kwitansi_settings ada
+    $table_check = $conn->query("SHOW TABLES LIKE 'kwitansi_settings'");
+    if (!$table_check || $table_check->num_rows == 0) {
+        // Buat tabel jika belum ada
+        $create_table = "CREATE TABLE IF NOT EXISTS kwitansi_settings (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            setting_key VARCHAR(50) UNIQUE NOT NULL,
+            setting_value VARCHAR(255) NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        $conn->query($create_table);
+        
+        // Insert default value
+        $conn->query("INSERT INTO kwitansi_settings (setting_key, setting_value) VALUES ('kwitansi_start_number', '1')");
+        return 1;
+    }
+    
+    $sql = "SELECT setting_value FROM kwitansi_settings WHERE setting_key = 'kwitansi_start_number' LIMIT 1";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return intval($row['setting_value']);
+    }
+    
+    // Default jika tidak ada
+    return 1;
+}
+
+/**
+ * Update pengaturan nomor kwitansi awal
+ * @param int $start_number Nomor awal baru
+ * @return bool True jika berhasil
+ */
+function updateKwitansiStartNumber($start_number) {
+    global $conn;
+    
+    // Pastikan tabel ada
+    $table_check = $conn->query("SHOW TABLES LIKE 'kwitansi_settings'");
+    if (!$table_check || $table_check->num_rows == 0) {
+        $create_table = "CREATE TABLE IF NOT EXISTS kwitansi_settings (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            setting_key VARCHAR(50) UNIQUE NOT NULL,
+            setting_value VARCHAR(255) NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        $conn->query($create_table);
+    }
+    
+    $start_number = intval($start_number);
+    if ($start_number < 1) {
+        return false;
+    }
+    
+    $sql = "INSERT INTO kwitansi_settings (setting_key, setting_value) 
+            VALUES ('kwitansi_start_number', ?) 
+            ON DUPLICATE KEY UPDATE setting_value = ?, updated_at = NOW()";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $start_number, $start_number);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Dapatkan nomor kwitansi berikutnya (auto increment)
+ * @return string Nomor kwitansi berikutnya
+ */
+function getNextKwitansiNumber() {
+    global $conn;
+    
+    // Ambil nomor awal dari pengaturan
+    $start_number = getKwitansiStartNumber();
+    
+    // Cari nomor kwitansi terbesar di database (hanya yang berupa angka murni)
+    $sql = "SELECT MAX(CAST(no_kwitansi AS UNSIGNED)) as max_number 
+            FROM transaksi 
+            WHERE no_kwitansi REGEXP '^[0-9]+$' AND CAST(no_kwitansi AS UNSIGNED) > 0";
+    $result = $conn->query($sql);
+    
+    $max_number = 0;
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if ($row['max_number'] !== null) {
+            $max_number = intval($row['max_number']);
+        }
+    }
+    
+    // Tentukan nomor berikutnya berdasarkan logika:
+    // 1. Jika max_number < start_number (atau database kosong), gunakan start_number
+    // 2. Jika max_number >= start_number, gunakan max_number + 1 (lanjutkan increment)
+    if ($max_number < $start_number) {
+        // Database kosong atau semua nomor lebih kecil dari start_number
+        // Mulai dari start_number yang di-set
+        $next_number = $start_number;
+    } else {
+        // Ada nomor yang >= start_number, lanjutkan increment
+        $next_number = $max_number + 1;
+    }
+    
+    // Cek duplikasi - jika nomor sudah ada, increment sampai tidak ada
+    // Ini penting untuk memastikan tidak ada nomor yang duplikat
+    $attempts = 0;
+    $max_attempts = 10000; // Batas maksimal untuk menghindari infinite loop
+    while ($attempts < $max_attempts) {
+        $check_sql = "SELECT COUNT(*) as count FROM transaksi WHERE no_kwitansi = ?";
+        $check_stmt = $conn->prepare($check_sql);
+        $next_number_str = strval($next_number);
+        $check_stmt->bind_param("s", $next_number_str);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+        $check_row = $check_result->fetch_assoc();
+        
+        if ($check_row['count'] == 0) {
+            // Nomor belum digunakan, aman untuk digunakan
+            break;
+        }
+        
+        // Nomor sudah digunakan, increment sampai dapat nomor yang belum digunakan
+        $next_number++;
+        $attempts++;
+    }
+    
+    // Jika sudah mencapai max attempts, gunakan timestamp sebagai fallback
+    if ($attempts >= $max_attempts) {
+        error_log("Warning: Max attempts reached in getNextKwitansiNumber(). Using fallback.");
+        $next_number = time(); // Fallback menggunakan timestamp
+    }
+    
+    return strval($next_number);
+}
+
+/**
+ * Cek apakah nomor kwitansi sudah ada
+ * @param string $no_kwitansi Nomor kwitansi yang akan dicek
+ * @return bool True jika sudah ada
+ */
+function isKwitansiNumberExists($no_kwitansi) {
+    global $conn;
+    
+    $sql = "SELECT COUNT(*) as count FROM transaksi WHERE no_kwitansi = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $no_kwitansi);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    return $row['count'] > 0;
+}
+
+function submitForm() {
+    global $conn;
+
+    // Validasi input
+    $errors = [];
+
+    // Common validations for both modes
+    if (empty($_POST['tanggal'])) {
+        $errors[] = "Tanggal harus diisi";
+    }
+
+    if (empty($_POST['id_jurnal'])) {
+        $errors[] = "Silakan pilih jurnal";
+    }
+
+    // Sanitize simple inputs
+    $no_kwitansi_input = isset($_POST['no_kwitansi']) ? trim($_POST['no_kwitansi']) : '';
+    
+    // Jika nomor kwitansi kosong atau hanya whitespace, gunakan auto increment
+    if (empty($no_kwitansi_input)) {
+        $no_kwitansi = getNextKwitansiNumber();
+    } else {
+        // User input manual - sanitize terlebih dahulu
+        $no_kwitansi_sanitized = sanitizeSimple($no_kwitansi_input);
+        
+        // Validasi: nomor kwitansi harus angka (untuk auto increment)
+        if (!preg_match('/^[0-9]+$/', $no_kwitansi_sanitized)) {
+            $errors[] = "Nomor kwitansi harus berupa angka (hanya angka 0-9)";
+        } else {
+            $no_kwitansi = $no_kwitansi_sanitized;
+            // Cek duplikasi
+            if (isKwitansiNumberExists($no_kwitansi)) {
+                $errors[] = "Nomor kwitansi " . $no_kwitansi . " sudah digunakan. Silakan gunakan nomor lain atau biarkan kosong untuk auto increment.";
+            }
+        }
+    }
+    
+    // Jika masih ada error, jangan lanjutkan
+    if (count($errors) > 0) {
+        $_SESSION['errors'] = $errors;
+        header("Location: index.php");
+        exit;
+    }
+    
+    $uraian = isset($_POST['uraian']) ? sanitizeSimple($_POST['uraian']) : '';
+    $diterima_dari = isset($_POST['diterima_dari']) ? sanitizeSimple($_POST['diterima_dari']) : '';
+
+    // Assign id_jurnal from POST
+    $id_jurnal = isset($_POST['id_jurnal']) ? intval($_POST['id_jurnal']) : null;
+
+    // Determine input mode
+    $jenis_input = isset($_POST['jenis_input']) ? $_POST['jenis_input'] : 'lengkap';
+
+    if ($jenis_input === 'setoran') {
+        // Setoran mode: only validate setoran amount
+        if (empty($_POST['setoran']) || !is_numeric($_POST['setoran']) || $_POST['setoran'] <= 0) {
+            $errors[] = "Setoran harus angka dan lebih dari 0";
+        }
+    } else {
+        // Lengkap mode: validate all fields
+        if (empty($_POST['jumlah']) || !is_numeric($_POST['jumlah']) || $_POST['jumlah'] <= 0) {
+            $errors[] = "Jumlah harus angka dan lebih dari 0";
+        }
+
+        if (empty($_POST['id_kategori'])) {
+            $errors[] = "Silakan pilih kategori";
+        }
+
+        if (empty($_POST['id_subkategori'])) {
+            $errors[] = "Silakan pilih sub kategori";
+        }
+    }
+
+    if (count($errors) > 0) {
+        $_SESSION['errors'] = $errors;
+        header("Location: index.php");
+        exit;
+    }
+
+    // Determine uang_dari_bank based on jurnal ID and input mode - DINAMIS BERDASARKAN NAMA
+    $is_income = false;
+    if (isset($daftar_jurnal[$id_jurnal])) {
+        $nama_jurnal = $daftar_jurnal[$id_jurnal];
+        $is_income = stripos($nama_jurnal, 'penerimaan') !== false;
+    }
+
+    // Simpan data
+    $tanggal = date('Y-m-d', strtotime($_POST['tanggal']));
+
+    if ($jenis_input === 'setoran') {
+        // Setoran mode: save setoran amount, set jumlah to 0, no kategori/subkategori
+        $jumlah = 0;
+        $id_subkategori = null;
+        $setoran = $_POST['setoran'];
+        $uang_dari_bank = $is_income ? $setoran : NULL;
+
+        $sql = "INSERT INTO transaksi (tanggal, no_kwitansi, uraian, jumlah, id_jurnal, id_subkategori, setoran, uang_dari_bank)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssdidds", $tanggal, $no_kwitansi, $uraian, $jumlah, $id_jurnal, $id_subkategori, $setoran, $uang_dari_bank);
+    } else {
+        // Lengkap mode: save all fields normally
+        $jumlah = $_POST['jumlah'];
+        $id_subkategori = $_POST['id_subkategori'];
+        $setoran = isset($_POST['setoran']) ? $_POST['setoran'] : 0;
+        $uang_dari_bank = $is_income ? $jumlah : NULL;
+
+        $sql = "INSERT INTO transaksi (tanggal, no_kwitansi, uraian, jumlah, id_jurnal, id_subkategori, setoran, uang_dari_bank)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssdidds", $tanggal, $no_kwitansi, $uraian, $jumlah, $id_jurnal, $id_subkategori, $setoran, $uang_dari_bank);
+    }
+
+    if ($stmt->execute()) {
+        $transaksi_id = $conn->insert_id; // Ambil ID transaksi yang baru dibuat
+        
+        $_SESSION['success'] = "Data transaksi berhasil disimpan!";
+
+        // Proses laporan (Sheet 2 dan Sheet 3)
+        generateReports();
+        
+        // Return success dengan transaksi_id untuk sync
+        return [
+            'success' => true,
+            'transaksi_id' => $transaksi_id
+        ];
+    } else {
+        $_SESSION['errors'] = ["Gagal menyimpan data: " . $conn->error];
+        return [
+            'success' => false,
+            'message' => $conn->error
+        ];
+    }
+}
+
+// Fungsi untuk menghasilkan laporan Sheet 2 (Terstruktur) dengan filter
+function generateSheet2Report($jurnal_filter = null, $tahun_filter = null, $tanggal_dari = null, $tanggal_sampai = null, $nominal_min = null, $nominal_max = null, $sort_by = 'tanggal_desc') {
+    global $conn, $daftar_jurnal;
+    
+    // OPTIMIZED: Cache jurnal penerimaan mapping sekali saja
+    static $jurnal_penerimaan_cache = null;
+    if ($jurnal_penerimaan_cache === null) {
+        $jurnal_penerimaan_cache = [];
+        foreach ($daftar_jurnal as $id => $nama) {
+            if (stripos($nama, 'penerimaan') !== false) {
+                $jurnal_penerimaan_cache[$id] = true;
+            }
+        }
+    }
+    
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if ($jurnal_filter) {
+        $where_conditions[] = "t.id_jurnal = ?";
+        $params[] = $jurnal_filter;
+        $types .= "i";
+    }
+    
+    // OPTIMIZED: Gunakan range tanggal instead of YEAR() function (lebih cepat dengan index)
+    if ($tahun_filter) {
+        $where_conditions[] = "t.tanggal >= ? AND t.tanggal < ?";
+        $params[] = $tahun_filter . '-01-01';
+        $params[] = ($tahun_filter + 1) . '-01-01';
+        $types .= "ss";
+    }
+    
+    // Filter tanggal dari
+    if ($tanggal_dari && !empty($tanggal_dari)) {
+        $where_conditions[] = "t.tanggal >= ?";
+        $params[] = $tanggal_dari;
+        $types .= "s";
+    }
+    
+    // Filter tanggal sampai
+    if ($tanggal_sampai && !empty($tanggal_sampai)) {
+        $where_conditions[] = "t.tanggal <= ?";
+        $params[] = $tanggal_sampai;
+        $types .= "s";
+    }
+    
+    $where_clause = "";
+    if (!empty($where_conditions)) {
+        $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+    }
+    
+    // OPTIMIZED: Simplify ORDER BY - remove functions from ORDER BY for better index usage
+    $order_by = "t.tanggal DESC, t.id_jurnal, k.kode_kategori, s.kode_subkategori";
+    switch ($sort_by) {
+        case 'tanggal_asc':
+            $order_by = "t.tanggal ASC, t.id_jurnal, k.kode_kategori, s.kode_subkategori";
+            break;
+        case 'tanggal_desc':
+            $order_by = "t.tanggal DESC, t.id_jurnal, k.kode_kategori, s.kode_subkategori";
+            break;
+        case 'nominal_asc':
+            // For nominal sorting, we'll sort in PHP after query for better performance
+            $order_by = "t.tanggal DESC, t.id_jurnal";
+            break;
+        case 'nominal_desc':
+            $order_by = "t.tanggal DESC, t.id_jurnal";
+            break;
+        default:
+            $order_by = "t.tanggal DESC, t.id_jurnal, k.kode_kategori, s.kode_subkategori";
+    }
+    
+    // OPTIMIZED: Remove DATE_FORMAT and CONCAT from query - do it in PHP (faster)
+    $sql = "SELECT
+                t.tanggal,
+                t.no_kwitansi,
+                t.uraian,
+                t.jumlah,
+                t.setoran,
+                t.uang_dari_bank,
+                t.id_jurnal,
+                j.nama_jurnal,
+                k.kode_kategori,
+                k.nama_kategori,
+                s.kode_subkategori,
+                s.nama_subkategori
+            FROM transaksi t
+            INNER JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+            LEFT JOIN subkategori s ON t.id_subkategori = s.id_subkategori
+            LEFT JOIN kategori k ON s.id_kategori = k.id_kategori
+            $where_clause
+            ORDER BY $order_by";
+    
+    $stmt = $conn->prepare($sql);
+    
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $transactions = [];
+    
+    // OPTIMIZED: Pre-build kategori and subkategori strings, format bulan in PHP
+    $month_names = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            // OPTIMIZED: Use cache for journal type check
+            $is_income_journal = isset($jurnal_penerimaan_cache[$row['id_jurnal']]);
+            
+            // Calculate amount once
+            if ($is_income_journal) {
+                $amount = $row['uang_dari_bank'] ?? 0;
+                if ($amount == 0) {
+                    $amount = $row['jumlah'] ?? 0;
+                }
+            } else {
+                $amount = $row['setoran'] ?? 0;
+                if ($amount == 0) {
+                    $amount = $row['jumlah'] ?? 0;
+                }
+            }
+            
+            // Filter nominal min/max jika ada (OPTIMIZED: check after amount calculation)
+            if ($nominal_min !== null && $amount < $nominal_min) {
+                continue;
+            }
+            if ($nominal_max !== null && $amount > $nominal_max) {
+                continue;
+            }
+            
+            // OPTIMIZED: Format bulan and build strings in PHP (faster than SQL functions)
+            $tanggal_parts = explode('-', $row['tanggal']);
+            if (count($tanggal_parts) >= 3) {
+                $bulan_num = (int)$tanggal_parts[1];
+                $tahun = $tanggal_parts[0];
+                // Validate bulan_num (1-12)
+                if ($bulan_num >= 1 && $bulan_num <= 12) {
+                    $bulan = $month_names[$bulan_num] . ' ' . $tahun;
+                } else {
+                    // Fallback: use date function if format invalid
+                    $bulan = date('F Y', strtotime($row['tanggal']));
+                }
+            } else {
+                // Fallback: use date function if format invalid
+                $bulan = date('F Y', strtotime($row['tanggal']));
+            }
+            
+            // Build kategori and subkategori strings
+            $kategori = ($row['kode_kategori'] ? $row['kode_kategori'] . ' - ' : '') . ($row['nama_kategori'] ?? 'Tidak ada kategori');
+            $subkategori = ($row['kode_subkategori'] ? $row['kode_subkategori'] . ' - ' : '') . ($row['nama_subkategori'] ?? '');
+            
+            $row['bulan'] = $bulan;
+            $row['kategori'] = $kategori;
+            $row['subkategori'] = $subkategori;
+            $row['amount'] = $amount; // Store calculated amount
+            $row['is_income'] = $is_income_journal; // Store journal type
+            
+            $transactions[] = $row;
+        }
+    }
+    
+    // OPTIMIZED: Sort by nominal in PHP if needed (faster than SQL COALESCE in ORDER BY)
+    if ($sort_by === 'nominal_asc' || $sort_by === 'nominal_desc') {
+        usort($transactions, function($a, $b) use ($sort_by) {
+            $amount_a = $a['amount'];
+            $amount_b = $b['amount'];
+            if ($sort_by === 'nominal_asc') {
+                return $amount_a <=> $amount_b;
+            } else {
+                return $amount_b <=> $amount_a;
+            }
+        });
+    }
+    
+    // OPTIMIZED: Kelompokkan data dengan struktur data yang lebih efisien
+    $structured_data = [];
+
+    foreach ($transactions as $trx) {
+        $jurnal = $trx['nama_jurnal'];
+        $bulan = $trx['bulan'];
+        $is_income_journal = $trx['is_income'];
+        $amount = $trx['amount'];
+
+        if ($trx['kode_subkategori']) {
+            // Untuk transaksi dengan subkategori, gunakan struktur normal
+            $level1_kode = substr($trx['kode_subkategori'], 0, 6);
+            $level1_nama = $trx['kategori'] ?? 'Tidak ada kategori';
+            $level1 = $level1_kode . ' - ' . $level1_nama;
+            $level2 = $trx['subkategori'];
+        } else {
+            // Untuk transaksi tanpa subkategori, buat kategori terpisah
+            $uang_dari_bank = $trx['uang_dari_bank'] ?? 0;
+            $setoran = $trx['setoran'] ?? 0;
+            
+            if ($is_income_journal && $uang_dari_bank > 0) {
+                $level1 = "UANG_DARI_BANK - Uang dari Bank";
+                $level2 = "UANG_DARI_BANK - Uang dari Bank";
+            } elseif (!$is_income_journal && $setoran > 0) {
+                $level1 = "UANG_SETORAN - Uang Setoran";
+                $level2 = "UANG_SETORAN - Uang Setoran";
+            } else {
+                if ($is_income_journal) {
+                    $level1 = "PENERIMAAN_UMUM - Penerimaan Umum";
+                    $level2 = "PENERIMAAN_UMUM - Penerimaan Umum";
+                } else {
+                    $level1 = "PENGELUARAN_UMUM - Pengeluaran Umum";
+                    $level2 = "PENGELUARAN_UMUM - Pengeluaran Umum";
+                }
+            }
+        }
+
+        // OPTIMIZED: Initialize arrays more efficiently
+        if (!isset($structured_data[$jurnal])) {
+            $structured_data[$jurnal] = [];
+        }
+        if (!isset($structured_data[$jurnal][$bulan])) {
+            $structured_data[$jurnal][$bulan] = [];
+        }
+        if (!isset($structured_data[$jurnal][$bulan][$level1])) {
+            $structured_data[$jurnal][$bulan][$level1] = [
+                'kategori' => $trx['kategori'] ?? 'Tidak ada kategori',
+                'subcategories' => [],
+                'total' => 0
+            ];
+        }
+        if (!isset($structured_data[$jurnal][$bulan][$level1]['subcategories'][$level2])) {
+            $structured_data[$jurnal][$bulan][$level1]['subcategories'][$level2] = [
+                'transactions' => [],
+                'total' => 0
+            ];
+        }
+
+        // OPTIMIZED: Store transaction data (reuse calculated values)
+        $structured_data[$jurnal][$bulan][$level1]['subcategories'][$level2]['transactions'][] = [
+            'tanggal' => $trx['tanggal'],
+            'no_kwitansi' => $trx['no_kwitansi'],
+            'uraian' => $trx['uraian'],
+            'jumlah' => $trx['jumlah'],
+            'setoran' => $trx['setoran'] ?? 0,
+            'uang_dari_bank' => $trx['uang_dari_bank'] ?? 0
+        ];
+
+        // OPTIMIZED: Use pre-calculated amount
+        $structured_data[$jurnal][$bulan][$level1]['subcategories'][$level2]['total'] += $amount;
+        $structured_data[$jurnal][$bulan][$level1]['total'] += $amount;
+    }
+    
+    // Simpan ke session untuk ditampilkan
+    $_SESSION['sheet2_report'] = $structured_data;
+}
+
+// Fungsi untuk menghasilkan laporan Sheet 3 (Horizontal) dengan filter
+function generateSheet3Report($jurnal_filter = null, $tahun_filter = null, $bulan_filter = null) {
+    global $conn;
+
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+
+    if ($jurnal_filter) {
+        $where_conditions[] = "t.id_jurnal = ?";
+        $params[] = $jurnal_filter;
+        $types .= "i";
+    }
+
+    if ($tahun_filter) {
+        $where_conditions[] = "YEAR(t.tanggal) = ?";
+        $params[] = $tahun_filter;
+        $types .= "i";
+    }
+
+    // bulan_filter = 0 atau null berarti tidak ada filter bulan (tampilkan semua bulan)
+    if ($bulan_filter && $bulan_filter > 0 && $bulan_filter <= 12) {
+        $where_conditions[] = "MONTH(t.tanggal) = ?";
+        $params[] = $bulan_filter;
+        $types .= "i";
+    }
+
+    $where_clause = "";
+    if (!empty($where_conditions)) {
+        $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+    }
+
+    $sql = "SELECT
+                t.*,
+                j.nama_jurnal,
+                j.id_jurnal,
+                k.kode_kategori,
+                k.nama_kategori,
+                k.id_jurnal as kategori_jurnal_id,
+                s.kode_subkategori,
+                s.nama_subkategori,
+                DATE_FORMAT(t.tanggal, '%M %Y') as bulan_format
+            FROM transaksi t
+            JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+            LEFT JOIN subkategori s ON t.id_subkategori = s.id_subkategori
+            LEFT JOIN kategori k ON s.id_kategori = k.id_kategori
+            $where_clause
+            ORDER BY t.tanggal";
+
+    $stmt = $conn->prepare($sql);
+
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $transactions = [];
+
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+    }
+
+    // Anggaran (opsional; guard jika tabel belum ada)
+    $anggaranDict = [];
+    if ($conn->query("SHOW TABLES LIKE 'anggaran_pendapatan'")->num_rows) {
+        // Cek struktur tabel untuk memastikan kolom 'type' ada
+        $checkColumn = $conn->query("SHOW COLUMNS FROM anggaran_pendapatan LIKE 'type'");
+
+        if ($checkColumn && $checkColumn->num_rows > 0) {
+            // Kolom type ada, gunakan query dengan type
+            $sqlAnggaran = "SELECT kode_subkategori, bulan, jumlah, type FROM anggaran_pendapatan";
+            if ($resA = $conn->query($sqlAnggaran)) {
+                while ($r = $resA->fetch_assoc()) {
+                    $key = $r['kode_subkategori'] . '|' . $r['bulan'] . '|' . $r['type'];
+                    $anggaranDict[$key] = (float)$r['jumlah'];
+                }
+            }
+        } else {
+            // Kolom type belum ada, gunakan query tanpa type (fallback)
+            $sqlAnggaran = "SELECT kode_subkategori, bulan, jumlah FROM anggaran_pendapatan";
+            if ($resA = $conn->query($sqlAnggaran)) {
+                while ($r = $resA->fetch_assoc()) {
+                    $key = $r['kode_subkategori'] . '|' . $r['bulan'] . '|subkategori';
+                    $anggaranDict[$key] = (float)$r['jumlah'];
+                }
+            }
+        }
+    }
+
+    // Uraian subkategori
+    $uraianDict = [];
+    if ($resU = $conn->query("SELECT kode_subkategori, nama_subkategori FROM subkategori")) {
+        while ($r = $resU->fetch_assoc()) {
+            $uraianDict[$r['kode_subkategori']] = $r['nama_subkategori'];
+        }
+    }
+
+    $allBulan = [];
+    $totalKas = [];
+    $kategoriDict = [];
+    $subKategoriDict = [];
+    $totalPerKategoriBulan = [];
+    $totalPerKelompok = [];
+    $totalKeseluruhanPerBulan = [];
+    $uangSetoranDict = [];
+    $uangDariBankDict = [];
+    $allCategories = [];
+    $allSubCategories = [];
+
+    // Kumpulkan kategori dan subkategori dari master
+    foreach ($uraianDict as $kode => $nama) {
+        $kategori = (strlen($kode) >= 6) ? substr($kode, 0, 6) : $kode;
+        if (!in_array($kategori, $allCategories)) {
+            $allCategories[] = $kategori;
+            $allSubCategories[$kategori] = [];
+        }
+        if (!in_array($kode, $allSubCategories[$kategori])) {
+            $allSubCategories[$kategori][] = $kode;
+        }
+    }
+
+    foreach ($transactions as $trx) {
+        $bulan = $trx['bulan_format'];
+        $namaJurnal = strtolower($trx['nama_jurnal'] ?? '');
+
+        $jumlah = (float)($trx['jumlah'] ?? 0);
+        $setoran = (float)($trx['setoran'] ?? 0);
+        $uangDariBank = (float)($trx['uang_dari_bank'] ?? 0);
+
+        $isIncomeJournal = strpos($namaJurnal, 'penerimaan') !== false;
+        $isExpenseJournal = strpos($namaJurnal, 'pengeluaran') !== false;
+
+        // Tentukan alokasi khusus setoran/uang dari bank berdasarkan jenis jurnal
+        $allocatedToSpecialRow = false;
+        if ($isIncomeJournal && $uangDariBank > 0) {
+            // Jurnal penerimaan: pakai uang_dari_bank sebagai pemasukan khusus
+            if (!in_array($bulan, $allBulan)) {
+                $allBulan[] = $bulan;
+                $totalKeseluruhanPerBulan[$bulan] = 0;
+            }
+            $uangDariBankDict[$bulan] = ($uangDariBankDict[$bulan] ?? 0) + $uangDariBank;
+            $totalKeseluruhanPerBulan[$bulan] += $uangDariBank;
+            $allocatedToSpecialRow = true;
+        } elseif ($isExpenseJournal && $setoran > 0) {
+            // Jurnal pengeluaran: setoran sebagai baris khusus (misal pembayaran via setoran)
+            if (!in_array($bulan, $allBulan)) {
+                $allBulan[] = $bulan;
+                $totalKeseluruhanPerBulan[$bulan] = 0;
+            }
+            $uangSetoranDict[$bulan] = ($uangSetoranDict[$bulan] ?? 0) + $setoran;
+            $totalKeseluruhanPerBulan[$bulan] += $setoran;
+            // Catatan: untuk pengeluaran, nilai kategori akan menggunakan (jumlah - setoran) di bawah
+        }
+
+        // Nilai kategori per subkategori
+        $kas = 0;
+        if ($isExpenseJournal) {
+            // Pengeluaran: nominal subkategori = jumlah - setoran
+            $kas = max(0, $jumlah - $setoran);
+        } else {
+            // Penerimaan: nominal subkategori = jumlah (setoran dikelola terpisah untuk income via uang_dari_bank)
+            $kas = $jumlah;
+        }
+        if ($kas == 0) {
+            continue;
+        }
+
+        $kodeSub = cleanCode($trx['kode_subkategori'] ?? '');
+        if ($kodeSub === '') {
+            // Coba gunakan kode_kategori jika tersedia agar tidak ter-skip
+            $kodeKategori = cleanCode($trx['kode_kategori'] ?? '');
+            if ($kodeKategori !== '') {
+                $kategori = (strlen($kodeKategori) >= 3) ? substr($kodeKategori, 0, 3) : $kodeKategori;
+                // Placeholder subkategori agar bisa ditampilkan
+                $kodeSub = $kodeKategori . '.00.000';
+            } else {
+                // Tidak punya subkategori maupun kategori, lewati
+                continue;
+            }
+        }
+
+        // Tentukan kode kategori level-1 (xxx.xx)
+        if (strlen($kodeSub) >= 6) {
+            $kategori = substr($kodeSub, 0, 6);
+        } else {
+            $kategori = strlen($kodeSub) >= 3 ? substr($kodeSub, 0, 3) : $kodeSub;
+        }
+
+        if (!isset($kategoriDict[$kategori])) {
+            $kategoriDict[$kategori] = true;
+            $subKategoriDict[$kategori] = [];
+        }
+        if (!in_array($kodeSub, $subKategoriDict[$kategori])) {
+            $subKategoriDict[$kategori][] = $kodeSub;
+        }
+
+        $uniqueKey = $kategori.'|'.$kodeSub.'|'.$bulan;
+        $totalKas[$uniqueKey] = ($totalKas[$uniqueKey] ?? 0) + $kas;
+
+        // Debug: Log nilai yang disimpan
+        // error_log("DEBUG Sheet3: Saving to totalKas[$uniqueKey] = " . $totalKas[$uniqueKey] . " (added $kas)");
+
+        $kelompokKey = substr($kategori, 0, 3);
+        $kelompokTotalKey = $kelompokKey.'|'.$bulan;
+        $totalPerKelompok[$kelompokTotalKey] = ($totalPerKelompok[$kelompokTotalKey] ?? 0) + $kas;
+
+        $totalKey = $kategori.'|'.$bulan;
+        $totalPerKategoriBulan[$totalKey] = ($totalPerKategoriBulan[$totalKey] ?? 0) + $kas;
+
+        // Pastikan inisialisasi untuk total keseluruhan per bulan
+        if (!array_key_exists($bulan, $totalKeseluruhanPerBulan)) {
+            $totalKeseluruhanPerBulan[$bulan] = 0;
+        }
+        $totalKeseluruhanPerBulan[$bulan] += $kas;
+    }
+
+    // Fallback: jika belum ada bulan terisi (misal karena proses sebelumnya melewati semua),
+    // turunkan daftar bulan dari kunci koleksi yang ada
+    if (empty($allBulan)) {
+        $bulanSet = [];
+        foreach (array_keys($totalKas) as $k) {
+            $parts = explode('|', $k);
+            if (count($parts) === 3) $bulanSet[$parts[2]] = true;
+        }
+        foreach (array_keys($totalPerKategoriBulan) as $k) {
+            $parts = explode('|', $k);
+            if (count($parts) === 2) $bulanSet[$parts[1]] = true;
+        }
+        foreach (array_keys($totalPerKelompok) as $k) {
+            $parts = explode('|', $k);
+            if (count($parts) === 2) $bulanSet[$parts[1]] = true;
+        }
+        foreach (array_keys($uangSetoranDict) as $b) $bulanSet[$b] = true;
+        foreach (array_keys($uangDariBankDict) as $b) $bulanSet[$b] = true;
+        $allBulan = array_keys($bulanSet);
+    }
+
+    usort($allBulan, fn($a,$b)=> strtotime($a)-strtotime($b));
+    sort($allCategories);
+    foreach ($allSubCategories as $k => $arr) sort($allSubCategories[$k]);
+
+    $_SESSION['sheet3_report'] = [
+        'bulan' => $allBulan,
+        'uang_setoran' => $uangSetoranDict,
+        'uang_dari_bank' => $uangDariBankDict,
+        'total_kas' => $totalKas,
+        'kategori_dict' => $kategoriDict,
+        'subkategori_dict' => $subKategoriDict,
+        'total_per_kategori_bulan' => $totalPerKategoriBulan,
+        'total_per_kelompok' => $totalPerKelompok,
+        'total_keseluruhan_per_bulan' => $totalKeseluruhanPerBulan,
+        'all_categories' => $allCategories,
+        'all_sub_categories' => $allSubCategories,
+        'uraian_dict' => $uraianDict,
+        'anggaran_dict' => $anggaranDict
+    ];
+
+    // Simpan daftar jurnal ke session untuk export
+    global $daftar_jurnal;
+    $_SESSION['daftar_jurnal'] = $daftar_jurnal;
+
+    // Kembalikan report untuk pemanggilan programatik (audit)
+    return $_SESSION['sheet3_report'];
+}
+
+function isUangSetoran($trx) {
+    // Primary check: treat uang_dari_bank as nominal; jika > 0 maka setoran/transfer
+    if (isset($trx['uang_dari_bank']) && (float)$trx['uang_dari_bank'] > 0) {
+        return true;
+    }
+
+    // Fallback checks for backward compatibility
+    // Check if it's a setoran transaction (setoran > 0 and jumlah = 0)
+    if ((float)($trx['setoran'] ?? 0) > 0 && (float)$trx['jumlah'] == 0) return true;
+    // Legacy check for transactions without subkategori but with jumlah > 0
+    if (empty($trx['kode_subkategori']) && (float)$trx['jumlah'] > 0) return true;
+    // Check uraian for "Uang Setoran"
+    if (!empty($trx['uraian']) && stripos($trx['uraian'], 'Uang Setoran') !== false) return true;
+    return false;
+}
+
+function cleanCode($kode) {
+    if (empty($kode)) return '';
+    return preg_replace('/[^0-9.]/', '', $kode);
+}
+
+/**
+ * Helper Functions untuk Jurnal (Dinamis dari Database)
+ * Fungsi-fungsi ini menghindari hard-coded ID jurnal
+ */
+
+/**
+ * Dapatkan semua ID jurnal berdasarkan tipe (penerimaan/pengeluaran)
+ * @param string $type 'penerimaan', 'pengeluaran', atau 'all'
+ * @return array Array of jurnal IDs
+ */
+function getJurnalIdsByType($type = 'all') {
+    global $conn;
+    $jurnal_ids = [];
+    
+    $sql = "SELECT id_jurnal, nama_jurnal FROM jurnal ORDER BY id_jurnal";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $nama_jurnal = strtolower($row['nama_jurnal']);
+            
+            if ($type === 'all') {
+                $jurnal_ids[] = $row['id_jurnal'];
+            } elseif ($type === 'penerimaan' && strpos($nama_jurnal, 'penerimaan') !== false) {
+                $jurnal_ids[] = $row['id_jurnal'];
+            } elseif ($type === 'pengeluaran' && strpos($nama_jurnal, 'pengeluaran') !== false) {
+                $jurnal_ids[] = $row['id_jurnal'];
+            }
+        }
+    }
+    
+    return $jurnal_ids;
+}
+
+/**
+ * Cek apakah jurnal adalah jurnal penerimaan
+ * @param int $id_jurnal
+ * @return bool
+ */
+function isJurnalPenerimaan($id_jurnal) {
+    global $conn, $daftar_jurnal;
+    
+    if (isset($daftar_jurnal[$id_jurnal])) {
+        $nama_jurnal = strtolower($daftar_jurnal[$id_jurnal]);
+        return strpos($nama_jurnal, 'penerimaan') !== false;
+    }
+    
+    // Fallback: query dari database
+    $sql = "SELECT nama_jurnal FROM jurnal WHERE id_jurnal = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_jurnal);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $nama_jurnal = strtolower($row['nama_jurnal']);
+        return strpos($nama_jurnal, 'penerimaan') !== false;
+    }
+    
+    return false;
+}
+
+/**
+ * Cek apakah jurnal adalah jurnal pengeluaran
+ * @param int $id_jurnal
+ * @return bool
+ */
+function isJurnalPengeluaran($id_jurnal) {
+    global $conn, $daftar_jurnal;
+    
+    if (isset($daftar_jurnal[$id_jurnal])) {
+        $nama_jurnal = strtolower($daftar_jurnal[$id_jurnal]);
+        return strpos($nama_jurnal, 'pengeluaran') !== false;
+    }
+    
+    // Fallback: query dari database
+    $sql = "SELECT nama_jurnal FROM jurnal WHERE id_jurnal = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_jurnal);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $nama_jurnal = strtolower($row['nama_jurnal']);
+        return strpos($nama_jurnal, 'pengeluaran') !== false;
+    }
+    
+    return false;
+}
+
+/**
+ * Dapatkan jurnal IDs yang menggunakan "Uang dari Bank" (bukan "Setoran")
+ * Biasanya jurnal penerimaan menggunakan "Uang dari Bank"
+ * @return array Array of jurnal IDs
+ */
+function getJurnalUangDariBank() {
+    return getJurnalIdsByType('penerimaan');
+}
+
+/**
+ * Dapatkan mapping jurnal ke account berdasarkan nama jurnal
+ * @return array Mapping array seperti ['Saldo Jemaat' => [id_jurnal_array], ...]
+ */
+function getJurnalAccountMapping() {
+    global $conn;
+    $mapping = [
+        'Saldo Jemaat' => [],
+        'Saldo GSG' => [],
+        'Saldo Saluran' => [],
+        'Saldo Pembangunan' => [],
+        'Saldo Jemaat (Bank Mandiri)' => []
+    ];
+    
+    $sql = "SELECT id_jurnal, nama_jurnal FROM jurnal ORDER BY id_jurnal";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $nama_jurnal = strtolower($row['nama_jurnal']);
+            $id_jurnal = $row['id_jurnal'];
+            
+            // Mapping berdasarkan nama jurnal (fleksibel, tidak hard-coded ID)
+            if (strpos($nama_jurnal, 'jemaat') !== false && strpos($nama_jurnal, 'bank mandiri') === false) {
+                $mapping['Saldo Jemaat'][] = $id_jurnal;
+            } elseif (strpos($nama_jurnal, 'bank mandiri') !== false) {
+                $mapping['Saldo Jemaat (Bank Mandiri)'][] = $id_jurnal;
+            } elseif (strpos($nama_jurnal, 'gsg') !== false) {
+                $mapping['Saldo GSG'][] = $id_jurnal;
+            } elseif (strpos($nama_jurnal, 'saluran') !== false) {
+                $mapping['Saldo Saluran'][] = $id_jurnal;
+            } elseif (strpos($nama_jurnal, 'pembangunan') !== false) {
+                $mapping['Saldo Pembangunan'][] = $id_jurnal;
+            }
+        }
+    }
+    
+    return $mapping;
+}
+
+/**
+ * Dapatkan kode kategori default untuk jurnal berdasarkan nama jurnal
+ * @param int $id_jurnal
+ * @param string $type 'penerimaan' atau 'pengeluaran'
+ * @return string Kode kategori default
+ */
+// Helper function untuk mendapatkan level 2 dari kode subkategori (format: xxx.xx)
+function getLevel2Code($kode_subkategori) {
+    if (empty($kode_subkategori) || $kode_subkategori === '000.00.00') {
+        return null;
+    }
+    
+    // Ambil 6 karakter pertama (format: xxx.xx)
+    // Jika kode lebih panjang, ambil sampai titik kedua
+    $parts = explode('.', $kode_subkategori);
+    if (count($parts) >= 2) {
+        return $parts[0] . '.' . $parts[1];
+    }
+    
+    // Fallback: ambil 6 karakter pertama
+    return substr($kode_subkategori, 0, 6);
+}
+
+function getDefaultKodeKategoriByJurnal($id_jurnal, $type = 'penerimaan') {
+    global $conn, $daftar_jurnal;
+    
+    if (!isset($daftar_jurnal[$id_jurnal])) {
+        return '000';
+    }
+    
+    $nama_jurnal = strtolower($daftar_jurnal[$id_jurnal]);
+    
+    // Mapping berdasarkan nama jurnal (dinamis)
+    if (strpos($nama_jurnal, 'jemaat') !== false && strpos($nama_jurnal, 'bank mandiri') === false) {
+        return $type === 'penerimaan' ? '100' : '100';
+    } elseif (strpos($nama_jurnal, 'bank mandiri') !== false) {
+        return $type === 'penerimaan' ? '200' : '200';
+    } elseif (strpos($nama_jurnal, 'gsg') !== false) {
+        return $type === 'penerimaan' ? '300' : '300';
+    } elseif (strpos($nama_jurnal, 'saluran') !== false) {
+        return $type === 'penerimaan' ? '400' : '400';
+    } elseif (strpos($nama_jurnal, 'pembangunan') !== false) {
+        return $type === 'penerimaan' ? '500' : '500';
+    }
+    
+    // Fallback: coba ambil dari kategori pertama di jurnal ini
+    $sql = "SELECT kode_kategori FROM kategori WHERE id_jurnal = ? ORDER BY kode_kategori LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_jurnal);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return substr($row['kode_kategori'], 0, 3); // Ambil 3 digit pertama
+    }
+    
+    return '000';
+}
+
+/**
+ * Dapatkan jurnal abbreviation dari database atau generate dari nama
+ * @param string $nama_jurnal
+ * @return string Abbreviation
+ */
+function getJurnalAbbreviation($nama_jurnal) {
+    global $conn;
+    
+    // Cek apakah ada kode_jurnal di database
+    $sql = "SELECT kode_jurnal FROM jurnal WHERE nama_jurnal = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $nama_jurnal);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if (!empty($row['kode_jurnal'])) {
+            return $row['kode_jurnal'];
+        }
+    }
+    
+    // Fallback: generate dari nama jurnal
+    $words = explode(' ', $nama_jurnal);
+    $abbr = '';
+    foreach ($words as $word) {
+        if (strlen($word) > 0) {
+            $abbr .= strtoupper($word[0]);
+        }
+    }
+    
+    return substr($abbr, 0, 10); // Maksimal 10 karakter
+}
+
+/**
+ * Dapatkan jurnal IDs berdasarkan filter string (jemaat, gsg, saluran, pembangunan, bank mandiri)
+ * @param string $filter
+ * @param string $type 'penerimaan' atau 'pengeluaran'
+ * @return array Array of jurnal IDs
+ */
+function getJurnalIdsByFilter($filter, $type = 'penerimaan') {
+    global $conn;
+    $jurnal_ids = [];
+    
+    $sql = "SELECT id_jurnal, nama_jurnal FROM jurnal ORDER BY id_jurnal";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $nama_jurnal = strtolower($row['nama_jurnal']);
+            $id_jurnal = $row['id_jurnal'];
+            
+            // Cek tipe jurnal
+            $is_penerimaan = strpos($nama_jurnal, 'penerimaan') !== false;
+            $is_pengeluaran = strpos($nama_jurnal, 'pengeluaran') !== false;
+            
+            // Cek apakah sesuai dengan type yang diminta
+            if (($type === 'penerimaan' && !$is_penerimaan) || 
+                ($type === 'pengeluaran' && !$is_pengeluaran)) {
+                continue;
+            }
+            
+            // Filter berdasarkan nama
+            $match = false;
+            switch ($filter) {
+                case 'jemaat':
+                    $match = (strpos($nama_jurnal, 'jemaat') !== false && 
+                             strpos($nama_jurnal, 'bank mandiri') === false);
+                    break;
+                case 'gsg':
+                    $match = strpos($nama_jurnal, 'gsg') !== false;
+                    break;
+                case 'saluran':
+                    $match = strpos($nama_jurnal, 'saluran') !== false;
+                    break;
+                case 'pembangunan':
+                    $match = strpos($nama_jurnal, 'pembangunan') !== false;
+                    break;
+                case 'bank mandiri':
+                    $match = strpos($nama_jurnal, 'bank mandiri') !== false;
+                    break;
+                default:
+                    $match = false;
+            }
+            
+            if ($match) {
+                $jurnal_ids[] = $id_jurnal;
+            }
+        }
+    }
+    
+    return $jurnal_ids;
+}
+
+/**
+ * Update balance untuk account berdasarkan jurnal ID
+ * @param array $balances Reference to balances array
+ * @param int $id_jurnal
+ * @param float $amount
+ * @param string $type 'penerimaan' atau 'pengeluaran'
+ */
+function updateBalanceByJurnal(&$balances, $id_jurnal, $amount, $type = 'penerimaan') {
+    $mapping = getJurnalAccountMapping();
+    
+    foreach ($mapping as $account => $jurnal_ids) {
+        if (in_array($id_jurnal, $jurnal_ids)) {
+            if ($type === 'penerimaan') {
+                $balances[$account] = ($balances[$account] ?? 0) + $amount;
+            } else {
+                $balances[$account] = ($balances[$account] ?? 0) - $amount;
+            }
+            break;
+        }
+    }
+}
+
+// Alias kompatibilitas bila ada pemanggilan lama
+function generateHorizontalReport() {
+    generateSheet3Report();
+}
+
+// Modifikasi fungsi generateReports untuk memanggil semua laporan
+function generateReports() {
+    generateSheet1Report();     // Sheet 1
+    generateSheet2Report();     // Sheet 2
+    generateSheet3Report();     // Sheet 3
+}
+
+/**
+ * Fungsi untuk menghasilkan laporan keuangan saluran GKPI Medan Kota per bulan
+ * dengan pembagian penerimaan dan pengeluaran berdasarkan jurnal
+ */
+function generateLaporanKeuangan($tahun = null, $jurnal_filter = null) {
+    global $conn;
+
+    // Mapping nama jurnal ke singkatan
+    $jurnal_abbreviations = [
+        'Penerimaan Jemaat' => 'PJ',
+        'Penerimaan Persembahan' => 'PP',
+        'Penerimaan Lain-lain' => 'PL',
+        'Pengeluaran Operasional' => 'PO',
+        'Pengeluaran Program' => 'PPG',
+        'Pengeluaran Lain-lain' => 'PLN',
+        'Penerimaan Saldo Bank' => 'PSB',
+        'Penerimaan GSG' => 'PGSG',
+        'JURNAL PENERIMAAN & PENGELUARAN JEMAAT di Bank Mandiri' => 'JPM',
+        // Tambahkan mapping lainnya sesuai kebutuhan
+    ];
+
+    // Ambil daftar jurnal penerimaan dan pengeluaran berdasarkan nama jurnal
+    $sql_jurnal = "SELECT id_jurnal, nama_jurnal FROM jurnal";
+    $result_jurnal = $conn->query($sql_jurnal);
+    $jurnal_penerimaan = [];
+    $jurnal_pengeluaran = [];
+
+    if ($result_jurnal && $result_jurnal->num_rows > 0) {
+        while ($row = $result_jurnal->fetch_assoc()) {
+            $nama = strtolower($row['nama_jurnal']);
+            if (strpos($nama, 'penerimaan') !== false) {
+                $jurnal_penerimaan[] = $row['id_jurnal'];
+            } elseif (strpos($nama, 'pengeluaran') !== false) {
+                $jurnal_pengeluaran[] = $row['id_jurnal'];
+            }
+        }
+    }
+
+    // Ambil transaksi penerimaan dan pengeluaran per bulan dengan filter jurnal jika ada
+    $sql = "SELECT 
+                DATE_FORMAT(t.tanggal, '%Y-%m') as bulan,
+                t.tanggal,
+                t.uraian,
+                t.no_kwitansi,
+                t.jumlah,
+                j.id_jurnal,
+                j.nama_jurnal,
+                k.kode_kategori
+            FROM transaksi t
+            JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+            LEFT JOIN subkategori s ON t.id_subkategori = s.id_subkategori
+            LEFT JOIN kategori k ON s.id_kategori = k.id_kategori
+            WHERE YEAR(t.tanggal) = ?";
+
+    if ($jurnal_filter !== null && $jurnal_filter !== '') {
+        $sql .= " AND t.id_jurnal = ?";
+    }
+
+    $sql .= " ORDER BY t.tanggal ASC";
+
+    $stmt = $conn->prepare($sql);
+
+    if ($jurnal_filter !== null && $jurnal_filter !== '') {
+        $stmt->bind_param("ii", $tahun, $jurnal_filter);
+    } else {
+        $stmt->bind_param("i", $tahun);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $data_per_bulan = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $bulan = $row['bulan'];
+        if (!isset($data_per_bulan[$bulan])) {
+            $data_per_bulan[$bulan] = [
+                'penerimaan' => [],
+                'pengeluaran' => [],
+                'total_penerimaan' => 0,
+                'total_pengeluaran' => 0,
+                'saldo_awal' => 0,
+                'saldo_akhir' => 0,
+            ];
+        }
+
+        // Ambil singkatan jurnal
+        $jurnal_abbr = $jurnal_abbreviations[$row['nama_jurnal']] ?? substr($row['nama_jurnal'], 0, 2);
+
+        $item = [
+            'tanggal' => date('d-m-Y', strtotime($row['tanggal'])),
+            'uraian' => $row['uraian'],
+            'no_bukti' => $row['no_kwitansi'],
+            'jumlah' => $row['jumlah'],
+            'kode' => $row['kode_kategori'] ?? '',
+            'nama_jurnal' => $row['nama_jurnal'] ?? '',
+            'jurnal_abbr' => $jurnal_abbr,
+        ];
+
+        // Calculate the correct amount (jumlah + setoran)
+        $total_amount = $row['jumlah'] + ($row['setoran'] ?? 0);
+
+        if (in_array($row['id_jurnal'], $jurnal_penerimaan)) {
+            $data_per_bulan[$bulan]['penerimaan'][] = $item;
+            $data_per_bulan[$bulan]['total_penerimaan'] += $total_amount;
+        } elseif (in_array($row['id_jurnal'], $jurnal_pengeluaran)) {
+            $data_per_bulan[$bulan]['pengeluaran'][] = $item;
+            $data_per_bulan[$bulan]['total_pengeluaran'] += $total_amount;
+        }
+    }
+
+    // Hitung saldo awal (saldo akhir tahun sebelumnya)
+    $saldo_awal_tahun = 0;
+    if ($tahun > 2000) { // Pastikan tahun valid
+        $sql_saldo_akhir = "SELECT
+            SUM(CASE WHEN j.nama_jurnal LIKE '%penerimaan%' THEN (t.jumlah + COALESCE(t.setoran, 0)) ELSE 0 END) -
+            SUM(CASE WHEN j.nama_jurnal LIKE '%pengeluaran%' THEN (t.jumlah + COALESCE(t.setoran, 0)) ELSE 0 END) as saldo_akhir
+            FROM transaksi t
+            JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+            WHERE YEAR(t.tanggal) = ?";
+
+        $stmt_saldo = $conn->prepare($sql_saldo_akhir);
+        $tahun_sebelumnya = $tahun - 1;
+        $stmt_saldo->bind_param("i", $tahun_sebelumnya);
+        $stmt_saldo->execute();
+        $result_saldo = $stmt_saldo->get_result();
+
+        if ($result_saldo && $result_saldo->num_rows > 0) {
+            $row_saldo = $result_saldo->fetch_assoc();
+            $saldo_awal_tahun = $row_saldo['saldo_akhir'] ?? 0;
+        }
+    }
+
+    // Hitung saldo awal dan saldo akhir per bulan
+    $saldo_sebelumnya = $saldo_awal_tahun;
+    ksort($data_per_bulan);
+    foreach ($data_per_bulan as $bulan => &$data) {
+        $data['saldo_awal'] = $saldo_sebelumnya;
+        $data['saldo_akhir'] = $saldo_sebelumnya + $data['total_penerimaan'] - $data['total_pengeluaran'];
+        $saldo_sebelumnya = $data['saldo_akhir'];
+    }
+    unset($data);
+
+    // Simpan ke session untuk export
+    $_SESSION['laporan_keuangan_data'] = $data_per_bulan;
+    $_SESSION['laporan_keuangan_filters'] = [
+        'tahun' => $tahun,
+        'jurnal_filter' => $jurnal_filter
+    ];
+
+    return $data_per_bulan;
+}
+
+
+
+/**
+ * Validasi format kode kategori
+ * @param string $kode
+ * @return bool
+ */
+function validateKategoriCode($kode) {
+    return preg_match('/^[0-9]{3}$/', $kode);
+}
+
+/**
+ * Validasi format kode subkategori
+ * @param string $kode
+ * @return bool
+ */
+function validateSubkategoriCode($kode) {
+    // Format: xxx.xx.xx atau xxx.xx.xxx
+    return preg_match('/^[0-9]{3}\.[0-9]{2}(\.[0-9]{2,3})?$/', $kode);
+}
+
+/**
+ * Generate kode subkategori otomatis berdasarkan kategori
+ * @param string $kode_kategori
+ * @param int $level
+ * @return string
+ */
+function generateSubkategoriCode($kode_kategori, $level = 1) {
+    if (!validateKategoriCode($kode_kategori)) {
+        return false;
+    }
+    
+    switch ($level) {
+        case 1:
+            return $kode_kategori . '.01';
+        case 2:
+            return $kode_kategori . '.01.001';
+        default:
+            return false;
+    }
+}
+
+/**
+ * Parse kode subkategori untuk mendapatkan informasi level
+ * @param string $kode
+ * @return array
+ */
+function parseSubkategoriCode($kode) {
+    if (!validateSubkategoriCode($kode)) {
+        return false;
+    }
+    
+    $parts = explode('.', $kode);
+    return [
+        'kategori' => $parts[0],
+        'sub_level_1' => $parts[1],
+        'sub_level_2' => isset($parts[2]) ? $parts[2] : null,
+        'total_levels' => count($parts)
+    ];
+}
+
+// Fungsi untuk menghasilkan laporan Sheet 1 (Data Transaksi) dengan filter tambahan
+function generateSheet1Report($jurnal_filter = null, $tahun_filter = null, $uraian_filter = null, $kwitansi_filter = null) {
+    global $conn;
+    
+    $where_conditions = [];
+    $params = [];
+    $types = "";
+    
+    if ($jurnal_filter) {
+        $where_conditions[] = "t.id_jurnal = ?";
+        $params[] = $jurnal_filter;
+        $types .= "i";
+    }
+    
+    if ($tahun_filter) {
+        $where_conditions[] = "YEAR(t.tanggal) = ?";
+        $params[] = $tahun_filter;
+        $types .= "i";
+    }
+    
+    if ($uraian_filter) {
+        $where_conditions[] = "t.uraian LIKE ?";
+        $params[] = "%" . $uraian_filter . "%";
+        $types .= "s";
+    }
+    
+    if ($kwitansi_filter) {
+        $where_conditions[] = "t.no_kwitansi LIKE ?";
+        $params[] = "%" . $kwitansi_filter . "%";
+        $types .= "s";
+    }
+    
+    $where_clause = "";
+    if (!empty($where_conditions)) {
+        $where_clause = "WHERE " . implode(" AND ", $where_conditions);
+    }
+    
+    $sql = "SELECT 
+                t.*,
+                j.nama_jurnal,
+                k.kode_kategori,
+                k.nama_kategori,
+                s.kode_subkategori,
+                s.nama_subkategori
+            FROM transaksi t
+            JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+            LEFT JOIN subkategori s ON t.id_subkategori = s.id_subkategori
+            LEFT JOIN kategori k ON s.id_kategori = k.id_kategori
+            $where_clause
+            ORDER BY t.tanggal DESC, t.created_at DESC";
+    
+    $stmt = $conn->prepare($sql);
+    
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $transactions = [];
+    
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+    }
+    
+    // Simpan ke session untuk ditampilkan
+    $_SESSION['sheet1_report'] = $transactions;
+    $_SESSION['sheet1_filters'] = [
+        'jurnal_filter' => $jurnal_filter,
+        'tahun_filter' => $tahun_filter,
+        'uraian_filter' => $uraian_filter,
+        'kwitansi_filter' => $kwitansi_filter
+    ];
+}
+
+/**
+ * Simpan data anggaran pendapatan ke database
+ */
+function saveAnggaranPendapatan($data) {
+    global $conn;
+    
+    $kode_subkategori = $data['kode_subkategori'] ?? '';
+    $bulan = $data['bulan'] ?? '';
+    $jumlah = $data['jumlah'] ?? 0;
+    $type = $data['type'] ?? 'subkategori';
+    
+    // Validasi
+    if (empty($bulan) || !is_numeric($jumlah)) {
+        return ['success' => false, 'message' => 'Data tidak valid'];
+    }
+    
+    // Cek apakah tabel anggaran_pendapatan ada
+    $table_exists = $conn->query("SHOW TABLES LIKE 'anggaran_pendapatan'")->num_rows > 0;
+    
+    if (!$table_exists) {
+        // Buat tabel jika belum ada (dengan kolom type)
+        $create_table = "CREATE TABLE anggaran_pendapatan (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            kode_subkategori VARCHAR(50),
+            bulan VARCHAR(20) NOT NULL,
+            jumlah DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+            type ENUM('uang-setoran', 'kelompok', 'subkategori', 'keseluruhan') NOT NULL DEFAULT 'subkategori',
+            UNIQUE KEY unique_anggaran (kode_subkategori, bulan, type)
+        )";
+        
+        if (!$conn->query($create_table)) {
+            return ['success' => false, 'message' => 'Gagal membuat tabel: ' . $conn->error];
+        }
+    }
+    
+    // Cek apakah kolom 'type' sudah ada di tabel
+    $column_exists = $conn->query("SHOW COLUMNS FROM anggaran_pendapatan LIKE 'type'")->num_rows > 0;
+    
+    if ($column_exists) {
+        // Query paling sederhana - tanpa ON DUPLICATE KEY
+        // Cek dulu apakah data sudah ada
+        $check_sql = "SELECT id FROM anggaran_pendapatan 
+                     WHERE kode_subkategori = ? AND bulan = ? AND type = ?";
+        $check_stmt = $conn->prepare($check_sql);
+        $check_stmt->bind_param("sss", $kode_subkategori, $bulan, $type);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+        
+        if ($check_result->num_rows > 0) {
+            // Update data yang sudah ada - HANYA update jumlah
+            $sql = "UPDATE anggaran_pendapatan SET jumlah = ? 
+                    WHERE kode_subkategori = ? AND bulan = ? AND type = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("dsss", $jumlah, $kode_subkategori, $bulan, $type);
+        } else {
+            // Insert data baru
+            $sql = "INSERT INTO anggaran_pendapatan (kode_subkategori, bulan, jumlah, type) 
+                    VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssds", $kode_subkategori, $bulan, $jumlah, $type);
+        }
+    } else {
+        // Fallback: query tanpa kolom type
+        // Cek dulu apakah data sudah ada
+        $check_sql = "SELECT id FROM anggaran_pendapatan 
+                     WHERE kode_subkategori = ? AND bulan = ?";
+        $check_stmt = $conn->prepare($check_sql);
+        $check_stmt->bind_param("ss", $kode_subkategori, $bulan);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+        
+        if ($check_result->num_rows > 0) {
+            // Update data yang sudah ada
+            $sql = "UPDATE anggaran_pendapatan SET jumlah = ? 
+                    WHERE kode_subkategori = ? AND bulan = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("dss", $jumlah, $kode_subkategori, $bulan);
+        } else {
+            // Insert data baru
+            $sql = "INSERT INTO anggaran_pendapatan (kode_subkategori, bulan, jumlah) 
+                    VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssd", $kode_subkategori, $bulan, $jumlah);
+        }
+    }
+    
+    if ($stmt->execute()) {
+        return ['success' => true, 'message' => 'Anggaran berhasil disimpan'];
+    } else {
+        return ['success' => false, 'message' => 'Gagal menyimpan: ' . $conn->error];
+    }
+}
+
+/**
+ * API endpoint untuk menyimpan anggaran
+ */
+function handleSaveAnggaran() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (!$input) {
+            echo json_encode(['success' => false, 'message' => 'Data tidak valid']);
+            exit;
+        }
+
+        $result = saveAnggaranPendapatan($input);
+        echo json_encode($result);
+        exit;
+    }
+}
+
+/**
+ * Fungsi saveAnggaranPendapatan yang sangat sederhana (alternatif)
+ * Gunakan ini jika fungsi utama masih error
+ */
+function saveAnggaranPendapatanSimple($data) {
+    global $conn;
+    
+    $kode_subkategori = $data['kode_subkategori'] ?? '';
+    $bulan = $data['bulan'] ?? '';
+    $jumlah = $data['jumlah'] ?? 0;
+    $type = $data['type'] ?? 'subkategori';
+    
+    try {
+        // Coba update dulu
+        $sql = "UPDATE anggaran_pendapatan SET jumlah = ? 
+                WHERE kode_subkategori = ? AND bulan = ? AND type = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("dsss", $jumlah, $kode_subkategori, $bulan, $type);
+        
+        if ($stmt->execute() && $stmt->affected_rows > 0) {
+            return ['success' => true, 'message' => 'Anggaran berhasil diupdate'];
+        }
+        
+        // Jika update tidak ada yang diubah, coba insert
+        $sql = "INSERT INTO anggaran_pendapatan (kode_subkategori, bulan, jumlah, type) 
+                VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssds", $kode_subkategori, $bulan, $jumlah, $type);
+        
+        if ($stmt->execute()) {
+            return ['success' => true, 'message' => 'Anggaran berhasil disimpan'];
+        }
+        
+        return ['success' => false, 'message' => 'Gagal menyimpan'];
+        
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Fungsi untuk mendeteksi informasi browser dan device dari user agent
+ * @param string $user_agent User agent string
+ * @return array Informasi device yang terdeteksi
+ */
+function detectDeviceInfo($user_agent = null) {
+    if ($user_agent === null) {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    }
+    
+    $info = [
+        'browser' => 'Unknown',
+        'browser_version' => '',
+        'operating_system' => 'Unknown',
+        'device_type' => 'Desktop',
+        'device_model' => '',
+        'platform' => ''
+    ];
+    
+    // Detect Browser
+    if (preg_match('/MSIE/i', $user_agent) && !preg_match('/Opera/i', $user_agent)) {
+        $info['browser'] = 'Internet Explorer';
+        if (preg_match('/MSIE\s([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    } elseif (preg_match('/Firefox/i', $user_agent)) {
+        $info['browser'] = 'Firefox';
+        if (preg_match('/Firefox\/([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    } elseif (preg_match('/Chrome/i', $user_agent)) {
+        $info['browser'] = 'Chrome';
+        if (preg_match('/Chrome\/([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    } elseif (preg_match('/Safari/i', $user_agent)) {
+        $info['browser'] = 'Safari';
+        if (preg_match('/Version\/([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    } elseif (preg_match('/Opera/i', $user_agent)) {
+        $info['browser'] = 'Opera';
+        if (preg_match('/Opera\/([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    } elseif (preg_match('/Edge/i', $user_agent)) {
+        $info['browser'] = 'Edge';
+        if (preg_match('/Edge\/([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['browser_version'] = $matches[1];
+        }
+    }
+    
+    // Detect Operating System
+    if (preg_match('/Windows NT 10/i', $user_agent)) {
+        $info['operating_system'] = 'Windows 10/11';
+    } elseif (preg_match('/Windows NT 6\.3/i', $user_agent)) {
+        $info['operating_system'] = 'Windows 8.1';
+    } elseif (preg_match('/Windows NT 6\.2/i', $user_agent)) {
+        $info['operating_system'] = 'Windows 8';
+    } elseif (preg_match('/Windows NT 6\.1/i', $user_agent)) {
+        $info['operating_system'] = 'Windows 7';
+    } elseif (preg_match('/Windows NT 6\.0/i', $user_agent)) {
+        $info['operating_system'] = 'Windows Vista';
+    } elseif (preg_match('/Windows NT 5\.1/i', $user_agent)) {
+        $info['operating_system'] = 'Windows XP';
+    } elseif (preg_match('/Macintosh|Mac OS X/i', $user_agent)) {
+        $info['operating_system'] = 'macOS';
+        if (preg_match('/Mac OS X ([0-9_]+)/i', $user_agent, $matches)) {
+            $info['operating_system'] = 'macOS ' . str_replace('_', '.', $matches[1]);
+        }
+    } elseif (preg_match('/Linux/i', $user_agent)) {
+        $info['operating_system'] = 'Linux';
+    } elseif (preg_match('/Android/i', $user_agent)) {
+        $info['operating_system'] = 'Android';
+        if (preg_match('/Android ([0-9\.]+)/i', $user_agent, $matches)) {
+            $info['operating_system'] = 'Android ' . $matches[1];
+        }
+    } elseif (preg_match('/iPhone|iPad|iPod/i', $user_agent)) {
+        $info['operating_system'] = 'iOS';
+        if (preg_match('/OS ([0-9_]+)/i', $user_agent, $matches)) {
+            $info['operating_system'] = 'iOS ' . str_replace('_', '.', $matches[1]);
+        }
+    }
+    
+    // Detect Device Type
+    if (preg_match('/Mobile|Android|iPhone|iPad|iPod/i', $user_agent)) {
+        $info['device_type'] = 'Mobile';
+        if (preg_match('/iPhone/i', $user_agent)) {
+            $info['device_model'] = 'iPhone';
+        } elseif (preg_match('/iPad/i', $user_agent)) {
+            $info['device_model'] = 'iPad';
+        } elseif (preg_match('/iPod/i', $user_agent)) {
+            $info['device_model'] = 'iPod';
+        } elseif (preg_match('/Android/i', $user_agent)) {
+            $info['device_model'] = 'Android Device';
+        }
+    } elseif (preg_match('/Tablet|iPad/i', $user_agent)) {
+        $info['device_type'] = 'Tablet';
+    }
+    
+    // Detect Platform
+    if (preg_match('/Windows/i', $user_agent)) {
+        $info['platform'] = 'Windows';
+    } elseif (preg_match('/Mac/i', $user_agent)) {
+        $info['platform'] = 'Mac';
+    } elseif (preg_match('/Linux/i', $user_agent)) {
+        $info['platform'] = 'Linux';
+    } elseif (preg_match('/Android/i', $user_agent)) {
+        $info['platform'] = 'Android';
+    } elseif (preg_match('/iPhone|iPad|iPod/i', $user_agent)) {
+        $info['platform'] = 'iOS';
+    }
+    
+    return $info;
+}
+
+/**
+ * Fungsi untuk menyimpan log login ke database
+ * @param string $username Username yang login
+ * @return bool True jika berhasil disimpan
+ */
+function saveLoginLog($username) {
+    global $conn;
+
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $fingerprint = hash('sha256', $ip_address . $user_agent);
+
+    // Deteksi informasi device
+    $device_info = detectDeviceInfo($user_agent);
+
+    error_log("saveLoginLog called for user: $username");
+    error_log("IP: $ip_address, User Agent: " . substr($user_agent, 0, 100));
+    
+    $sql = "INSERT INTO login_logs (
+        username, waktu_login, ip_address, user_agent,
+        browser, operating_system,
+        device_type, device_model, fingerprint
+    ) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param(
+            "ssssssss",
+            $username, $ip_address, $user_agent,
+            $device_info['browser'],
+            $device_info['operating_system'], $device_info['device_type'],
+            $device_info['device_model'], $fingerprint
+        );
+
+        if (!$stmt->execute()) {
+            error_log("saveLoginLog failed: " . $stmt->error);
+            return false;
+        }
+        error_log("saveLoginLog succeeded");
+        return true;
+    } else {
+        error_log("saveLoginLog prepare failed: " . $conn->error);
+    }
+
+    return false;
+}
+
+/**
+ * Fungsi untuk mendapatkan informasi sesi login terbaru
+ * @param string $username Username
+ * @return array|null Informasi sesi atau null jika tidak ditemukan
+ */
+function getLatestLoginInfo($username) {
+    global $conn;
+    
+    $sql = "SELECT * FROM login_logs 
+            WHERE username = ? 
+            ORDER BY waktu_login DESC 
+            LIMIT 1";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+    
+    return null;
+}
+
+/**
+ * Fungsi untuk mendapatkan semua sesi login aktif
+ * @param string $username Username
+ * @return array Daftar sesi aktif
+ */
+function getActiveSessions($username) {
+    global $conn;
+    
+    $sql = "SELECT * FROM login_logs 
+            WHERE username = ? 
+            ORDER BY waktu_login DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $sessions = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $sessions[] = $row;
+        }
+    }
+    
+    return $sessions;
+}
+
+/**
+ * Fungsi untuk menampilkan dashboard dengan info sesi login
+ */
+function showDashboard() {
+    global $conn;
+    
+    // Ambil info sesi login terbaru untuk user yang sedang login
+    $username = $_SESSION['username'] ?? 'Unknown';
+    $current_fingerprint = hash('sha256', ($_SERVER['REMOTE_ADDR'] ?? '') . ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+    
+    // Query untuk mendapatkan log login terbaru user ini
+    $login_logs = [];
+    $is_active_session = false;
+    
+    // Cek apakah tabel login_logs ada
+    $table_check = $conn->query("SHOW TABLES LIKE 'login_logs'");
+    if ($table_check && $table_check->num_rows > 0) {
+        $sql = "SELECT * FROM login_logs 
+                WHERE username = ? 
+                ORDER BY waktu_login DESC 
+                LIMIT 10";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $login_logs[] = $row;
+                }
+                
+                // Cek apakah sesi saat ini aktif (fingerprint cocok dengan yang terbaru)
+                $latest_log = $login_logs[0];
+                $is_active_session = ($latest_log['fingerprint'] === $current_fingerprint);
+            }
+        }
+    }
+    
+    include __DIR__ . '/views/dashboard.php';
+}
+
+/**
+ * Delete selected transactions from Sheet 1 report.
+ * @param array $ids Array of transaction IDs to delete.
+ * @return array Result with success status and message.
+ */
+function deleteSheet1Transactions($ids) {
+    global $conn;
+
+    if (empty($ids) || !is_array($ids)) {
+        return ['success' => false, 'message' => 'No transactions selected for deletion.'];
+    }
+
+    // Sanitize IDs to integers
+    $ids = array_map('intval', $ids);
+
+    // Prepare placeholders for the query
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+    $sql = "DELETE FROM transaksi WHERE id_transaksi IN ($placeholders)";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        return ['success' => false, 'message' => 'Failed to prepare delete statement.'];
+    }
+
+    // Bind parameters dynamically using call_user_func_array
+    $types = str_repeat('i', count($ids));
+    $bind_names[] = $types;
+    for ($i=0; $i<count($ids); $i++) {
+        $bind_name = 'bind' . $i;
+        $$bind_name = $ids[$i];
+        $bind_names[] = &$$bind_name;
+    }
+    call_user_func_array([$stmt, 'bind_param'], $bind_names);
+
+    if ($stmt->execute()) {
+        $affected_rows = $stmt->affected_rows;
+        return ['success' => true, 'message' => "$affected_rows transactions deleted successfully."];
+    } else {
+        return ['success' => false, 'message' => 'Failed to execute delete statement.'];
+    }
+}
+
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\index.php =====
+================================================================================
+
+<?php
+require_once 'config.php';
+require_once 'functions.php';
+require_once 'includes/url_helper.php';
+require_once 'includes/session_config.php'; // Persistent session
+
+// Jika belum login, redirect ke halaman login
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+// Cek session expiration
+if (isset($_SESSION['expire_time']) && time() > $_SESSION['expire_time']) {
+    session_destroy();
+    header("Location: login.php?expired=1");
+    exit;
+}
+
+// Set judul halaman default
+$page_title = "Dashboard - Sistem Keuangan Gereja";
+
+$action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : 'form');
+
+switch ($action) {
+    case 'form':
+        showForm();
+        break;
+    case 'submit':
+        $result = submitForm();
+        
+        // Jika transaksi berhasil disimpan dan ini adalah bakti bulanan, sync ke jemaat
+        if ($result && isset($result['success']) && $result['success']) {
+            $transaksi_id = $result['transaksi_id'] ?? null;
+            if ($transaksi_id) {
+                // Cek apakah ini transaksi bakti bulanan
+                // Bakti bulanan: subkategori 500.01.01 pada jurnal penerimaan jemaat (dinamis)
+                $sql = "SELECT s.kode_subkategori, t.id_jurnal, j.nama_jurnal 
+                        FROM transaksi t 
+                        LEFT JOIN subkategori s ON t.id_subkategori = s.id_subkategori 
+                        LEFT JOIN jurnal j ON t.id_jurnal = j.id_jurnal
+                        WHERE t.id_transaksi = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('i', $transaksi_id);
+                $stmt->execute();
+                $result_check = $stmt->get_result();
+                
+                if ($result_check->num_rows > 0) {
+                    $row = $result_check->fetch_assoc();
+                    // Cek apakah subkategori 500.01.01 DAN jurnal adalah Penerimaan Jemaat (dinamis berdasarkan nama)
+                    $nama_jurnal_lower = strtolower($row['nama_jurnal'] ?? '');
+                    $is_penerimaan_jemaat = (strpos($nama_jurnal_lower, 'penerimaan') !== false && 
+                                            strpos($nama_jurnal_lower, 'jemaat') !== false);
+                    
+                    if ($row['kode_subkategori'] === '500.01.01' && $is_penerimaan_jemaat) {
+                        // Include sync function
+                        require_once 'integration/jemaat_sync.php';
+                        
+                        try {
+                            // Log start sync
+                            error_log("=== SYNC START ===");
+                            error_log("Transaksi ID: $transaksi_id");
+                            
+                            $jemaatSync = new JemaatSync();
+                            $sync_result = $jemaatSync->syncBaktiBulanan($transaksi_id);
+                            
+                            // Log result
+                            error_log("Sync Result: " . json_encode($sync_result));
+                            error_log("=== SYNC END ===");
+                            
+                            if ($sync_result['success']) {
+                                $_SESSION['success'] .= ' | Data berhasil di-sync ke aplikasi jemaat.';
+                                
+                                // Log success
+                                if (isset($sync_result['data']['family_id'])) {
+                                    error_log("Sync berhasil - Family ID: " . $sync_result['data']['family_id']);
+                                }
+                            } else {
+                                // Log error dengan detail
+                                $errorMsg = $sync_result['message'] ?? 'unknown';
+                                error_log("=== SYNC FAILED ===");
+                                error_log("Transaksi ID: $transaksi_id");
+                                error_log("Error: $errorMsg");
+                                error_log("=== END SYNC FAILED ===");
+                                
+                                $_SESSION['errors'] = $_SESSION['errors'] ?? [];
+                                
+                                // Deteksi jenis error untuk message yang lebih jelas
+                                $syncErrorType = 'Gagal terhubung ke server';
+                                if (stripos($errorMsg, 'timeout') !== false || stripos($errorMsg, 'connection') !== false) {
+                                    $syncErrorType = 'Gagal terhubung ke server (timeout/connection error)';
+                                } elseif (stripos($errorMsg, 'unauthorized') !== false || stripos($errorMsg, 'api') !== false) {
+                                    $syncErrorType = 'Gagal autentikasi ke server (API key tidak valid)';
+                                } elseif (stripos($errorMsg, 'register') !== false || stripos($errorMsg, 'tidak ditemukan') !== false) {
+                                    $syncErrorType = 'Register tidak ditemukan di server';
+                                } else {
+                                    $syncErrorType = 'Gagal terhubung ke server: ' . $errorMsg;
+                                }
+                                
+                                $_SESSION['errors'][] = '⚠️ <strong>Sync Gagal:</strong> ' . $syncErrorType . '<br><small>✅ Transaksi tetap tersimpan di database lokal. Anda bisa sync ulang nanti via <a href="integration/check_sync_errors.php" target="_blank">Check Sync Errors</a> atau <a href="integration/auto_sync_dashboard.php" target="_blank">Auto Sync Dashboard</a>.</small>';
+                                $_SESSION['sync_failed'] = true; // Flag untuk JavaScript alert
+                                $_SESSION['sync_error_message'] = $syncErrorType; // Simpan message untuk JavaScript
+                                
+                                // Jangan hapus transaksi - biarkan user bisa sync manual nanti
+                            }
+                        } catch (Exception $e) {
+                            // Log exception
+                            error_log("Sync Exception: " . $e->getMessage());
+                            error_log("Stack trace: " . $e->getTraceAsString());
+                            
+                            $_SESSION['errors'] = $_SESSION['errors'] ?? [];
+                            // Jangan hapus transaksi - biarkan tersimpan untuk sync manual
+                            $_SESSION['errors'][] = '⚠️ <strong>Error Sinkronisasi:</strong> Gagal terhubung ke server jemaat. Alasan: ' . htmlspecialchars($e->getMessage()) . '<br><small>✅ Transaksi tetap tersimpan di database lokal. Anda bisa sync ulang nanti via <a href="integration/check_sync_errors.php" target="_blank">Check Sync Errors</a>.</small>';
+                            $_SESSION['sync_failed'] = true; // Flag untuk JavaScript alert
+                            $_SESSION['sync_error_message'] = 'Gagal terhubung ke server: ' . $e->getMessage();
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Redirect setelah sync selesai
+        header("Location: index.php");
+        exit;
+        break;
+    case 'delete_sheet1_transactions':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ids = isset($_POST['selected_ids']) ? $_POST['selected_ids'] : [];
+            $jurnal_filter = isset($_POST['jurnal_filter']) ? $_POST['jurnal_filter'] : '';
+            $tahun_filter = isset($_POST['tahun_filter']) ? $_POST['tahun_filter'] : date('Y');
+            $search = isset($_POST['search']) ? $_POST['search'] : '';
+
+            $result = deleteSheet1Transactions($ids);
+
+            // Set flash message
+            if ($result['success']) {
+                $_SESSION['success'] = $result['message'];
+            } else {
+                $_SESSION['errors'] = [$result['message']];
+            }
+
+            // Redirect back to sheet1_report with same filters
+            $redirect_url = "index.php?action=sheet1_report";
+            if ($jurnal_filter) $redirect_url .= "&jurnal_filter=" . urlencode($jurnal_filter);
+            if ($tahun_filter) $redirect_url .= "&tahun_filter=" . urlencode($tahun_filter);
+            if ($search) $redirect_url .= "&search=" . urlencode($search);
+
+            header("Location: $redirect_url");
+            exit;
+        }
+        break;
+
+    case 'sheet1_report':
+        $jurnal_filter = isset($_GET['jurnal_filter']) ? $_GET['jurnal_filter'] : null;
+        $tahun_filter = isset($_GET['tahun_filter']) ? $_GET['tahun_filter'] : date('Y');
+        generateSheet1Report($jurnal_filter, $tahun_filter);
+        include 'views/sheet1_report.php';
+        break;
+    case 'sheet2_report':
+        $jurnal_filter = isset($_GET['jurnal_filter']) ? $_GET['jurnal_filter'] : null;
+        $tahun_filter = isset($_GET['tahun_filter']) ? $_GET['tahun_filter'] : date('Y');
+        $tanggal_dari = isset($_GET['tanggal_dari']) ? $_GET['tanggal_dari'] : null;
+        $tanggal_sampai = isset($_GET['tanggal_sampai']) ? $_GET['tanggal_sampai'] : null;
+        $nominal_min = isset($_GET['nominal_min']) ? floatval($_GET['nominal_min']) : null;
+        $nominal_max = isset($_GET['nominal_max']) ? floatval($_GET['nominal_max']) : null;
+        $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'tanggal_desc';
+        
+        // OPTIMIZED: Check if we need to regenerate report
+        // Only regenerate if session is empty or database filters changed
+        // Note: search_keyword is not used in generateSheet2Report(), so we don't need to regenerate for search
+        $current_db_filters = [
+            'jurnal' => $jurnal_filter,
+            'tahun' => $tahun_filter,
+            'tanggal_dari' => $tanggal_dari,
+            'tanggal_sampai' => $tanggal_sampai,
+            'nominal_min' => $nominal_min,
+            'nominal_max' => $nominal_max,
+            'sort_by' => $sort_by
+        ];
+        
+        $needs_regenerate = false;
+        if (!isset($_SESSION['sheet2_report']) || empty($_SESSION['sheet2_report'])) {
+            $needs_regenerate = true;
+        } elseif (isset($_SESSION['sheet2_report_filters'])) {
+            // Compare database filters - regenerate if different
+            // search_keyword is handled in view, not in generateSheet2Report()
+            $old_filters = $_SESSION['sheet2_report_filters'];
+            if ($old_filters !== $current_db_filters) {
+                $needs_regenerate = true;
+            }
+        } else {
+            // No filters stored, regenerate to be safe
+            $needs_regenerate = true;
+        }
+        
+        if ($needs_regenerate) {
+            generateSheet2Report($jurnal_filter, $tahun_filter, $tanggal_dari, $tanggal_sampai, $nominal_min, $nominal_max, $sort_by);
+            $_SESSION['sheet2_report_filters'] = $current_db_filters;
+        }
+        
+        include 'views/sheet2_report.php';
+        break;
+    case 'sheet3_report':
+        // Parse filter parameters dengan benar
+        $jurnal_filter = isset($_GET['jurnal_filter']) && $_GET['jurnal_filter'] !== '' ? intval($_GET['jurnal_filter']) : null;
+        $tahun_filter = isset($_GET['tahun_filter']) && $_GET['tahun_filter'] !== '' ? intval($_GET['tahun_filter']) : date('Y');
+        // bulan_filter: jika kosong atau 0, berarti semua bulan (null)
+        $bulan_filter = isset($_GET['bulan_filter']) && $_GET['bulan_filter'] !== '' && $_GET['bulan_filter'] != '0' ? intval($_GET['bulan_filter']) : null;
+        $report = generateSheet3Report($jurnal_filter, $tahun_filter, $bulan_filter);
+        include 'views/sheet3_report.php';
+        break;
+    case 'laporan_keuangan':
+        header("Location: laporankeuangan.php");
+        exit;
+        break;
+    case 'laporan_keuangan_bulanan':
+        header("Location: laporankeuangan.php?tahun=" . date('Y'));
+        exit;
+        break;
+    case 'in_out':
+        header("Location: in_out.php?tahun=2025");
+        exit;
+        break;
+    case 'get_kategori':
+        getKategoriByJurnal();
+        break;
+    case 'get_subkategori':
+        getSubkategori();
+        break;
+    case 'get_next_kwitansi':
+        // AJAX endpoint untuk mendapatkan nomor kwitansi berikutnya
+        header('Content-Type: application/json');
+        require_once 'functions.php';
+        echo json_encode(['next_number' => getNextKwitansiNumber()]);
+        exit;
+        break;
+    case 'save_kwitansi_setting':
+        // Simpan pengaturan nomor kwitansi awal
+        require_once 'functions.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Cek apakah ini AJAX request
+            $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+            
+            $start_number = isset($_POST['start_number']) ? intval($_POST['start_number']) : 1;
+            if ($start_number < 1) {
+                if ($is_ajax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Nomor awal harus lebih dari 0']);
+                    exit;
+                } else {
+                    $_SESSION['errors'] = ['Nomor awal harus lebih dari 0'];
+                }
+            } else {
+                if (updateKwitansiStartNumber($start_number)) {
+                    // Ambil nomor berikutnya yang akan digunakan
+                    $next_number = getNextKwitansiNumber();
+                    if ($is_ajax) {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => true, 
+                            'message' => 'Pengaturan nomor kwitansi berhasil disimpan!',
+                            'start_number' => $start_number,
+                            'next_number' => $next_number
+                        ]);
+                        exit;
+                    } else {
+                        $_SESSION['success'] = "Pengaturan nomor kwitansi berhasil disimpan! Nomor awal di-set ke " . $start_number . ". Nomor kwitansi berikutnya: " . $next_number;
+                    }
+                } else {
+                    if ($is_ajax) {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => false, 'message' => 'Gagal menyimpan pengaturan']);
+                        exit;
+                    } else {
+                        $_SESSION['errors'] = ['Gagal menyimpan pengaturan'];
+                    }
+                }
+            }
+            
+            // Jika bukan AJAX, redirect seperti biasa
+            if (!$is_ajax) {
+                header("Location: index.php");
+                exit;
+            }
+        }
+        break;
+    case 'get_kwitansi_setting':
+        // AJAX endpoint untuk mendapatkan pengaturan nomor kwitansi
+        header('Content-Type: application/json');
+        require_once 'functions.php';
+        
+        // Ambil nomor terbesar di database
+        $sql = "SELECT MAX(CAST(no_kwitansi AS UNSIGNED)) as max_number 
+                FROM transaksi 
+                WHERE no_kwitansi REGEXP '^[0-9]+$' AND CAST(no_kwitansi AS UNSIGNED) > 0";
+        $result = $conn->query($sql);
+        $max_number = 0;
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if ($row['max_number'] !== null) {
+                $max_number = intval($row['max_number']);
+            }
+        }
+        
+        echo json_encode([
+            'start_number' => getKwitansiStartNumber(),
+            'max_number' => $max_number,
+            'next_number' => getNextKwitansiNumber()
+        ]);
+        exit;
+        break;
+    case 'dashboard':
+        // Redirect to dashboard.php directly to show backup button
+        header("Location: dashboard.php");
+        exit;
+        break;
+    case 'login_sessions':
+        // Include login sessions view
+        include 'views/login_sessions.php';
+        break;
+    default:
+        showDashboard();
+}
+
+// Include header
+include 'views/header.php';
+
+// ... existing content ...
+
+// Include footer
+include 'views/footer.php';
+?>
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\laporan_keuangan_export.php =====
+================================================================================
+
+<?php
+session_start();
+
+// Ambil parameter filter
+$selected_year = isset($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+$jurnal_filter = isset($_GET['jurnal_filter']) ? intval($_GET['jurnal_filter']) : null;
+
+// Validasi session dan data
+if (!isset($_SESSION['laporan_keuangan_data']) || empty($_SESSION['laporan_keuangan_data'])) {
+    die("Tidak ada data laporan keuangan untuk diexport.");
+}
+
+$report_data = $_SESSION['laporan_keuangan_data'];
+
+// Ambil daftar jurnal untuk nama jurnal yang dipilih
+require_once 'config.php';
+global $conn;
+
+$selected_jurnal_name = 'Semua Jurnal';
+if ($jurnal_filter) {
+    $sql_jurnal = "SELECT id_jurnal, nama_jurnal FROM jurnal WHERE id_jurnal = ?";
+    $stmt_jurnal = $conn->prepare($sql_jurnal);
+    $stmt_jurnal->bind_param("i", $jurnal_filter);
+    $stmt_jurnal->execute();
+    $result_jurnal = $stmt_jurnal->get_result();
+    
+    if ($result_jurnal && $result_jurnal->num_rows > 0) {
+        $row_jurnal = $result_jurnal->fetch_assoc();
+        $selected_jurnal_name = $row_jurnal['nama_jurnal'];
+    }
+}
+
+// Set header untuk download file Excel
+header("Content-Type: application/vnd.ms-excel");
+header("Content-Disposition: attachment; filename=\"Jurnal_Penerimaan_Pengeluaran_Saluran_{$selected_year}_{$selected_jurnal_name}_" . date('Ymd_His') . ".xls\"");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Fungsi untuk format angka yang kompatibel dengan Excel
+function formatRupiahExport($number) {
+    return number_format($number, 0, '', ''); // Format tanpa pemisah untuk Excel
+}
+
+// Mapping nama jurnal ke singkatan
+$jurnal_abbreviations = [
+    'Penerimaan Jemaat' => 'PJ',
+    'Penerimaan Persembahan' => 'PP',
+    'Penerimaan Lain-lain' => 'PL',
+    'Pengeluaran Operasional' => 'PO',
+    'Pengeluaran Program' => 'PPG',
+    'Pengeluaran Lain-lain' => 'PLN',
+    'Penerimaan Saldo Bank' => 'PSB',
+    'Penerimaan GSG' => 'PGSG',
+    'JURNAL PENERIMAAN & PENGELUARAN JEMAAT di Bank Mandiri' => 'JPM',
+];
+?>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .title { font-size: 18pt; font-weight: bold; color: #1F4E78; margin-bottom: 5px; }
+        .subtitle { font-size: 14pt; color: #2F75B5; margin-bottom: 15px; }
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .info-table td { padding: 5px; border: 1px solid #BFBFBF; }
+        .info-label { font-weight: bold; background-color: #E6E6E6; width: 120px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .data-table th { background-color: #4472C4; color: white; font-weight: bold; padding: 8px; border: 1px solid #5B5B5B; text-align: center; }
+        .data-table td { padding: 6px; border: 1px solid #BFBFBF; vertical-align: top; }
+        .month-header { background-color: #8FAADC; color: white; font-weight: bold; text-align: center; }
+        .total-row { font-weight: bold; background-color: #D9E1F2; }
+        .saldo-row { font-weight: bold; background-color: #E2EFDA; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .number-format { mso-number-format: "#\\.##0"; }
+        .date-format { mso-number-format: "dd-mm-yyyy"; }
+        .footer { margin-top: 30px; font-style: italic; color: #7F7F7F; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">JURNAL PENERIMAAN & PENGELUARAN SALURAN GKPI MEDAN KOTA</div>
+        <div class="subtitle">PERIODE TAHUN <?= $selected_year ?></div>
+    </div>
+
+    <table class="info-table">
+        <tr>
+            <td class="info-label">Tahun:</td>
+            <td><?= $selected_year ?></td>
+        </tr>
+        <tr>
+            <td class="info-label">Jurnal:</td>
+            <td><?= htmlspecialchars($selected_jurnal_name) ?></td>
+        </tr>
+        <tr>
+            <td class="info-label">Tanggal Export:</td>
+            <td><?= date('d-m-Y H:i:s') ?></td>
+        </tr>
+    </table>
+
+    <?php if (!empty($report_data)): ?>
+    <div style="overflow-x:auto;">
+    <table class="data-table">
+        <thead>
+                <tr>
+                    <th colspan="5" class="text-center">PENERIMAAN & PENGELUARAN</th>
+                    <th colspan="5" class="text-center">PENERIMAAN & PENGELUARAN</th>
+                </tr>
+            <tr>
+                <th>Tanggal</th>
+                <th>Uraian</th>
+                <th>Jurnal</th>
+                <th>No. Bukti</th>
+                <th>Jumlah</th>
+
+                <th>Tanggal</th>
+                <th>Uraian</th>
+                <th>Jurnal</th>
+                <th>No. Bukti</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $total_penerimaan_tahun = 0;
+            $total_pengeluaran_tahun = 0;
+            $saldo_akhir_tahun = 0;
+            
+            foreach ($report_data as $month => $data): 
+                $total_penerimaan_tahun += $data['total_penerimaan'];
+                $total_pengeluaran_tahun += $data['total_pengeluaran'];
+                $saldo_akhir_tahun = $data['saldo_akhir'];
+            ?>
+                <tr class="month-header">
+                    <td colspan="10" class="text-center"><?= htmlspecialchars($month) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Saldo Awal</strong></td>
+                    <td class="text-right number-format"><?= formatRupiahExport($data['saldo_awal']) ?></td>
+                    <td colspan="5"></td>
+                </tr>
+                <?php
+                $max_rows = max(count($data['penerimaan']), count($data['pengeluaran']));
+                for ($i = 0; $i < $max_rows; $i++):
+                    $p = $data['penerimaan'][$i] ?? null;
+                    $k = $data['pengeluaran'][$i] ?? null;
+                ?>
+                <tr>
+                    <td class="date-format"><?= $p['tanggal'] ?? '' ?></td>
+                    <td><?= htmlspecialchars($p['uraian'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($p['jurnal_abbr'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($p['no_bukti'] ?? '') ?></td>
+                    <td class="text-right number-format"><?= isset($p['jumlah']) ? formatRupiahExport($p['jumlah']) : '' ?></td>
+
+                    <td class="date-format"><?= $k['tanggal'] ?? '' ?></td>
+                    <td><?= htmlspecialchars($k['uraian'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($k['jurnal_abbr'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($k['no_bukti'] ?? '') ?></td>
+                    <td class="text-right number-format"><?= isset($k['jumlah']) ? formatRupiahExport($k['jumlah']) : '' ?></td>
+                </tr>
+                <?php endfor; ?>
+                <tr class="total-row">
+                    <td colspan="4" class="text-right"><strong>Total Penerimaan</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['total_penerimaan']) ?></strong></td>
+                    <td colspan="4" class="text-right"><strong>Total Pengeluaran</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['total_pengeluaran']) ?></strong></td>
+                </tr>
+                <tr class="saldo-row">
+                    <td colspan="9" class="text-right"><strong>Saldo Akhir</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['saldo_akhir']) ?></strong></td>
+                </tr>
+            <?php endforeach; ?>
+            
+            <!-- Total Tahun -->
+            <tr class="total-row" style="background-color: #FFD966;">
+                <td colspan="4" class="text-right"><strong>TOTAL TAHUN - PENERIMAAN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($total_penerimaan_tahun) ?></strong></td>
+                <td colspan="4" class="text-right"><strong>TOTAL TAHUN - PENGELUARAN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($total_pengeluaran_tahun) ?></strong></td>
+            </tr>
+            <tr class="saldo-row" style="background-color: #C6E0B4;">
+                <td colspan="9" class="text-right"><strong>SALDO AKHIR TAHUN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($saldo_akhir_tahun) ?></strong></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    
+    <!-- Ringkasan Statistik -->
+    <div style="margin-top: 30px;">
+        <table class="info-table">
+            <tr class="total-row">
+                <td class="info-label">Total Penerimaan Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($total_penerimaan_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+            <tr class="total-row">
+                <td class="info-label">Total Pengeluaran Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($total_pengeluaran_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+            <tr class="saldo-row">
+                <td class="info-label">Saldo Akhir Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($saldo_akhir_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <?php else: ?>
+        <div style="color: #FF0000; font-weight: bold; font-style: italic; text-align: center; margin: 30px 0;">
+            Tidak ada data laporan keuangan untuk tahun <?= $selected_year ?>.
+        </div>
+    <?php endif; ?>
+
+    <div class="footer">
+        Dokumen ini dihasilkan secara otomatis pada <?= date('d F Y H:i:s') ?> dari Sistem Laporan Keuangan GKPI Medan Kota
+    </div>
+</body>
+</html>
+
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\pdf_export_laporan_keuangan.php =====
+================================================================================
+
+<?php
+session_start();
+require_once 'lib/dompdf/autoload.inc.php';
+use Dompdf\Dompdf;
+
+if (!isset($_SESSION['laporan_keuangan_data']) || empty($_SESSION['laporan_keuangan_data'])) {
+    die("Tidak ada data laporan keuangan untuk diexport.");
+}
+
+$report_data = $_SESSION['laporan_keuangan_data'];
+
+require_once 'config.php';
+global $conn;
+
+$selected_year = isset($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+$jurnal_filter = isset($_GET['jurnal_filter']) ? intval($_GET['jurnal_filter']) : null;
+
+$selected_jurnal_name = 'Semua Jurnal';
+if ($jurnal_filter) {
+    $sql_jurnal = "SELECT id_jurnal, nama_jurnal FROM jurnal WHERE id_jurnal = ?";
+    $stmt_jurnal = $conn->prepare($sql_jurnal);
+    $stmt_jurnal->bind_param("i", $jurnal_filter);
+    $stmt_jurnal->execute();
+    $result_jurnal = $stmt_jurnal->get_result();
+    
+    if ($result_jurnal && $result_jurnal->num_rows > 0) {
+        $row_jurnal = $result_jurnal->fetch_assoc();
+        $selected_jurnal_name = $row_jurnal['nama_jurnal'];
+    }
+}
+
+function formatRupiahExport($number) {
+    return number_format($number, 0, '', '');
+}
+
+$jurnal_abbreviations = [
+    'Penerimaan Jemaat' => 'PJ',
+    'Penerimaan Persembahan' => 'PP',
+    'Penerimaan Lain-lain' => 'PL',
+    'Pengeluaran Operasional' => 'PO',
+    'Pengeluaran Program' => 'PPG',
+    'Pengeluaran Lain-lain' => 'PLN',
+    'Penerimaan Saldo Bank' => 'PSB',
+    'Penerimaan GSG' => 'PGSG',
+    'JURNAL PENERIMAAN & PENGELUARAN JEMAAT di Bank Mandiri' => 'JPM',
+];
+
+ob_start();
+?>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 8px;
+            font-size: 7pt;
+            line-height: 1.1;
+        }
+        .header { text-align: center; margin-bottom: 10px; }
+        .title { font-size: 12pt; font-weight: bold; color: #1F4E78; margin-bottom: 3px; }
+        .subtitle { font-size: 9pt; color: #2F75B5; margin-bottom: 8px; }
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 7pt; }
+        .info-table td { padding: 3px; border: 1px solid #BFBFBF; }
+        .info-label { font-weight: bold; background-color: #E6E6E6; width: 100px; }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+            font-size: 6pt;
+            table-layout: fixed;
+        }
+        .data-table th {
+            background-color: #4472C4;
+            color: white;
+            font-weight: bold;
+            padding: 4px 2px;
+            border: 1px solid #5B5B5B;
+            text-align: center;
+            font-size: 6pt;
+            word-wrap: break-word;
+        }
+        .data-table td {
+            padding: 3px 2px;
+            border: 1px solid #BFBFBF;
+            vertical-align: top;
+            font-size: 6pt;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 50px; } /* Tanggal */
+        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 120px; } /* Uraian */
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 40px; } /* Jurnal */
+        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 60px; } /* No. Bukti */
+        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 70px; text-align: right; } /* Jumlah */
+        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 50px; } /* Tanggal */
+        .data-table th:nth-child(7), .data-table td:nth-child(7) { width: 120px; } /* Uraian */
+        .data-table th:nth-child(8), .data-table td:nth-child(8) { width: 40px; } /* Jurnal */
+        .data-table th:nth-child(9), .data-table td:nth-child(9) { width: 60px; } /* No. Bukti */
+        .data-table th:nth-child(10), .data-table td:nth-child(10) { width: 70px; text-align: right; } /* Jumlah */
+        .month-header { background-color: #8FAADC; color: white; font-weight: bold; text-align: center; font-size: 7pt; }
+        .total-row { font-weight: bold; background-color: #D9E1F2; font-size: 6pt; }
+        .saldo-row { font-weight: bold; background-color: #E2EFDA; font-size: 6pt; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .number-format { text-align: right; font-size: 6pt; }
+        .date-format { text-align: center; font-size: 6pt; }
+        .footer { margin-top: 10px; font-style: italic; color: #7F7F7F; text-align: right; font-size: 6pt; }
+        .page-break { page-break-before: always; }
+        @page { margin: 0.3in; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">JURNAL PENERIMAAN & PENGELUARAN SALURAN GKPI MEDAN KOTA</div>
+        <div class="subtitle">PERIODE TAHUN <?= $selected_year ?></div>
+    </div>
+
+    <table class="info-table">
+        <tr>
+            <td class="info-label">Tahun:</td>
+            <td><?= $selected_year ?></td>
+        </tr>
+        <tr>
+            <td class="info-label">Jurnal:</td>
+            <td><?= htmlspecialchars($selected_jurnal_name) ?></td>
+        </tr>
+        <tr>
+            <td class="info-label">Tanggal Export:</td>
+            <td><?= date('d-m-Y H:i:s') ?></td>
+        </tr>
+    </table>
+
+    <?php if (!empty($report_data)): ?>
+    <div style="overflow-x:auto;">
+    <table class="data-table">
+        <thead>
+                <tr>
+                    <th colspan="5" class="text-center">PENERIMAAN & PENGELUARAN</th>
+                    <th colspan="5" class="text-center">PENERIMAAN & PENGELUARAN</th>
+                </tr>
+            <tr>
+                <th>Tanggal</th>
+                <th>Uraian</th>
+                <th>Jurnal</th>
+                <th>No. Bukti</th>
+                <th>Jumlah</th>
+
+                <th>Tanggal</th>
+                <th>Uraian</th>
+                <th>Jurnal</th>
+                <th>No. Bukti</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $total_penerimaan_tahun = 0;
+            $total_pengeluaran_tahun = 0;
+            $saldo_akhir_tahun = 0;
+            
+            foreach ($report_data as $month => $data): 
+                $total_penerimaan_tahun += $data['total_penerimaan'];
+                $total_pengeluaran_tahun += $data['total_pengeluaran'];
+                $saldo_akhir_tahun = $data['saldo_akhir'];
+            ?>
+                <tr class="month-header">
+                    <td colspan="10" class="text-center"><?= htmlspecialchars($month) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Saldo Awal</strong></td>
+                    <td class="text-right number-format"><?= formatRupiahExport($data['saldo_awal']) ?></td>
+                    <td colspan="5"></td>
+                </tr>
+                <?php
+                $max_rows = max(count($data['penerimaan']), count($data['pengeluaran']));
+                for ($i = 0; $i < $max_rows; $i++):
+                    $p = $data['penerimaan'][$i] ?? null;
+                    $k = $data['pengeluaran'][$i] ?? null;
+                ?>
+                <tr>
+                    <td class="date-format"><?= $p['tanggal'] ?? '' ?></td>
+                    <td><?= htmlspecialchars($p['uraian'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($p['jurnal_abbr'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($p['no_bukti'] ?? '') ?></td>
+                    <td class="text-right number-format"><?= isset($p['jumlah']) ? formatRupiahExport($p['jumlah']) : '' ?></td>
+
+                    <td class="date-format"><?= $k['tanggal'] ?? '' ?></td>
+                    <td><?= htmlspecialchars($k['uraian'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($k['jurnal_abbr'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($k['no_bukti'] ?? '') ?></td>
+                    <td class="text-right number-format"><?= isset($k['jumlah']) ? formatRupiahExport($k['jumlah']) : '' ?></td>
+                </tr>
+                <?php endfor; ?>
+                <tr class="total-row">
+                    <td colspan="4" class="text-right"><strong>Total Penerimaan</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['total_penerimaan']) ?></strong></td>
+                    <td colspan="4" class="text-right"><strong>Total Pengeluaran</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['total_pengeluaran']) ?></strong></td>
+                </tr>
+                <tr class="saldo-row">
+                    <td colspan="9" class="text-right"><strong>Saldo Akhir</strong></td>
+                    <td class="text-right number-format"><strong><?= formatRupiahExport($data['saldo_akhir']) ?></strong></td>
+                </tr>
+            <?php endforeach; ?>
+            
+            <tr class="total-row" style="background-color: #FFD966;">
+                <td colspan="4" class="text-right"><strong>TOTAL TAHUN - PENERIMAAN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($total_penerimaan_tahun) ?></strong></td>
+                <td colspan="4" class="text-right"><strong>TOTAL TAHUN - PENGELUARAN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($total_pengeluaran_tahun) ?></strong></td>
+            </tr>
+            <tr class="saldo-row" style="background-color: #C6E0B4;">
+                <td colspan="9" class="text-right"><strong>SALDO AKHIR TAHUN</strong></td>
+                <td class="text-right number-format"><strong><?= formatRupiahExport($saldo_akhir_tahun) ?></strong></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <table class="info-table">
+            <tr class="total-row">
+                <td class="info-label">Total Penerimaan Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($total_penerimaan_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+            <tr class="total-row">
+                <td class="info-label">Total Pengeluaran Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($total_pengeluaran_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+            <tr class="saldo-row">
+                <td class="info-label">Saldo Akhir Tahun <?= $selected_year ?>:</td>
+                <td class="text-right number-format"><strong>Rp <?= number_format($saldo_akhir_tahun, 0, ',', '.') ?></strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <?php else: ?>
+        <div style="color: #FF0000; font-weight: bold; font-style: italic; text-align: center; margin: 30px 0;">
+            Tidak ada data laporan keuangan untuk tahun <?= $selected_year ?>.
+        </div>
+    <?php endif; ?>
+
+    <div class="footer">
+        Dokumen ini dihasilkan secara otomatis pada <?= date('d F Y H:i:s') ?> dari Sistem Laporan Keuangan GKPI Medan Kota
+    </div>
+</body>
+</html>
+<?php
+$html = ob_get_clean();
+
+$dompdf = new Dompdf();
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4', 'landscape');
+
+// Configure DomPDF for better table handling
+$dompdf->set_option('isHtml5ParserEnabled', true);
+$dompdf->set_option('isRemoteEnabled', false);
+$dompdf->set_option('defaultFont', 'Arial');
+$dompdf->set_option('dpi', 96);
+$dompdf->set_option('fontHeightRatio', 1.0);
+
+$dompdf->render();
+$dompdf->stream("Jurnal_Penerimaan_Pengeluaran_Saluran_{$selected_year}_{$selected_jurnal_name}_" . date('Ymd_His') . ".pdf", ["Attachment" => false]);
+exit;
+?>
+
+
+================================================================================
+===== C:\xampp\htdocs\teste17novsatu\teste\views\laporan_keuangan.php =====
+================================================================================
+
+<?php
+// views/laporan_keuangan.php
+
+$selected_year = isset($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+
+// Ambil daftar jurnal untuk filter
+global $conn;
+$sql_jurnal = "SELECT id_jurnal, nama_jurnal FROM jurnal ORDER BY nama_jurnal";
+$result_jurnal = $conn->query($sql_jurnal);
+$daftar_jurnal = [];
+if ($result_jurnal && $result_jurnal->num_rows > 0) {
+    while ($row = $result_jurnal->fetch_assoc()) {
+        $daftar_jurnal[] = $row;
+    }
+}
+
+$jurnal_filter = isset($_GET['jurnal_filter']) ? intval($_GET['jurnal_filter']) : null;
+$selected_jurnal_name = 'Semua Jurnal';
+if ($jurnal_filter) {
+    foreach ($daftar_jurnal as $jurnal) {
+        if ($jurnal['id_jurnal'] == $jurnal_filter) {
+            $selected_jurnal_name = $jurnal['nama_jurnal'];
+            break;
+        }
+    }
+}
+
+// Mapping nama jurnal ke singkatan
+$jurnal_abbreviations = [
+    'Penerimaan Jemaat' => 'PJ',
+    'Penerimaan Persembahan' => 'PP',
+    'Penerimaan Lain-lain' => 'PL',
+    'Pengeluaran Operasional' => 'PO',
+    'Pengeluaran Program' => 'PPG',
+    'Pengeluaran Lain-lain' => 'PLN',
+    // Tambahkan mapping lainnya sesuai kebutuhan
+];
+?>
+
+<div class="card mb-4">
+    <div class="card-header" style="line-height: 0.8; padding-top: 0.1rem; padding-bottom: 0.1rem;"><br><br>
+        <h5 style="line-height: 0.8; margin-bottom: 0.1rem; font-size: 1.1rem;">JURNAL PENERIMAAN & PENGELUARAN SALURAN GKPI MEDAN KOTA</h5>
+        <form method="get" action="index.php" class="row g-3 align-items-center">
+            <input type="hidden" name="action" value="laporan_keuangan">
+            <div class="col-auto">
+                <label for="tahun" class="form-label">Tahun:</label>
+                <input type="number" id="tahun" name="tahun" class="form-control" value="<?= htmlspecialchars($selected_year) ?>" min="2000" max="<?= date('Y') ?>" required>
+            </div>
+            <div class="col-auto">
+                <label for="jurnal_filter" class="form-label">Filter Jurnal:</label>
+                <select id="jurnal_filter" name="jurnal_filter" class="form-select">
+                    <option value="">Semua Jurnal</option>
+                    <?php foreach ($daftar_jurnal as $jurnal): ?>
+                        <option value="<?= $jurnal['id_jurnal'] ?>" <?= $jurnal_filter == $jurnal['id_jurnal'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($jurnal['nama_jurnal']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mt-4">Tampilkan</button>
+            </div>
+            <div class="col-auto">
+                <a href="laporan_keuangan_export.php?tahun=<?= $selected_year ?>&jurnal_filter=<?= $jurnal_filter ?>" class="btn btn-success mt-4">
+                    <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="pdf_export_laporan_keuangan.php?tahun=<?= $selected_year ?>&jurnal_filter=<?= $jurnal_filter ?>" class="btn btn-danger mt-4" target="_blank">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php if (!isset($report_data) || empty($report_data)): ?>
+    <div class="alert alert-info">Tidak ada data laporan untuk tahun <?= htmlspecialchars($selected_year) ?> <?= $jurnal_filter ? "pada jurnal " . htmlspecialchars($selected_jurnal_name) : "" ?>.</div>
+<?php else: ?>
+    <div class="table-responsive" style="overflow-x:auto;">
+        <table class="table table-bordered table-sm table-structured">
+            <thead>
+                <tr>
+                    <th colspan="5" class="text-center">PENERIMAAN</th>
+                    <th colspan="5" class="text-center">PENGELUARAN</th>
+                </tr>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Uraian</th>
+                    <th>Jurnal</th>
+                    <th>No. Bukti</th>
+                    <th>Jumlah</th>
+
+                    <th>Tanggal</th>
+                    <th>Uraian</th>
+                    <th>Jurnal</th>
+                    <th>No. Bukti</th>
+                    <th>Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($report_data as $month => $data): ?>
+                    <tr class="table-primary">
+                        <td colspan="10" class="text-center fw-bold"><?= htmlspecialchars($month) ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Saldo Awal</strong></td>
+                        <td class="text-end"><?= number_format($data['saldo_awal'], 0, ',', '.') ?></td>
+                        <td colspan="5"></td>
+                    </tr>
+                    <?php
+                    $max_rows = max(count($data['penerimaan']), count($data['pengeluaran']));
+                    for ($i = 0; $i < $max_rows; $i++):
+                        $p = $data['penerimaan'][$i] ?? null;
+                        $k = $data['pengeluaran'][$i] ?? null;
+                    ?>
+                    <tr>
+                        <td><?= $p['tanggal'] ?? '' ?></td>
+                        <td><?= htmlspecialchars($p['uraian'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($p['jurnal_abbr'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($p['no_bukti'] ?? '') ?></td>
+                        <td class="text-end"><?= isset($p['jumlah']) ? number_format($p['jumlah'], 0, ',', '.') : '' ?></td>
+
+                        <td><?= $k['tanggal'] ?? '' ?></td>
+                        <td><?= htmlspecialchars($k['uraian'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($k['jurnal_abbr'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($k['no_bukti'] ?? '') ?></td>
+                        <td class="text-end"><?= isset($k['jumlah']) ? number_format($k['jumlah'], 0, ',', '.') : '' ?></td>
+                    </tr>
+                    <?php endfor; ?>
+                    <tr class="table-info fw-bold">
+                        <td colspan="4" class="text-end">Total Penerimaan <?= htmlspecialchars($month) ?></td>
+                        <td class="text-end"><?= number_format($data['total_penerimaan'], 0, ',', '.') ?></td>
+                        <td colspan="4" class="text-end">Total Pengeluaran <?= htmlspecialchars($month) ?></td>
+                        <td class="text-end"><?= number_format($data['total_pengeluaran'], 0, ',', '.') ?></td>
+                    </tr>
+                    <tr class="table-success fw-bold">
+                        <td colspan="9" class="text-end">Saldo Akhir <?= htmlspecialchars($month) ?></td>
+                        <td class="text-end"><?= number_format($data['saldo_akhir'], 0, ',', '.') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
+
+
+
+
+
+
+
+Menambahkan indentasi/hierarki visual pada tabel agar sesuai struktur di gambar. Memperbarui tampilan:
+
+
+[3 tools called]
+
+
+Menambahkan indentasi/hierarki visual pada tabel. Memeriksa struktur data dan memperbarui tampilan:
+
+
+[4 tools called]
+
+
+Memeriksa apakah perlu mengelompokkan transaksi per uraian. Memperbarui tampilan dengan indentasi hierarkis:
+
+
+[7 tools called]
+
+
+Memperbarui logika untuk menampilkan transaksi per uraian dengan indentasi hierarkis. Memodifikasi fungsi `generateSheet3Report` untuk mengelompokkan per uraian:
+
+
+[4 tools called]
+
+
+Memperbarui fungsi `generateSheet3Report` untuk mengelompokkan transaksi per uraian, lalu menampilkannya dengan indentasi hierarkis:
+
+
+[5 tools called]
+
+
+Memperbarui tampilan untuk menampilkan setiap uraian detail sebagai baris terpisah dengan indentasi hierarkis:
+
+
+[2 tools called]
+
+
+Menambahkan indentasi hierarkis pada tabel. Perubahan:
+
+## Perubahan yang diterapkan
+
+### 1. Indentasi hierarkis
+- Kategori utama (200): tidak indent, bold, hanya di baris pertama subkategori
+- Subkategori (200.01): indent 20px, bold
+- Uraian detail: indent 60px (lebih dalam)
+
+### 2. Tampilan detail uraian
+- Setiap uraian detail dari transaksi ditampilkan sebagai baris terpisah
+- Uraian detail ditampilkan dengan indentasi lebih dalam
+- Hanya menampilkan uraian yang memiliki nilai > 0
+
+### 3. Struktur data
+- Menambahkan `uraian_detail_dict` untuk menyimpan daftar uraian detail per subkategori
+- Menambahkan key detail untuk total kas per uraian: `kategori|subkategori|uraian|bulan`
+
+## Hasil yang diharapkan
+
+Struktur tabel sekarang:
+```
+200  |  200.01  |  TUNJANGAN & PENGGANTI TRANSPORT  |  [nilai total]
+     |          |  Pendeta Pimpinan Jemaat          |  [nilai]
+     |          |  Pendeta Khusus                   |  [nilai]
+     |          |  Guru Jemaat                      |  [nilai]
+     |          |  ...                              |  ...
+```
+
+Silakan uji di `http://localhost/teste/index.php?action=sheet3_report` untuk melihat struktur hierarkis dengan indentasi.
+
+Jika perlu penyesuaian indentasi atau format, beri tahu.
+
+
+
+--------------------------------------------
+22nov
+
+Menganalisis semua file CSV di folder excel, lalu menyusun rencana untuk menggabungkannya menjadi satu laporan keuangan bulanan. Memulai analisis:
+
+
+[2 tools called]
+
+
+Menganalisis struktur file jurnal dan laporan bulanan secara lebih detail:
+
+
+[4 tools called]
+
+
+Menyusun analisis dan rencana implementasi:
+
+
+[3 tools called]
+
+
+Parser tidak menemukan transaksi. Memperbaiki parser dengan debugging yang lebih baik:
+
+
+[4 tools called]
+
+
+Memperbaiki parser sesuai struktur yang sebenarnya:
+
+
+[2 tools called]
+
+
+Header sudah ditemukan, tetapi transaksi belum terdeteksi. Memperbaiki parser untuk melewati baris kosong dan baris label kategori:
+
+
+[4 tools called]
+
+
+Parser sudah menemukan transaksi. Memperbaiki parsing untuk pengeluaran dan menyusun dokumentasi lengkap:
+
+
+[4 tools called]
+
+
+Menyusun ringkasan dan rencana implementasi:
+
+
+[2 tools called]
+
+
+Ringkasan analisa dan rencana:
+
+## ANALISA FILE CSV DI FOLDER EXCEL
+
+### File yang ditemukan:
+1. JURNAL PENERIMAAN JEMAAT 2024 → 1,438 transaksi
+2. JURNAL PENGELUARAN JEMAAT 2024 → 816 transaksi
+3. JURNAL PENERIMAAN GSG 2024 → 224 transaksi
+4. JURNAL PENGELUARAN GSG 2024 → 26 transaksi
+5. JURNAL PENERIMAAN BANK MANDIRI 2024 → 592 transaksi
+6. JURNAL SALURAN 2024 → Format berbeda (perlu parsing khusus)
+7. Lap. Bul 2025.csv → Template laporan bulanan (multi-bulan)
+
+Total: ~3,096 transaksi dari semua jurnal
+
+---
+
+## PLAN: BAGAIMANA JURNAL MENJADI LAPORAN BULANAN
+
+### STEP 1: Baca semua file jurnal
+- Baca setiap file CSV jurnal
+- Parse setiap transaksi (tanggal, jumlah, kode kategori)
+- Ekstrak kode kategori dari kolom "MATA ANGGARAN"
+
+### STEP 2: Parse kode kategori
+Format di jurnal: `300,01,05`
+- `300` = Kategori utama (KEBAKTIAN)
+- `01` = Subkategori (Kebaktian Minggu)
+- `05` = Detail (diabaikan)
+
+Hasil: `300.01` → "Kebaktian Minggu & Hari Besar"
+
+### STEP 3: Group & aggregate
+Group berdasarkan:
+- Account (Jemaat, GSG, Saluran, Bank Mandiri)
+- Tipe (Penerimaan/Pengeluaran)
+- Kode kategori (300, 300.01, 500, dll)
+- Bulan (Januari, Februari, dst)
+
+Hitung:
+- Total per bulan
+- Kumulatif dari awal tahun
+
+### STEP 4: Format output
+Susun sesuai struktur laporan bulanan dengan:
+- Saldo Awal
+- Penerimaan (300, 500, 700)
+- Pengeluaran (200, 400, 600, 800)
+- Semua kode selalu muncul (meskipun 0)
+
+---
+
+## PENJELASAN: MENGAPA LAPORAN BULANAN SEPERTI ITU?
+
+### 1. Struktur hierarkis (300 → 300.01)
+Alasan: memudahkan analisa
+- 300 = total semua jenis kebaktian
+- 300.01 = detail per jenis
+
+Manfaat: bisa melihat total dan detail sekaligus
+
+### 2. Kolom "s/d Bulan Lalu"
+Alasan: tracking progress tahunan
+- Januari: s/d Bulan Lalu = 0
+- Februari: s/d Bulan Lalu = total Januari
+- Maret: s/d Bulan Lalu = total Januari + Februari
+
+Manfaat: melihat akumulasi sampai bulan sebelumnya
+
+### 3. Kolom "Bulan Ini"
+Alasan: melihat performa bulan tertentu
+Manfaat: analisa trend bulanan (naik/turun)
+
+### 4. Kolom "s/d Bulan Ini"
+Alasan: total kumulatif dari awal tahun
+Manfaat: tracking YTD (Year To Date)
+
+### 5. Pemisahan Penerimaan & Pengeluaran
+Alasan:
+- Penerimaan = uang masuk (300, 500, 700)
+- Pengeluaran = uang keluar (200, 400, 600, 800)
+
+Manfaat: menghitung Saldo = Penerimaan - Pengeluaran
+
+### 6. Pemisahan Account (Jemaat, GSG, Saluran)
+Alasan: setiap account punya rekening terpisah
+Manfaat: tracking per unit dan rekapitulasi total
+
+---
+
+## CONTOH TRANSFORMASI
+
+### Input (Jurnal):
+```
+5-Jan-24 | "Pers. Kebak. Tahun Baru..." | 50.000 | "300,01,05"
+5-Jan-24 | "Persembahan Tahun Baru..." | 5.598.000 | "300,01,08"
+5-Jan-24 | "Bakti Bulanan..." | 500.000 | "500,01,01"
+```
+
+### Proses:
+1. Parse kode: `300,01,05` → `300.01`
+2. Group: `Jemaat > Penerimaan > 300.01 > Januari`
+3. Sum: `50.000 + 5.598.000 = 5.648.000`
+
+### Output (Laporan):
+```
+300 | KEBAKTIAN
+  300.01 |   Kebaktian Minggu & Hari Besar
+    s/d Bulan Lalu: 0
+    Bulan Ini: 5.648.000
+    s/d Bulan Ini: 5.648.000
+```
+
+---
+
+## FILE YANG SUDAH DIBUAT
+
+1. `PLAN_LAPORAN_BULANAN_DARI_JURNAL.md` - Plan detail implementasi
+2. `PENJELASAN_LAPORAN_BULANAN.md` - Penjelasan lengkap
+3. `RINGKASAN_PLAN_LAPORAN_BULANAN.md` - Ringkasan ini
+4. `parse_jurnal_to_laporan.php` - Script parser (sudah bisa baca transaksi)
+
+---
+
+## NEXT STEPS
+
+1. Perbaiki parser pengeluaran (masih ada bug parsing kode)
+2. Buat aggregator (group & hitung total)
+3. Buat formatter (format sesuai laporan)
+4. Buat API endpoint
+5. Testing dengan data real
+
+Ingin saya lanjutkan implementasi atau ada yang perlu diperjelas?
+
+
+
+
+Dukcapil (1 results):
+Record #1
+Address: komp. tni-au kr. sari-i no. 48 rt 0 rw 0 sari rejo medan polonia kota medan sumatera utara
+BDay: 05-09-1973
+District: sari rejo
+FullName: betty endang kesuma parhusip, se. ak
+Gender: female
+Location: medan polonia
+Passport: 1271164509730001
+Phone: 62811645527
+Region: kota medan
+email:pbettyendang@gmail.com
+
+
+
+3K8ALUA
